@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.beekeeper.desktop.controller.InspectionListController">
+
+    <!-- Top Toolbar -->
+    <top>
+        <ToolBar>
+            <Button fx:id="addButton" text="Nová prehliadka" onAction="#handleAddInspection"/>
+            <Button fx:id="viewButton" text="Zobraziť" onAction="#handleViewInspection"/>
+            <Button fx:id="deleteButton" text="Zmazať" onAction="#handleDeleteInspection"/>
+            <Separator orientation="VERTICAL"/>
+            <Button text="Obnoviť" onAction="#handleRefresh"/>
+        </ToolBar>
+    </top>
+
+    <!-- Center - Table View -->
+    <center>
+        <TableView fx:id="inspectionTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="dateColumn" text="Dátum" prefWidth="200"/>
+                <TableColumn fx:id="temperatureColumn" text="Teplota (°C)" prefWidth="150"/>
+                <TableColumn fx:id="strengthColumn" text="Sila (1-10)" prefWidth="150"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </center>
+
+    <!-- Bottom Status Bar -->
+    <bottom>
+        <HBox style="-fx-background-color: #f9f9f9; -fx-padding: 8;">
+            <Label fx:id="statusLabel" text="Vyberte úľ"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

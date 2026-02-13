@@ -1,0 +1,48 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+application {
+    mainClass = 'com.beekeeper.desktop.Main'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+javafx {
+    version = "17.0.2"
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
+dependencies {
+    // Shared module - contains entities, DAOs, repositories, ViewModels
+    implementation project(':shared')
+
+    // SQLite JDBC driver
+    implementation 'org.xerial:sqlite-jdbc:3.45.1.0'
+
+    // RxJavaFX for JavaFX-RxJava2 integration
+    implementation 'io.reactivex.rxjava2:rxjavafx:2.2.2'
+
+    // Apache POI for Excel (shared with Android)
+    implementation 'org.apache.poi:poi:5.2.5'
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
+
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:5.3.1'
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
+
+    // TestFX for UI testing
+    testImplementation 'org.testfx:testfx-core:4.0.16-alpha'
+    testImplementation 'org.testfx:testfx-junit:4.0.16-alpha'
+}
+
+// Task to run the desktop application
+task runDesktop(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.beekeeper.desktop.Main'
+}

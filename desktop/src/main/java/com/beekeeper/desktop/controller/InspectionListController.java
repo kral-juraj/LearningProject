@@ -1,0 +1,208 @@
+package com.beekeeper.desktop.controller;
+
+import com.beekeeper.desktop.dao.jdbc.JdbcInspectionDao;
+import com.beekeeper.desktop.scheduler.DesktopSchedulerProvider;
+import com.beekeeper.shared.entity.Inspection;
+import com.beekeeper.shared.repository.InspectionRepository;
+import com.beekeeper.shared.util.DateUtils;
+import com.beekeeper.shared.viewmodel.InspectionViewModel;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+/**
+ * Controller for Inspection list view.
+ * Displays inspections for a selected hive.
+ */
+public class InspectionListController {
+
+    @FXML
+    private TableView<Inspection> inspectionTable;
+
+    @FXML
+    private TableColumn<Inspection, Long> dateColumn;
+
+    @FXML
+    private TableColumn<Inspection, Double> temperatureColumn;
+
+    @FXML
+    private TableColumn<Inspection, Integer> strengthColumn;
+
+    @FXML
+    private Button addButton;
+
+    @FXML
+    private Button viewButton;
+
+    @FXML
+    private Button deleteButton;
+
+    @FXML
+    private Label statusLabel;
+
+    private InspectionViewModel viewModel;
+    private CompositeDisposable disposables = new CompositeDisposable();
+    private ObservableList<Inspection> inspectionList = FXCollections.observableArrayList();
+    private String currentHiveId;
+
+    @FXML
+    public void initialize() {
+        // Initialize ViewModel
+        JdbcInspectionDao inspectionDao = new JdbcInspectionDao();
+        InspectionRepository repository = new InspectionRepository(inspectionDao);
+        DesktopSchedulerProvider schedulerProvider = new DesktopSchedulerProvider();
+        viewModel = new InspectionViewModel(repository, schedulerProvider);
+
+        // Configure table columns
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("inspectionDate"));
+        dateColumn.setCellFactory(column -> new TableCell<Inspection, Long>() {
+            @Override
+            protected void updateItem(Long item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(DateUtils.formatDate(item));
+                }
+            }
+        });
+
+        temperatureColumn.setCellValueFactory(new PropertyValueFactory<>("temperature"));
+        strengthColumn.setCellValueFactory(new PropertyValueFactory<>("strengthEstimate"));
+
+        // Bind table to observable list
+        inspectionTable.setItems(inspectionList);
+
+        // Enable/disable buttons based on selection
+        viewButton.setDisable(true);
+        deleteButton.setDisable(true);
+        inspectionTable.getSelectionModel().selectedItemProperty().addListener(
+            (obs, oldSelection, newSelection) -> {
+                boolean hasSelection = newSelection != null;
+                viewButton.setDisable(!hasSelection);
+                deleteButton.setDisable(!hasSelection);
+            }
+        );
+
+        // Subscribe to ViewModel state
+        subscribeToViewModel();
+    }
+
+    public void setHiveId(String hiveId) {
+        this.currentHiveId = hiveId;
+        if (viewModel != null) {
+            viewModel.loadInspectionsByHiveId(hiveId);
+        }
+    }
+
+    private void subscribeToViewModel() {
+        disposables.add(
+            viewModel.getInspections()
+                .observeOn(JavaFxScheduler.platform())
+                .subscribe(
+                    inspections -> {
+                        inspectionList.clear();
+                        inspectionList.addAll(inspections);
+                        statusLabel.setText(inspections.size() + " prehliadok");
+                    },
+                    error -> showError("Chyba: " + error.getMessage())
+                )
+        );
+
+        disposables.add(
+            viewModel.getLoading()
+                .observeOn(JavaFxScheduler.platform())
+                .subscribe(loading -> {
+                    addButton.setDisable(loading);
+                    inspectionTable.setDisable(loading);
+                })
+        );
+
+        disposables.add(
+            viewModel.getError()
+                .observeOn(JavaFxScheduler.platform())
+                .subscribe(this::showError)
+        );
+
+        disposables.add(
+            viewModel.getSuccess()
+                .observeOn(JavaFxScheduler.platform())
+                .subscribe(this::showSuccess)
+        );
+    }
+
+    @FXML
+    private void handleAddInspection() {
+        if (currentHiveId == null) {
+            showError("Najprv vyberte úľ");
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Nová prehliadka");
+        alert.setHeaderText("Funkcia v príprave");
+        alert.setContentText("Formulár na vytvorenie prehliadky bude implementovaný neskôr.");
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void handleViewInspection() {
+        Inspection selected = inspectionTable.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Detail prehliadky");
+        alert.setHeaderText("Prehliadka z " + DateUtils.formatDate(selected.getInspectionDate()));
+        alert.setContentText(
+            "Teplota: " + selected.getTemperature() + "°C\n" +
+            "Sila: " + selected.getStrengthEstimate() + "/10\n" +
+            "Zásoby: " + selected.getFoodStoresKg() + " kg"
+        );
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void handleDeleteInspection() {
+        Inspection selected = inspectionTable.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Zmazať prehliadku");
+        alert.setHeaderText("Zmazať prehliadku z " + DateUtils.formatDate(selected.getInspectionDate()));
+        alert.setContentText("Naozaj chcete zmazať túto prehliadku?");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                viewModel.deleteInspection(selected);
+            }
+        });
+    }
+
+    @FXML
+    private void handleRefresh() {
+        if (currentHiveId != null) {
+            viewModel.loadInspectionsByHiveId(currentHiveId);
+        }
+    }
+
+    private void showError(String message) {
+        statusLabel.setText("Chyba: " + message);
+        statusLabel.setStyle("-fx-text-fill: red;");
+    }
+
+    private void showSuccess(String message) {
+        statusLabel.setText(message);
+        statusLabel.setStyle("-fx-text-fill: green;");
+    }
+
+    public void cleanup() {
+        disposables.clear();
+        if (viewModel != null) {
+            viewModel.dispose();
+        }
+    }
+}

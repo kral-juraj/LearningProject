@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.beekeeper.desktop.controller.MainController">
+
+    <!-- Top Menu Bar -->
+    <top>
+        <MenuBar>
+            <Menu text="Súbor">
+                <MenuItem text="Nastavenia"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Ukončiť"/>
+            </Menu>
+            <Menu text="Nápoveda">
+                <MenuItem text="O aplikácii"/>
+            </Menu>
+        </MenuBar>
+    </top>
+
+    <!-- Main Content Area with Tabs -->
+    <center>
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE">
+            <Tab fx:id="apiariesTab" text="Včelnice">
+                <!-- Content will be loaded dynamically -->
+            </Tab>
+            <Tab fx:id="hivesTab" text="Úle" disable="true">
+                <Label text="Vyberte včelnicu"/>
+            </Tab>
+            <Tab fx:id="inspectionsTab" text="Prehliadky" disable="true">
+                <Label text="Vyberte úľ"/>
+            </Tab>
+        </TabPane>
+    </center>
+
+    <!-- Bottom Status Bar -->
+    <bottom>
+        <HBox style="-fx-background-color: #f0f0f0; -fx-padding: 5;">
+            <Label text="Beekeeper Desktop v1.0" style="-fx-font-size: 10px;"/>
+        </HBox>
+    </bottom>
+</BorderPane>
