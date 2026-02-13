@@ -1,8 +1,8 @@
 # Project State Checkpoint
 
-**Date:** February 13, 2025
-**Session:** Desktop Conversion Implementation - COMPLETE
-**Status:** 100% Implementation Complete, Ready for Use
+**Date:** February 14, 2025
+**Session:** Phase 3 Complete + Documentation Cleanup
+**Status:** All Core Features Implemented, 41 Tests Passing
 
 ---
 
@@ -12,16 +12,18 @@
 
 We successfully converted the Android Beekeeper app to a **multi-platform application** with both Android and Desktop (JavaFX) versions sharing 55% of the codebase.
 
-### Implementation Status: 100% COMPLETE ✅
+### Implementation Status: Phase 3 COMPLETE ✅
 
-All 7 phases completed (Phase 6 skipped by user request):
-- ✅ Phase 1: Multi-module structure
-- ✅ Phase 2: Shared code extraction
-- ✅ Phase 3: JDBC database layer
-- ✅ Phase 4: Business logic refactoring
-- ✅ Phase 5: JavaFX desktop UI
-- ⏭️ Phase 6: Tests (skipped)
-- ✅ Phase 7: Documentation
+Desktop conversion complete with all 4 core features:
+- ✅ Phase 1: Multi-module structure (shared + desktop + app)
+- ✅ Phase 2: JDBC database layer + ViewModels
+- ✅ Phase 3: All 4 desktop features implemented
+  - Calendar Events (11 fields, global tab)
+  - Feeding Management (9 fields, hive-specific)
+  - Inspection Entry (23 fields, hive-specific)
+  - Taxation Management (master-detail with frames, apiary-based)
+- ✅ Testing: 41 JUnit + integration tests passing
+- ✅ Documentation: 5 core MD files + comprehensive guides
 
 ---
 
@@ -73,15 +75,15 @@ LearningProject/
 - **Android:** Internal app storage (Room)
 
 ### Tables (9 total)
-1. **apiaries** - Včelnice
-2. **hives** - Úle (FK: apiaryId)
-3. **inspections** - Prehliadky (FK: hiveId)
-4. **feedings** - Krmenie (FK: hiveId)
-5. **taxations** - Taxácie (FK: hiveId)
-6. **taxation_frames** - Rámiky (FK: taxationId)
-7. **calendar_events** - Kalendár
-8. **settings** - Nastavenia
-9. **inspection_recordings** - Nahrávky
+1. **apiaries** - Včelnice (2 fields: name, location)
+2. **hives** - Úle (FK: apiaryId, 6 fields: name, hiveType, queenYear, notes, isActive)
+3. **inspections** - Prehliadky (FK: hiveId, 23 fields: date, temperature, strength, frames, queen, varroa, etc.)
+4. **feedings** - Krmenie (FK: hiveId, 9 fields: date, feedType, weights, amount, notes)
+5. **taxations** - Taxácie (FK: hiveId, 15 fields including totalStarterFrames)
+6. **taxation_frames** - Rámiky (FK: taxationId, 13 fields: position, type, brood, pollen, honey, etc.)
+7. **calendar_events** - Kalendár (11 fields: date, title, type, hive/apiary links, completed)
+8. **settings** - Nastavenia (not yet used)
+9. **inspection_recordings** - Nahrávky (not yet used)
 
 ### Foreign Keys
 - `hives.apiaryId → apiaries.id` (CASCADE DELETE)
@@ -185,21 +187,124 @@ public class ApiaryViewModel extends BaseViewModel {
 - ✅ Refresh list (Obnoviť)
 
 #### Prehliadky (Inspections) Tab
+- ✅ Create inspection form with 23 fields in ScrollPane
+- ✅ Edit existing inspections
 - ✅ View inspections for hive
-- ✅ Show detail dialog (Zobraziť)
 - ✅ Delete inspection (Zmazať)
-- ✅ Date formatting (dd.MM.yyyy)
+- ✅ Date/time pickers with validation
+- ✅ Sections: Basic info, Strength, Frames, Queen, Varroa, Behavior, Notes
+- ✅ Refresh list (Obnoviť)
+
+#### Krmenie (Feeding) Tab
+- ✅ Create feeding records with 9 fields
+- ✅ Edit existing feedings
+- ✅ Feed types: Sirup 1:1, 3:2, Fondant, Peľový koláč
+- ✅ Auto-calculate amount from weight before/after
+- ✅ Date/time pickers
+- ✅ Delete feeding (Zmazať)
+- ✅ Filter by selected hive
+- ✅ Refresh list (Obnoviť)
+
+#### Taxácie (Taxation) Tab - **APIARY-BASED**
+- ✅ Create taxation with master-detail form
+- ✅ Header: Date, temperature, total frames, food stores, notes
+- ✅ Embedded frame table with CRUD operations
+- ✅ Frame details: 13 fields (position, type, brood, pollen, honey, etc.)
+- ✅ View/Edit existing taxations
+- ✅ Delete taxation with cascade (removes frames)
+- ✅ **Filter by selected apiary** (shows all hives' taxations)
+- ✅ Table shows: Date, Temperature, Frames, Food, **Hive Name**, **Starter Frames**
+- ✅ Hive selection dialog when creating new taxation
+- ✅ Refresh list (Obnoviť)
+
+#### Kalendár (Calendar) Tab
+- ✅ Create calendar events with 11 fields
+- ✅ Edit existing events
+- ✅ Event types: Prehliadka, Krmenie, Ošetrenie, Stokovanie, Pripomienka
+- ✅ Link events to hive or apiary (optional)
+- ✅ Toggle completed status
+- ✅ Delete event (Zmazať)
+- ✅ Global tab (always enabled)
+- ✅ Date/time pickers
 - ✅ Refresh list (Obnoviť)
 
 ### UI Features
-- ✅ Tabbed interface (3 tabs)
+- ✅ Tabbed interface (6 tabs: Apiaries, Hives, Inspections, Feeding, Taxation, Calendar)
 - ✅ Menu bar (Súbor, Nápoveda)
-- ✅ Toolbar buttons
+- ✅ Toolbar buttons with icons
 - ✅ Status bar with feedback
 - ✅ Error/success messages
 - ✅ Confirmation dialogs
 - ✅ Slovak localization (100%)
 - ✅ Reactive updates (RxJava2)
+- ✅ Required field markers (*)
+- ✅ ScrollPane for long forms (Inspection)
+- ✅ Master-detail forms (Taxation with frames)
+- ✅ Date/time pickers with validation
+
+---
+
+## 🆕 Recent Changes (February 14, 2025)
+
+### Taxation System Refactoring
+**Changed from hive-based to apiary-based:**
+- When apiary selected → taxationTab shows ALL taxations from all hives in that apiary
+- Added `hiveName` column to identify which hive each taxation belongs to
+- Added `totalStarterFrames` column showing count of starter frames (calculated from frames)
+- Modified TaxationViewModel to track context (apiaryId vs hiveId) for correct reload
+- Fixed bug: table now reloads correctly after create/edit/delete operations
+- Hive selection dialog when creating new taxation
+
+**Technical changes:**
+- Taxation.java: +2 fields (hiveName, totalStarterFrames)
+- DatabaseManager.java: Added totalStarterFrames column migration
+- JdbcTaxationDao.java: Added getByApiaryId() with JOIN query (15 params INSERT, 14 params UPDATE)
+- TaxationViewModel.java: Context tracking (currentApiaryId, currentHiveId, reloadTaxations())
+- taxation_list.fxml: +2 columns (Úľ, Stav. rám.)
+- TaxationListController.java: Changed from setHiveId() to setApiaryId()
+- MainController.java: Enable taxationTab when apiary selected (not hive)
+
+### Git Repository Cleanup
+- Ran `gradle clean` to remove build artifacts
+- Updated .gitignore: Added build/, .gradle/, **/build/
+- Removed 161 build artifact files from Git tracking using `git rm -r --cached`
+- Committed cleanup with descriptive message
+
+### Documentation Cleanup
+**Deleted 11 outdated files (58% reduction):**
+- TODO.md, QUICK_START.md, GETTING_STARTED.md
+- IMPLEMENTATION_LOG.md, IMPLEMENTATION_COMPLETE.md
+- PHASE_2_PROGRESS.md, PHASE_2_COMPLETE_SUMMARY.md, PHASE_2_FINAL_SUMMARY.md
+- PHASE_3_IMPLEMENTATION_SUMMARY.md
+- PROJECT_CONTEXT.md, PROJECT_STRUCTURE.md
+
+**Kept 5 essential files:**
+- README.md (278 lines) - Project overview
+- DESKTOP_SETUP.md (481 lines) - Installation and usage
+- CONVERSION_GUIDE.md (863 lines) - Multi-platform development guide
+- PROJECT_STATE.md (this file) - Current project state
+- TESTING.md (renamed from MANUAL_TESTING_CHECKLIST.md, 378 lines) - Testing checklist
+
+**New documentation created:**
+- **DEVELOPMENT_PLAN.md** (450+ lines)
+  - 13 planned implementation phases (Fáza 4-13)
+  - Priorities and time estimates
+  - Phase 4: Analytics & Charts (next priority)
+  - Phase 5: Calculators (Varroa, Queen rearing)
+  - Phases 6-13: Settings, UI/UX, PDF Reports, Localization, Android reconversion, Cloud sync, AI integration
+
+- **EXCEL_MIGRATION.md** (500+ lines)
+  - One-time Excel → SQLite migration strategies
+  - Solution 1: Python script with pandas (RECOMMENDED) - complete working code
+  - Solution 2: Java standalone script with Apache POI
+  - Solution 3: CSV export + DB Browser GUI
+  - Solution 4: Manual SQL INSERT scripts
+  - Troubleshooting guide and checklist
+
+**Documentation totals:**
+- Before: 17 files, 6497 lines
+- After: 7 files, 2717 lines (58% reduction)
+- Focus: Essential reference material only
 
 ---
 
@@ -269,43 +374,70 @@ unzip desktop.zip
 ## 📊 Statistics
 
 ### Code Metrics
-- **Total Java Files:** 55+
-- **Total FXML Files:** 4
-- **Shared Code:** 33 files (55%)
-- **Desktop Code:** 22 files (25%)
-- **Lines of Code:** ~7,500+
-- **Documentation:** 4,968 lines
+- **Total Java Files:** 85+
+  - Shared: 33 files
+  - Desktop: 52+ files (controllers, DAOs, dialogs, utilities)
+- **Total FXML Files:** 18 (main + 4 lists + 7 dialogs + 6 detail forms)
+- **Shared Code:** 33 files (40% reuse)
+- **Desktop Code:** 52 files (60% platform-specific)
+- **Lines of Code:** ~15,000+
+- **Documentation:** 2,717 lines (7 MD files)
+
+### Testing Status
+- ✅ 41 tests passing
+  - 9 utility tests (DateTimeConverter, ValidationHelper, EnumHelper)
+  - 16 controller tests (4 list controllers × 4 test cases each)
+  - 8 dialog tests (4 dialogs × 2 test cases each)
+  - 8 integration tests (4 features × 2 test cases each)
 
 ### Build Status
+- ✅ `gradle clean` - SUCCESS
 - ✅ `gradle shared:build` - SUCCESS
 - ✅ `gradle desktop:build` - SUCCESS
+- ✅ `gradle desktop:test` - 41 tests passing
 - ✅ `gradle desktop:run` - SUCCESS
-- ⚠️ `gradle app:build` - Requires Android SDK
+- ⚠️ `gradle app:build` - Requires Android SDK (not yet reconverted)
 
 ---
 
-## 🔄 Next Steps (If Needed)
+## 🔄 Next Steps (Detailed in DEVELOPMENT_PLAN.md)
 
-### Short Term Enhancements
-1. **Feeding Forms** - Add UI for creating feeding records
-2. **Taxation Interface** - Implement frame-by-frame taxation entry
-3. **Calendar View** - Add calendar events management
-4. **Export to Excel** - Implement Excel export functionality
-5. **Advanced Filtering** - Add search/filter to tables
+### 🎯 Priority 1: Import Historical Data (Immediate)
+- Use Python migration script from EXCEL_MIGRATION.md
+- One-time import of Excel data (2020-2025)
+- Verify data integrity in desktop app
 
-### Medium Term
-1. **Charts & Analytics** - Add visualization of hive data
-2. **Backup/Restore** - Database backup management UI
-3. **Settings Dialog** - User preferences and configuration
-4. **Keyboard Shortcuts** - Add accelerators for common actions
-5. **Multi-language** - Add English localization
+### 📈 Priority 2: Phase 4 - Analytics & Charts (High Priority, 2-3 weeks)
+1. **Dashboard Tab** - Quick stats, recent activity, upcoming events
+2. **Analytics Tab** - Line charts for hive strength over time, bar charts for feeding
+3. **Reports** - Monthly/annual summaries, export to TXT/CSV
+4. **Technologies:** JavaFX Charts or JFreeChart
 
-### Long Term
-1. **Android Reconversion** - Follow CONVERSION_GUIDE.md to reconvert
-2. **Cloud Sync** - Sync between desktop and Android
-3. **AI Integration** - Add OpenAI Whisper + GPT-4 on desktop
-4. **PDF Reports** - Generate printable reports
-5. **Multi-tenancy** - Support multiple user profiles
+### 🧮 Priority 3: Phase 5 - Calculators (Medium Priority, 1-2 weeks)
+1. **Varroa Calculator** - Population projection model with treatment recommendations
+2. **Queen Rearing Calculator** - Timeline milestones (D+0 to D+21) with calendar export
+3. **Feed Calculator** - Convert kg to liters, sugar/water ratios
+
+### ⚙️ Priority 4: Phase 6 - Settings (Medium Priority, 3-5 days)
+1. **General Settings** - Default apiary, language, theme
+2. **Backup Settings** - Auto-backup, manual backup/restore
+3. **Calendar Settings** - Default event types, fenological calendar import
+4. **Advanced** - OpenAI API key (for future AI integration), debug mode
+
+### 🎨 Priority 5: Phase 7 - UI/UX Improvements (Low Priority, 1-2 weeks)
+1. **Keyboard Shortcuts** - Ctrl+N, Ctrl+E, Ctrl+D, Ctrl+1-6
+2. **Advanced Filtering** - Search bars, date range pickers, live filtering
+3. **Better Empty States** - Icons, helpful messages, quick actions
+4. **Tooltips & Help** - Field tooltips, help menu, keyboard shortcuts cheat sheet
+5. **UI Polish** - Icons, colors, hover effects, loading spinners
+
+### Long Term (See DEVELOPMENT_PLAN.md for details)
+- **Phase 8:** PDF Reports (1-2 weeks)
+- **Phase 9:** Localization - English (1 week)
+- **Phase 10:** Testing - Comprehensive test suite
+- **Phase 11:** Android Reconversion (4-6 weeks)
+- **Phase 12:** Cloud Sync (8-12 weeks)
+- **Phase 13:** AI Integration - Voice-to-data (6-8 weeks)
 
 ---
 
@@ -366,11 +498,11 @@ cp ~/beekeeper-desktop.db ~/beekeeper-backup.db
 ## 🐛 Known Issues / Limitations
 
 ### Current Limitations
-1. **Inspection Creation** - Form not yet implemented (planned feature)
-2. **Feeding UI** - Not yet implemented (planned feature)
-3. **Taxation UI** - Not yet implemented (planned feature)
-4. **Calendar** - Not yet implemented (planned feature)
-5. **Excel Import** - Not yet implemented (planned feature)
+1. **Excel Import** - Not implemented as a UI feature (use one-time migration scripts in EXCEL_MIGRATION.md)
+2. **Analytics & Charts** - Not yet implemented (planned for Phase 4)
+3. **Calculators** - Not yet implemented (Varroa, Queen rearing - Phase 5)
+4. **Settings Dialog** - Not yet implemented (Phase 6)
+5. **PDF Reports** - Not yet implemented (Phase 8)
 
 ### Desktop-Specific Notes
 - Database location: `~/beekeeper-desktop.db` (configurable in Main.java)
@@ -387,22 +519,25 @@ cp ~/beekeeper-desktop.db ~/beekeeper-backup.db
 
 ## 📚 Documentation Reference
 
-All documentation is in markdown files:
+All documentation is in markdown files (7 files, 2717 lines total):
 
-1. **README.md** - Start here for overview
-2. **DESKTOP_SETUP.md** - How to install and use desktop app
-3. **CONVERSION_GUIDE.md** - How to add features and convert between platforms
-4. **IMPLEMENTATION_COMPLETE.md** - Summary of what was implemented
-5. **PROJECT_STATE.md** - This file (current state checkpoint)
+1. **README.md** (278 lines) - Start here for project overview
+2. **DESKTOP_SETUP.md** (481 lines) - Installation, usage, troubleshooting
+3. **CONVERSION_GUIDE.md** (863 lines) - Multi-platform architecture, adding features
+4. **PROJECT_STATE.md** (this file, 600+ lines) - Current state checkpoint, recent changes
+5. **TESTING.md** (378 lines) - Manual testing checklist for all features
+6. **DEVELOPMENT_PLAN.md** (450+ lines) - Future roadmap (Phases 4-13)
+7. **EXCEL_MIGRATION.md** (500+ lines) - One-time Excel → DB migration strategies
 
 ---
 
 ## 💡 Important Context for Future Sessions
 
 ### What the User Wants
-- Original goal: Convert Android app to desktop for easier debugging
-- Secondary goal: Learn multi-platform architecture
-- Future plan: Convert back to Android when desktop version is stable
+- Original goal: Convert Android app to desktop for easier debugging ✅ DONE
+- Current goal: Full-featured beekeeping management desktop app ✅ DONE (Phase 3)
+- Next goal: Import historical Excel data, then add Analytics & Charts (Phase 4)
+- Future plan: Convert back to Android when desktop version is mature
 - Use case: Personal beekeeping management (včelárstvo)
 - Language preference: Slovak (slovenčina) for UI
 
@@ -411,14 +546,16 @@ All documentation is in markdown files:
 - Uses Gradle for builds
 - Has IntelliJ IDEA / Android Studio
 - macOS environment (Apple Silicon)
-- Installed Gradle via Homebrew during session
+- Git workflow: commits locally, pushes manually
+- Prefers detailed documentation
 
 ### What Works Well
 - Multi-module structure is clean and understood
 - JDBC is easier to debug than Room (as intended)
 - Desktop UI is functional and user-friendly
-- Code reuse strategy (55%) is working well
-- Documentation is comprehensive
+- Code reuse strategy (40% shared, 60% desktop)
+- Documentation is comprehensive and organized
+- All 4 core features implemented and tested (41 tests passing)
 
 ### Design Decisions Made
 1. **BehaviorRelay over LiveData** - Better for multi-platform
@@ -427,6 +564,19 @@ All documentation is in markdown files:
 4. **Pure POJOs in shared/** - No platform annotations
 5. **CASCADE DELETE** - Automatic cleanup of related data
 6. **Slovak localization** - Complete UI in Slovak language
+7. **Taxation apiary-based** - Show all hives' taxations when apiary selected
+8. **Master-detail forms** - Taxation with embedded frame table
+9. **Date/time pickers** - Validation and separate hour/minute fields
+10. **Required field markers** - Visual (*) indicators in forms
+
+### Recent Session Summary (Feb 14, 2025)
+1. Refactored taxation from hive-based to apiary-based display
+2. Added hiveName and totalStarterFrames columns to taxation table
+3. Fixed reload bug in TaxationViewModel (context tracking)
+4. Cleaned up Git repository (removed 161 build artifacts)
+5. Cleaned up documentation (deleted 11 outdated MD files, 58% reduction)
+6. Created DEVELOPMENT_PLAN.md with 13 future phases
+7. Created EXCEL_MIGRATION.md with 4 migration strategies (Python recommended)
 
 ---
 
@@ -527,14 +677,41 @@ When resuming work, verify:
 
 ---
 
-**Last Updated:** February 13, 2025, 16:45 CET
-**Project Status:** 100% Complete, Production Ready
-**Next Session:** Ready to continue with new features or Android reconversion
+**Last Updated:** February 14, 2025, 22:30 CET
+**Project Status:** Phase 3 Complete, All Core Features Implemented
+**Next Session:** Import Excel data OR start Phase 4 (Analytics & Charts)
 
 ---
 
 **📌 KEY TAKEAWAY FOR NEXT SESSION:**
-Desktop app is **fully functional** and ready to use. All business logic is in `shared/` module (55% code reuse). Documentation is comprehensive (4,968 lines). User can either:
-1. Use desktop app as-is for debugging
-2. Add more features (Feeding, Taxation, Calendar)
-3. Start Android reconversion (follow CONVERSION_GUIDE.md)
+
+Desktop app is **fully functional** with all 6 tabs working:
+1. ✅ **Včelnice** (Apiaries) - CRUD operations
+2. ✅ **Úle** (Hives) - CRUD, active/inactive toggle
+3. ✅ **Prehliadky** (Inspections) - Full 23-field form with create/edit
+4. ✅ **Krmenie** (Feeding) - 9-field form with auto-calculations
+5. ✅ **Taxácie** (Taxation) - Master-detail with frames, **apiary-based display**
+6. ✅ **Kalendár** (Calendar) - 11-field events, global tab
+
+**Testing:** 41 tests passing (utils + controllers + dialogs + integration)
+
+**Documentation:** Clean and organized (7 files, 2717 lines)
+- README.md - Overview
+- DESKTOP_SETUP.md - Installation
+- CONVERSION_GUIDE.md - Architecture
+- PROJECT_STATE.md - Current state (this file)
+- TESTING.md - Test checklist
+- DEVELOPMENT_PLAN.md - Future roadmap (Phases 4-13)
+- EXCEL_MIGRATION.md - One-time Excel import strategies
+
+**Next Steps:**
+1. **Import historical data** - Use Python script from EXCEL_MIGRATION.md (2020-2025 Excel files)
+2. **Phase 4: Analytics** - Dashboard + charts + reports (2-3 weeks)
+3. **Phase 5: Calculators** - Varroa + Queen rearing + Feed calculator (1-2 weeks)
+
+**Critical Recent Changes:**
+- Taxation now **apiary-based** (shows all hives' taxations, not just one hive)
+- Table shows **hive name** and **starter frames count**
+- Context tracking fixed (table reloads correctly after CRUD)
+- Git clean (build artifacts removed)
+- Documentation streamlined (58% reduction)
