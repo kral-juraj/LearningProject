@@ -14,6 +14,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.util.function.Consumer;
+
 /**
  * Controller for Apiary list view.
  * Displays all apiaries in a TableView with CRUD operations.
@@ -39,11 +41,15 @@ public class ApiaryListController {
     private Button deleteButton;
 
     @FXML
+    private Button showHivesButton;
+
+    @FXML
     private Label statusLabel;
 
     private ApiaryViewModel viewModel;
     private CompositeDisposable disposables = new CompositeDisposable();
     private ObservableList<Apiary> apiaryList = FXCollections.observableArrayList();
+    private Consumer<Apiary> onApiarySelected;
 
     @FXML
     public void initialize() {
@@ -63,19 +69,25 @@ public class ApiaryListController {
         // Enable/disable buttons based on selection
         editButton.setDisable(true);
         deleteButton.setDisable(true);
-        apiaryTable.getSelectionModel().selectedItemProperty().addListener(
-            (obs, oldSelection, newSelection) -> {
-                boolean hasSelection = newSelection != null;
-                editButton.setDisable(!hasSelection);
-                deleteButton.setDisable(!hasSelection);
-            }
-        );
+        showHivesButton.setDisable(true);
 
-        // Subscribe to ViewModel state
-        subscribeToViewModel();
+        // Defer selection listener setup to avoid macOS NSTrackingRectTag bug
+        Platform.runLater(() -> {
+            apiaryTable.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldSelection, newSelection) -> {
+                    boolean hasSelection = newSelection != null;
+                    editButton.setDisable(!hasSelection);
+                    deleteButton.setDisable(!hasSelection);
+                    showHivesButton.setDisable(!hasSelection);
+                }
+            );
 
-        // Load initial data
-        viewModel.loadApiaries();
+            // Subscribe to ViewModel state after UI is fully initialized
+            subscribeToViewModel();
+
+            // Load initial data
+            viewModel.loadApiaries();
+        });
     }
 
     private void subscribeToViewModel() {
@@ -178,6 +190,14 @@ public class ApiaryListController {
         viewModel.loadApiaries();
     }
 
+    @FXML
+    private void handleShowHives() {
+        Apiary selected = apiaryTable.getSelectionModel().getSelectedItem();
+        if (selected != null && onApiarySelected != null) {
+            onApiarySelected.accept(selected);
+        }
+    }
+
     private void showError(String message) {
         statusLabel.setText("Chyba: " + message);
         statusLabel.setStyle("-fx-text-fill: red;");
@@ -193,5 +213,13 @@ public class ApiaryListController {
         if (viewModel != null) {
             viewModel.dispose();
         }
+    }
+
+    /**
+     * Set callback for when "Zobraziť úle" button is clicked.
+     * @param callback Consumer that receives the selected Apiary
+     */
+    public void setOnApiarySelected(Consumer<Apiary> callback) {
+        this.onApiarySelected = callback;
     }
 }

@@ -25,16 +25,20 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/main.fxml"));
         Parent root = loader.load();
 
-        // Configure primary stage
+        // Configure primary stage with explicit size to avoid macOS resize issues
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
         primaryStage.setTitle("Beekeeper Desktop - Včelársky denník");
-        primaryStage.setScene(new Scene(root, 1200, 800));
+
+        // Set size AFTER scene is set to avoid NSTrackingRectTag issues
+        primaryStage.setWidth(1200);
+        primaryStage.setHeight(800);
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);
 
         // Handle window close
         primaryStage.setOnCloseRequest(event -> {
-            DatabaseManager.close();
-            System.out.println("Database closed");
+            System.out.println("Application closing...");
         });
 
         primaryStage.show();
@@ -43,7 +47,8 @@ public class Main extends Application {
     @Override
     public void stop() {
         // Cleanup on application exit
-        DatabaseManager.close();
+        // Note: Individual connections are managed by try-with-resources in DAOs
+        System.out.println("Application stopped");
     }
 
     public static void main(String[] args) {

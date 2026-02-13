@@ -5,15 +5,20 @@ plugins {
 
 application {
     mainClass = 'com.beekeeper.desktop.Main'
+    // JVM arguments for better macOS compatibility
+    applicationDefaultJvmArgs = [
+        '-Dprism.order=sw',  // Use software rendering to avoid graphics glitches
+        '-Djavafx.animation.fullspeed=false'
+    ]
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 javafx {
-    version = "17.0.2"
+    version = "21.0.2"
     modules = ['javafx.controls', 'javafx.fxml']
 }
 

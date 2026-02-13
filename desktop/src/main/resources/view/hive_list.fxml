@@ -15,6 +15,8 @@
             <Button fx:id="deleteButton" text="Zmazať" onAction="#handleDeleteHive"/>
             <Button fx:id="toggleActiveButton" text="Zmeniť stav" onAction="#handleToggleActive"/>
             <Separator orientation="VERTICAL"/>
+            <Button fx:id="showInspectionsButton" text="Zobraziť prehliadky" onAction="#handleShowInspections" style="-fx-font-weight: bold;"/>
+            <Separator orientation="VERTICAL"/>
             <Button text="Obnoviť" onAction="#handleRefresh"/>
         </ToolBar>
     </top>

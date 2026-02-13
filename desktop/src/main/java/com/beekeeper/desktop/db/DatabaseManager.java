@@ -11,8 +11,8 @@ import java.sql.Statement;
  */
 public class DatabaseManager {
 
-    private static Connection connection;
     private static String dbPath;
+    private static boolean initialized = false;
 
     /**
      * Initialize database connection and create schema if needed.
@@ -21,47 +21,52 @@ public class DatabaseManager {
      */
     public static void initialize(String databasePath) throws SQLException {
         dbPath = databasePath;
-        connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
-        connection.setAutoCommit(true);
 
-        // Enable foreign keys (disabled by default in SQLite)
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute("PRAGMA foreign_keys = ON");
+        // Create initial connection to set up database and tables
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath)) {
+            conn.setAutoCommit(true);
+
+            // Enable foreign keys (disabled by default in SQLite)
+            try (Statement stmt = conn.createStatement()) {
+                stmt.execute("PRAGMA foreign_keys = ON");
+            }
+
+            createTables(conn);
+            initialized = true;
         }
-
-        createTables();
     }
 
     /**
-     * Get the active database connection.
-     * @return Database connection
-     * @throws SQLException if connection is closed
+     * Get a new database connection.
+     * Each call returns a fresh connection that should be closed after use.
+     * @return New database connection
+     * @throws SQLException if database is not initialized
      */
     public static Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
+        if (!initialized || dbPath == null) {
             throw new SQLException("Database not initialized. Call initialize() first.");
         }
-        return connection;
+        Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+        // Enable foreign keys for this connection
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute("PRAGMA foreign_keys = ON");
+        }
+        return conn;
     }
 
     /**
-     * Close the database connection.
+     * Close is no longer needed since each connection is independent.
+     * Kept for backwards compatibility.
      */
     public static void close() {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // No-op: connections are managed by callers using try-with-resources
     }
 
     /**
      * Create all database tables with proper foreign key relationships.
      * Tables are created in dependency order to satisfy foreign key constraints.
      */
-    private static void createTables() throws SQLException {
+    private static void createTables(Connection connection) throws SQLException {
         try (Statement stmt = connection.createStatement()) {
 
             // 1. Apiaries table (no dependencies)
@@ -226,7 +231,8 @@ public class DatabaseManager {
      * WARNING: This will delete all data!
      */
     public static void dropAllTables() throws SQLException {
-        try (Statement stmt = connection.createStatement()) {
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement()) {
             stmt.execute("DROP TABLE IF EXISTS inspection_recordings");
             stmt.execute("DROP TABLE IF EXISTS calendar_events");
             stmt.execute("DROP TABLE IF EXISTS taxation_frames");

@@ -7,11 +7,14 @@ import com.beekeeper.shared.repository.HiveRepository;
 import com.beekeeper.shared.viewmodel.HiveViewModel;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.function.Consumer;
 
 /**
  * Controller for Hive list view.
@@ -44,12 +47,16 @@ public class HiveListController {
     private Button toggleActiveButton;
 
     @FXML
+    private Button showInspectionsButton;
+
+    @FXML
     private Label statusLabel;
 
     private HiveViewModel viewModel;
     private CompositeDisposable disposables = new CompositeDisposable();
     private ObservableList<Hive> hiveList = FXCollections.observableArrayList();
     private String currentApiaryId;
+    private Consumer<Hive> onHiveSelected;
 
     @FXML
     public void initialize() {
@@ -71,17 +78,23 @@ public class HiveListController {
         editButton.setDisable(true);
         deleteButton.setDisable(true);
         toggleActiveButton.setDisable(true);
-        hiveTable.getSelectionModel().selectedItemProperty().addListener(
-            (obs, oldSelection, newSelection) -> {
-                boolean hasSelection = newSelection != null;
-                editButton.setDisable(!hasSelection);
-                deleteButton.setDisable(!hasSelection);
-                toggleActiveButton.setDisable(!hasSelection);
-            }
-        );
+        showInspectionsButton.setDisable(true);
 
-        // Subscribe to ViewModel state
-        subscribeToViewModel();
+        // Defer setup to avoid macOS NSTrackingRectTag bug
+        Platform.runLater(() -> {
+            hiveTable.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldSelection, newSelection) -> {
+                    boolean hasSelection = newSelection != null;
+                    editButton.setDisable(!hasSelection);
+                    deleteButton.setDisable(!hasSelection);
+                    toggleActiveButton.setDisable(!hasSelection);
+                    showInspectionsButton.setDisable(!hasSelection);
+                }
+            );
+
+            // Subscribe to ViewModel state
+            subscribeToViewModel();
+        });
     }
 
     public void setApiaryId(String apiaryId) {
@@ -196,6 +209,14 @@ public class HiveListController {
         }
     }
 
+    @FXML
+    private void handleShowInspections() {
+        Hive selected = hiveTable.getSelectionModel().getSelectedItem();
+        if (selected != null && onHiveSelected != null) {
+            onHiveSelected.accept(selected);
+        }
+    }
+
     private void showError(String message) {
         statusLabel.setText("Chyba: " + message);
         statusLabel.setStyle("-fx-text-fill: red;");
@@ -211,5 +232,13 @@ public class HiveListController {
         if (viewModel != null) {
             viewModel.dispose();
         }
+    }
+
+    /**
+     * Set callback for when "Zobraziť prehliadky" button is clicked.
+     * @param callback Consumer that receives the selected Hive
+     */
+    public void setOnHiveSelected(Consumer<Hive> callback) {
+        this.onHiveSelected = callback;
     }
 }

@@ -8,6 +8,7 @@ import com.beekeeper.shared.util.DateUtils;
 import com.beekeeper.shared.viewmodel.InspectionViewModel;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -80,16 +81,20 @@ public class InspectionListController {
         // Enable/disable buttons based on selection
         viewButton.setDisable(true);
         deleteButton.setDisable(true);
-        inspectionTable.getSelectionModel().selectedItemProperty().addListener(
-            (obs, oldSelection, newSelection) -> {
-                boolean hasSelection = newSelection != null;
-                viewButton.setDisable(!hasSelection);
-                deleteButton.setDisable(!hasSelection);
-            }
-        );
 
-        // Subscribe to ViewModel state
-        subscribeToViewModel();
+        // Defer setup to avoid macOS NSTrackingRectTag bug
+        Platform.runLater(() -> {
+            inspectionTable.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldSelection, newSelection) -> {
+                    boolean hasSelection = newSelection != null;
+                    viewButton.setDisable(!hasSelection);
+                    deleteButton.setDisable(!hasSelection);
+                }
+            );
+
+            // Subscribe to ViewModel state
+            subscribeToViewModel();
+        });
     }
 
     public void setHiveId(String hiveId) {

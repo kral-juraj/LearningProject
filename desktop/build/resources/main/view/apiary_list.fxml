@@ -14,6 +14,8 @@
             <Button fx:id="editButton" text="Upraviť" onAction="#handleEditApiary"/>
             <Button fx:id="deleteButton" text="Zmazať" onAction="#handleDeleteApiary"/>
             <Separator orientation="VERTICAL"/>
+            <Button fx:id="showHivesButton" text="Zobraziť úle" onAction="#handleShowHives" style="-fx-font-weight: bold;"/>
+            <Separator orientation="VERTICAL"/>
             <Button text="Obnoviť" onAction="#handleRefresh"/>
         </ToolBar>
     </top>
