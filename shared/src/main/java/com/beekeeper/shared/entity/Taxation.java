@@ -19,6 +19,17 @@ public class Taxation implements Serializable {
     private long createdAt;
     private long updatedAt;
 
+    // Agregované dáta zo všetkých rámikov
+    private int totalPollenDm;
+    private int totalCappedStoresDm;
+    private int totalUncappedStoresDm;
+    private int totalCappedBroodDm;
+    private int totalUncappedBroodDm;
+    private int totalStarterFrames;     // Počet stavebných rámikov
+
+    // Ďalšie informácie (nie v DB, ale načítané cez JOIN)
+    private String hiveName;
+
     public Taxation() {
     }
 
@@ -92,5 +103,61 @@ public class Taxation implements Serializable {
 
     public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getTotalPollenDm() {
+        return totalPollenDm;
+    }
+
+    public void setTotalPollenDm(int totalPollenDm) {
+        this.totalPollenDm = totalPollenDm;
+    }
+
+    public int getTotalCappedStoresDm() {
+        return totalCappedStoresDm;
+    }
+
+    public void setTotalCappedStoresDm(int totalCappedStoresDm) {
+        this.totalCappedStoresDm = totalCappedStoresDm;
+    }
+
+    public int getTotalUncappedStoresDm() {
+        return totalUncappedStoresDm;
+    }
+
+    public void setTotalUncappedStoresDm(int totalUncappedStoresDm) {
+        this.totalUncappedStoresDm = totalUncappedStoresDm;
+    }
+
+    public int getTotalCappedBroodDm() {
+        return totalCappedBroodDm;
+    }
+
+    public void setTotalCappedBroodDm(int totalCappedBroodDm) {
+        this.totalCappedBroodDm = totalCappedBroodDm;
+    }
+
+    public int getTotalUncappedBroodDm() {
+        return totalUncappedBroodDm;
+    }
+
+    public void setTotalUncappedBroodDm(int totalUncappedBroodDm) {
+        this.totalUncappedBroodDm = totalUncappedBroodDm;
+    }
+
+    public int getTotalStarterFrames() {
+        return totalStarterFrames;
+    }
+
+    public void setTotalStarterFrames(int totalStarterFrames) {
+        this.totalStarterFrames = totalStarterFrames;
+    }
+
+    public String getHiveName() {
+        return hiveName;
+    }
+
+    public void setHiveName(String hiveName) {
+        this.hiveName = hiveName;
     }
 }

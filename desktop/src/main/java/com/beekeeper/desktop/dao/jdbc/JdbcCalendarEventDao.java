@@ -183,6 +183,23 @@ public class JdbcCalendarEventDao implements CalendarEventDao {
     }
 
     @Override
+    public Flowable<List<CalendarEvent>> getAll() {
+        return Flowable.fromCallable(() -> {
+            List<CalendarEvent> list = new ArrayList<>();
+            String sql = "SELECT * FROM calendar_events ORDER BY eventDate DESC";
+            try (Connection conn = DatabaseManager.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        list.add(mapResultSetToCalendarEvent(rs));
+                    }
+                }
+            }
+            return list;
+        });
+    }
+
+    @Override
     public Completable deleteById(String id) {
         return Completable.fromAction(() -> {
             String sql = "DELETE FROM calendar_events WHERE id = ?";

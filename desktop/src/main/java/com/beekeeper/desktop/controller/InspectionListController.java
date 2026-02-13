@@ -147,11 +147,11 @@ public class InspectionListController {
             return;
         }
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Nová prehliadka");
-        alert.setHeaderText("Funkcia v príprave");
-        alert.setContentText("Formulár na vytvorenie prehliadky bude implementovaný neskôr.");
-        alert.showAndWait();
+        com.beekeeper.desktop.dialog.InspectionDialog dialog =
+            new com.beekeeper.desktop.dialog.InspectionDialog(null, currentHiveId);
+        java.util.Optional<Inspection> result = dialog.showAndWait();
+
+        result.ifPresent(inspection -> viewModel.createInspection(inspection));
     }
 
     @FXML
@@ -159,15 +159,11 @@ public class InspectionListController {
         Inspection selected = inspectionTable.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Detail prehliadky");
-        alert.setHeaderText("Prehliadka z " + DateUtils.formatDate(selected.getInspectionDate()));
-        alert.setContentText(
-            "Teplota: " + selected.getTemperature() + "°C\n" +
-            "Sila: " + selected.getStrengthEstimate() + "/10\n" +
-            "Zásoby: " + selected.getFoodStoresKg() + " kg"
-        );
-        alert.showAndWait();
+        com.beekeeper.desktop.dialog.InspectionDialog dialog =
+            new com.beekeeper.desktop.dialog.InspectionDialog(selected, currentHiveId);
+        java.util.Optional<Inspection> result = dialog.showAndWait();
+
+        result.ifPresent(inspection -> viewModel.updateInspection(inspection));
     }
 
     @FXML

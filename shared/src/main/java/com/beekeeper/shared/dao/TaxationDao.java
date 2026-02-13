@@ -30,5 +30,7 @@ public interface TaxationDao {
 
     Single<List<Taxation>> getByHiveIdAndDateRange(String hiveId, long startDate, long endDate);
 
+    Flowable<List<Taxation>> getByApiaryId(String apiaryId);
+
     Completable deleteById(String id);
 }

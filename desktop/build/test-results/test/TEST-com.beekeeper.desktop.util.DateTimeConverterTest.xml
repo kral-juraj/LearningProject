@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.beekeeper.desktop.util.DateTimeConverterTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-02-13T23:02:22.469Z" hostname="MN-EXC7WJQGV63R" time="0.007">
+  <properties/>
+  <testcase name="testExtractMinuteWithZeroTimestamp()" classname="com.beekeeper.desktop.util.DateTimeConverterTest" time="0.0"/>
+  <testcase name="testToTimestamp()" classname="com.beekeeper.desktop.util.DateTimeConverterTest" time="0.003"/>
+  <testcase name="testRoundtripAtEndOfDay()" classname="com.beekeeper.desktop.util.DateTimeConverterTest" time="0.0"/>
+  <testcase name="testToLocalDateWithZeroTimestamp()" classname="com.beekeeper.desktop.util.DateTimeConverterTest" time="0.0"/>
+  <testcase name="testRoundtripAtMidnight()" classname="com.beekeeper.desktop.util.DateTimeConverterTest" time="0.001"/>
+  <testcase name="testExtractHourWithZeroTimestamp()" classname="com.beekeeper.desktop.util.DateTimeConverterTest" time="0.0"/>
+  <testcase name="testExtractMinute()" classname="com.beekeeper.desktop.util.DateTimeConverterTest" time="0.0"/>
+  <testcase name="testExtractHour()" classname="com.beekeeper.desktop.util.DateTimeConverterTest" time="0.001"/>
+  <testcase name="testToTimestampWithNullDate()" classname="com.beekeeper.desktop.util.DateTimeConverterTest" time="0.0"/>
+  <testcase name="testToLocalDate()" classname="com.beekeeper.desktop.util.DateTimeConverterTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

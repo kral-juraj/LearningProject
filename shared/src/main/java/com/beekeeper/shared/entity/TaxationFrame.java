@@ -14,11 +14,15 @@ public class TaxationFrame implements Serializable {
     private int position; // position in hive (1-25)
 
     // Plod
-    private int cappedBroodDm;
-    private int uncappedBroodDm;
+    private int cappedBroodDm;      // Zavíčkovaný plod
+    private int uncappedBroodDm;    // Otvorený plod
 
-    // Pel
+    // Peľ
     private int pollenDm;
+
+    // Zásoby (med)
+    private int cappedStoresDm;     // Zavíčkované zásoby
+    private int uncappedStoresDm;   // Nezavíčkované zásoby
 
     // Typ rámika
     private String frameType; // BROOD, HONEY, FOUNDATION, DRAWN, DARK
@@ -80,6 +84,22 @@ public class TaxationFrame implements Serializable {
 
     public void setPollenDm(int pollenDm) {
         this.pollenDm = pollenDm;
+    }
+
+    public int getCappedStoresDm() {
+        return cappedStoresDm;
+    }
+
+    public void setCappedStoresDm(int cappedStoresDm) {
+        this.cappedStoresDm = cappedStoresDm;
+    }
+
+    public int getUncappedStoresDm() {
+        return uncappedStoresDm;
+    }
+
+    public void setUncappedStoresDm(int uncappedStoresDm) {
+        this.uncappedStoresDm = uncappedStoresDm;
     }
 
     public String getFrameType() {

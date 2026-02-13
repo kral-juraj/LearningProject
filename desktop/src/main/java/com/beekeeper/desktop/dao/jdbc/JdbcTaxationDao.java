@@ -7,6 +7,7 @@ import com.beekeeper.shared.entity.Taxation;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,9 @@ public class JdbcTaxationDao implements TaxationDao {
     public Completable insert(Taxation taxation) {
         return Completable.fromAction(() -> {
             String sql = "INSERT OR REPLACE INTO taxations (id, hiveId, taxationDate, temperature, totalFrames, " +
-                        "foodStoresKg, notes, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        "foodStoresKg, notes, createdAt, updatedAt, totalPollenDm, totalCappedStoresDm, " +
+                        "totalUncappedStoresDm, totalCappedBroodDm, totalUncappedBroodDm, totalStarterFrames) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, taxation.getId());
@@ -35,6 +38,12 @@ public class JdbcTaxationDao implements TaxationDao {
                 stmt.setString(7, taxation.getNotes());
                 stmt.setLong(8, taxation.getCreatedAt());
                 stmt.setLong(9, taxation.getUpdatedAt());
+                stmt.setInt(10, taxation.getTotalPollenDm());
+                stmt.setInt(11, taxation.getTotalCappedStoresDm());
+                stmt.setInt(12, taxation.getTotalUncappedStoresDm());
+                stmt.setInt(13, taxation.getTotalCappedBroodDm());
+                stmt.setInt(14, taxation.getTotalUncappedBroodDm());
+                stmt.setInt(15, taxation.getTotalStarterFrames());
                 stmt.executeUpdate();
             }
         });
@@ -44,7 +53,9 @@ public class JdbcTaxationDao implements TaxationDao {
     public Completable insertAll(List<Taxation> taxations) {
         return Completable.fromAction(() -> {
             String sql = "INSERT OR REPLACE INTO taxations (id, hiveId, taxationDate, temperature, totalFrames, " +
-                        "foodStoresKg, notes, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        "foodStoresKg, notes, createdAt, updatedAt, totalPollenDm, totalCappedStoresDm, " +
+                        "totalUncappedStoresDm, totalCappedBroodDm, totalUncappedBroodDm, totalStarterFrames) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 for (Taxation taxation : taxations) {
@@ -57,6 +68,12 @@ public class JdbcTaxationDao implements TaxationDao {
                     stmt.setString(7, taxation.getNotes());
                     stmt.setLong(8, taxation.getCreatedAt());
                     stmt.setLong(9, taxation.getUpdatedAt());
+                    stmt.setInt(10, taxation.getTotalPollenDm());
+                    stmt.setInt(11, taxation.getTotalCappedStoresDm());
+                    stmt.setInt(12, taxation.getTotalUncappedStoresDm());
+                    stmt.setInt(13, taxation.getTotalCappedBroodDm());
+                    stmt.setInt(14, taxation.getTotalUncappedBroodDm());
+                    stmt.setInt(15, taxation.getTotalStarterFrames());
                     stmt.addBatch();
                 }
                 stmt.executeBatch();
@@ -68,7 +85,8 @@ public class JdbcTaxationDao implements TaxationDao {
     public Completable update(Taxation taxation) {
         return Completable.fromAction(() -> {
             String sql = "UPDATE taxations SET hiveId=?, taxationDate=?, temperature=?, totalFrames=?, " +
-                        "foodStoresKg=?, notes=?, updatedAt=? WHERE id=?";
+                        "foodStoresKg=?, notes=?, updatedAt=?, totalPollenDm=?, totalCappedStoresDm=?, " +
+                        "totalUncappedStoresDm=?, totalCappedBroodDm=?, totalUncappedBroodDm=?, totalStarterFrames=? WHERE id=?";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, taxation.getHiveId());
@@ -78,7 +96,13 @@ public class JdbcTaxationDao implements TaxationDao {
                 stmt.setDouble(5, taxation.getFoodStoresKg());
                 stmt.setString(6, taxation.getNotes());
                 stmt.setLong(7, taxation.getUpdatedAt());
-                stmt.setString(8, taxation.getId());
+                stmt.setInt(8, taxation.getTotalPollenDm());
+                stmt.setInt(9, taxation.getTotalCappedStoresDm());
+                stmt.setInt(10, taxation.getTotalUncappedStoresDm());
+                stmt.setInt(11, taxation.getTotalCappedBroodDm());
+                stmt.setInt(12, taxation.getTotalUncappedBroodDm());
+                stmt.setInt(13, taxation.getTotalStarterFrames());
+                stmt.setString(14, taxation.getId());
                 stmt.executeUpdate();
             }
         });
@@ -156,6 +180,28 @@ public class JdbcTaxationDao implements TaxationDao {
         });
     }
 
+    @Override
+    public Flowable<List<Taxation>> getByApiaryId(String apiaryId) {
+        return Flowable.fromCallable(() -> {
+            List<Taxation> list = new ArrayList<>();
+            String sql = "SELECT t.*, h.name as hiveName " +
+                        "FROM taxations t " +
+                        "INNER JOIN hives h ON t.hiveId = h.id " +
+                        "WHERE h.apiaryId = ? " +
+                        "ORDER BY t.taxationDate DESC";
+            try (Connection conn = DatabaseManager.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, apiaryId);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        list.add(mapResultSetToTaxation(rs));
+                    }
+                }
+            }
+            return list;
+        });
+    }
+
     private Taxation mapResultSetToTaxation(ResultSet rs) throws Exception {
         Taxation taxation = new Taxation();
         taxation.setId(rs.getString("id"));
@@ -167,6 +213,21 @@ public class JdbcTaxationDao implements TaxationDao {
         taxation.setNotes(rs.getString("notes"));
         taxation.setCreatedAt(rs.getLong("createdAt"));
         taxation.setUpdatedAt(rs.getLong("updatedAt"));
+        taxation.setTotalPollenDm(rs.getInt("totalPollenDm"));
+        taxation.setTotalCappedStoresDm(rs.getInt("totalCappedStoresDm"));
+        taxation.setTotalUncappedStoresDm(rs.getInt("totalUncappedStoresDm"));
+        taxation.setTotalCappedBroodDm(rs.getInt("totalCappedBroodDm"));
+        taxation.setTotalUncappedBroodDm(rs.getInt("totalUncappedBroodDm"));
+        taxation.setTotalStarterFrames(rs.getInt("totalStarterFrames"));
+
+        // Load hiveName if available (from JOIN query)
+        try {
+            String hiveName = rs.getString("hiveName");
+            taxation.setHiveName(hiveName);
+        } catch (SQLException e) {
+            // Column doesn't exist in this query, ignore
+        }
+
         return taxation;
     }
 }

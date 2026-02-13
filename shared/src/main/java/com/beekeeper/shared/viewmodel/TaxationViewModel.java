@@ -27,6 +27,10 @@ public class TaxationViewModel extends BaseViewModel {
     private final BehaviorRelay<String> error = BehaviorRelay.create();
     private final BehaviorRelay<String> success = BehaviorRelay.create();
 
+    // Track current context for reload after operations
+    private String currentApiaryId;
+    private String currentHiveId;
+
     public TaxationViewModel(TaxationRepository repository, SchedulerProvider schedulerProvider) {
         this.repository = repository;
         this.schedulerProvider = schedulerProvider;
@@ -53,6 +57,9 @@ public class TaxationViewModel extends BaseViewModel {
     }
 
     public void loadTaxationsByHiveId(String hiveId) {
+        this.currentHiveId = hiveId;
+        this.currentApiaryId = null; // Clear apiary context
+
         loading.accept(true);
         addDisposable(
             repository.getTaxationsByHiveId(hiveId)
@@ -69,6 +76,39 @@ public class TaxationViewModel extends BaseViewModel {
                     }
                 )
         );
+    }
+
+    public void loadTaxationsByApiaryId(String apiaryId) {
+        this.currentApiaryId = apiaryId;
+        this.currentHiveId = null; // Clear hive context
+
+        loading.accept(true);
+        addDisposable(
+            repository.getTaxationsByApiaryId(apiaryId)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.mainThread())
+                .subscribe(
+                    taxationList -> {
+                        taxations.accept(taxationList);
+                        loading.accept(false);
+                    },
+                    throwable -> {
+                        error.accept("Chyba pri načítaní taxácií: " + throwable.getMessage());
+                        loading.accept(false);
+                    }
+                )
+        );
+    }
+
+    /**
+     * Reload taxations based on current context (apiary or hive).
+     */
+    private void reloadTaxations() {
+        if (currentApiaryId != null) {
+            loadTaxationsByApiaryId(currentApiaryId);
+        } else if (currentHiveId != null) {
+            loadTaxationsByHiveId(currentHiveId);
+        }
     }
 
     public void loadFramesByTaxationId(String taxationId) {
@@ -99,6 +139,9 @@ public class TaxationViewModel extends BaseViewModel {
         }
         taxation.setUpdatedAt(DateUtils.getCurrentTimestamp());
 
+        // Calculate aggregated values from all frames
+        calculateFrameAggregates(taxation, frameList);
+
         loading.accept(true);
         addDisposable(
             repository.insertTaxationWithFrames(taxation, frameList)
@@ -108,7 +151,7 @@ public class TaxationViewModel extends BaseViewModel {
                     () -> {
                         success.accept("Taxácia úspešne vytvorená");
                         loading.accept(false);
-                        loadTaxationsByHiveId(taxation.getHiveId());
+                        reloadTaxations(); // Reload based on current context
                     },
                     throwable -> {
                         error.accept("Chyba pri vytváraní taxácie: " + throwable.getMessage());
@@ -116,6 +159,36 @@ public class TaxationViewModel extends BaseViewModel {
                     }
                 )
         );
+    }
+
+    /**
+     * Calculate aggregated values from all frames and set them in taxation.
+     */
+    private void calculateFrameAggregates(Taxation taxation, List<TaxationFrame> frames) {
+        int totalPollen = 0;
+        int totalCappedStores = 0;
+        int totalUncappedStores = 0;
+        int totalCappedBrood = 0;
+        int totalUncappedBrood = 0;
+        int totalStarter = 0;
+
+        for (TaxationFrame frame : frames) {
+            totalPollen += frame.getPollenDm();
+            totalCappedStores += frame.getCappedStoresDm();
+            totalUncappedStores += frame.getUncappedStoresDm();
+            totalCappedBrood += frame.getCappedBroodDm();
+            totalUncappedBrood += frame.getUncappedBroodDm();
+            if (frame.isStarter()) {
+                totalStarter++;
+            }
+        }
+
+        taxation.setTotalPollenDm(totalPollen);
+        taxation.setTotalCappedStoresDm(totalCappedStores);
+        taxation.setTotalUncappedStoresDm(totalUncappedStores);
+        taxation.setTotalCappedBroodDm(totalCappedBrood);
+        taxation.setTotalUncappedBroodDm(totalUncappedBrood);
+        taxation.setTotalStarterFrames(totalStarter);
     }
 
     public void updateTaxation(Taxation taxation) {
@@ -130,7 +203,7 @@ public class TaxationViewModel extends BaseViewModel {
                     () -> {
                         success.accept("Taxácia úspešne aktualizovaná");
                         loading.accept(false);
-                        loadTaxationsByHiveId(taxation.getHiveId());
+                        reloadTaxations(); // Reload based on current context
                     },
                     throwable -> {
                         error.accept("Chyba pri aktualizácii taxácie: " + throwable.getMessage());
@@ -150,7 +223,7 @@ public class TaxationViewModel extends BaseViewModel {
                     () -> {
                         success.accept("Taxácia úspešne zmazaná");
                         loading.accept(false);
-                        loadTaxationsByHiveId(taxation.getHiveId());
+                        reloadTaxations(); // Reload based on current context
                     },
                     throwable -> {
                         error.accept("Chyba pri mazaní taxácie: " + throwable.getMessage());

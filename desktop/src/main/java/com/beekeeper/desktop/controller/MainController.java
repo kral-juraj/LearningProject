@@ -26,9 +26,21 @@ public class MainController {
     @FXML
     private Tab inspectionsTab;
 
+    @FXML
+    private Tab feedingTab;
+
+    @FXML
+    private Tab taxationTab;
+
+    @FXML
+    private Tab calendarTab;
+
     private ApiaryListController apiaryListController;
     private HiveListController hiveListController;
     private InspectionListController inspectionListController;
+    private FeedingListController feedingListController;
+    private TaxationListController taxationListController;
+    private CalendarEventListController calendarEventListController;
 
     @FXML
     public void initialize() {
@@ -48,11 +60,29 @@ public class MainController {
             Parent inspectionView = inspectionLoader.load();
             inspectionListController = inspectionLoader.getController();
 
+            // Load Feeding view
+            FXMLLoader feedingLoader = new FXMLLoader(getClass().getResource("/view/feeding_list.fxml"));
+            Parent feedingView = feedingLoader.load();
+            feedingListController = feedingLoader.getController();
+
+            // Load Taxation view
+            FXMLLoader taxationLoader = new FXMLLoader(getClass().getResource("/view/taxation_list.fxml"));
+            Parent taxationView = taxationLoader.load();
+            taxationListController = taxationLoader.getController();
+
+            // Load Calendar view
+            FXMLLoader calendarLoader = new FXMLLoader(getClass().getResource("/view/calendar_list.fxml"));
+            Parent calendarView = calendarLoader.load();
+            calendarEventListController = calendarLoader.getController();
+
             // Set content in next JavaFX pulse to avoid macOS NSTrackingRectTag issues
             javafx.application.Platform.runLater(() -> {
                 apiariesTab.setContent(apiaryView);
                 hivesTab.setContent(hiveView);
                 inspectionsTab.setContent(inspectionView);
+                feedingTab.setContent(feedingView);
+                taxationTab.setContent(taxationView);
+                calendarTab.setContent(calendarView);
 
                 // Set up communication between controllers
                 setupControllerCommunication();
@@ -71,7 +101,11 @@ public class MainController {
         apiaryListController.setOnApiarySelected(apiary -> {
             if (apiary != null) {
                 hivesTab.setDisable(false);
+                taxationTab.setDisable(false);  // Enable taxation tab for selected apiary
+
                 hiveListController.setApiaryId(apiary.getId());
+                taxationListController.setApiaryId(apiary.getId());  // Load all taxations for apiary
+
                 // Switch to Hives tab
                 mainTabPane.getSelectionModel().select(hivesTab);
             }
@@ -81,7 +115,12 @@ public class MainController {
         hiveListController.setOnHiveSelected(hive -> {
             if (hive != null) {
                 inspectionsTab.setDisable(false);
+                feedingTab.setDisable(false);
+                // Note: taxationTab is already enabled (based on apiary selection)
+
                 inspectionListController.setHiveId(hive.getId());
+                feedingListController.setHiveId(hive.getId());
+
                 // Switch to Inspections tab
                 mainTabPane.getSelectionModel().select(inspectionsTab);
             }

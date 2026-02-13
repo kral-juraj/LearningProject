@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.beekeeper.desktop.controller.FeedingListController">
+
+    <!-- Top Toolbar -->
+    <top>
+        <ToolBar>
+            <Button fx:id="addButton" text="Nové krmenie" onAction="#handleAddFeeding"/>
+            <Button fx:id="editButton" text="Upraviť" onAction="#handleEditFeeding"/>
+            <Button fx:id="deleteButton" text="Zmazať" onAction="#handleDeleteFeeding"/>
+            <Separator orientation="VERTICAL"/>
+            <Button text="Obnoviť" onAction="#handleRefresh"/>
+        </ToolBar>
+    </top>
+
+    <!-- Center - Table View -->
+    <center>
+        <TableView fx:id="feedingTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="dateColumn" text="Dátum" prefWidth="180"/>
+                <TableColumn fx:id="feedTypeColumn" text="Typ krmiva" prefWidth="150"/>
+                <TableColumn fx:id="amountColumn" text="Množstvo (kg)" prefWidth="130"/>
+                <TableColumn fx:id="weightBeforeColumn" text="Hmotnosť pred (kg)" prefWidth="150"/>
+                <TableColumn fx:id="weightAfterColumn" text="Hmotnosť po (kg)" prefWidth="150"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </center>
+
+    <!-- Bottom Status Bar -->
+    <bottom>
+        <HBox style="-fx-background-color: #f9f9f9; -fx-padding: 8;">
+            <Label fx:id="statusLabel" text="Vyberte úľ"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

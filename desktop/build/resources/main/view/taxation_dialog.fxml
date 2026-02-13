@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="10" prefWidth="700" prefHeight="600">
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+
+    <!-- Section 1: Taxation Header -->
+    <Label text="Údaje taxácie" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+    <Separator/>
+    <GridPane hgap="10" vgap="10">
+        <!-- Date -->
+        <HBox spacing="0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label text="*" style="-fx-text-fill: red; -fx-font-weight: bold;"/>
+            <Label text=" Dátum:"/>
+        </HBox>
+        <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="Infinity"/>
+
+        <!-- Time -->
+        <Label text="Čas:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="hourField" promptText="HH" prefWidth="50" maxWidth="50"/>
+            <Label text=":"/>
+            <TextField fx:id="minuteField" promptText="MM" prefWidth="50" maxWidth="50"/>
+        </HBox>
+
+        <!-- Temperature -->
+        <Label text="Teplota (°C):" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="temperatureField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+        <!-- Total Frames -->
+        <Label text="Celkový počet rámikov:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextField fx:id="totalFramesField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+        <!-- Food Stores -->
+        <Label text="Zásoby (kg):" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <TextField fx:id="foodStoresField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+        <!-- Notes -->
+        <Label text="Poznámky:" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.valignment="TOP"/>
+        <TextArea fx:id="notesArea" GridPane.columnIndex="1" GridPane.rowIndex="5" prefHeight="60" wrapText="true"/>
+
+        <columnConstraints>
+            <ColumnConstraints minWidth="150" prefWidth="150"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="200"/>
+        </columnConstraints>
+    </GridPane>
+
+    <!-- Section 2: Frames -->
+    <Label text="Rámiky" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+    <Separator/>
+
+    <!-- Frame Management Toolbar -->
+    <ToolBar>
+        <Button fx:id="addFrameButton" text="Pridať rámik"/>
+        <Button fx:id="editFrameButton" text="Upraviť rámik"/>
+        <Button fx:id="deleteFrameButton" text="Zmazať rámik"/>
+    </ToolBar>
+
+    <!-- Frame Table -->
+    <TableView fx:id="frameTable" VBox.vgrow="ALWAYS" prefHeight="250">
+        <columns>
+            <TableColumn fx:id="positionColumn" text="Pozícia" prefWidth="80"/>
+            <TableColumn fx:id="frameTypeColumn" text="Typ" prefWidth="120"/>
+            <TableColumn fx:id="cappedBroodColumn" text="Zapečatený (dm)" prefWidth="130"/>
+            <TableColumn fx:id="uncappedBroodColumn" text="Nezapečatený (dm)" prefWidth="140"/>
+            <TableColumn fx:id="pollenColumn" text="Peľ (dm)" prefWidth="100"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+
+</VBox>

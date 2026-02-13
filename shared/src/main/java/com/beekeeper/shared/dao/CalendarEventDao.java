@@ -34,5 +34,7 @@ public interface CalendarEventDao {
 
     Flowable<List<CalendarEvent>> getUpcoming(long currentDate);
 
+    Flowable<List<CalendarEvent>> getAll();
+
     Completable deleteById(String id);
 }

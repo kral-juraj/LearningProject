@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.beekeeper.desktop.util.EnumHelperTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-02-13T23:02:22.476Z" hostname="MN-EXC7WJQGV63R" time="0.004">
+  <properties/>
+  <testcase name="testGetEventTypes()" classname="com.beekeeper.desktop.util.EnumHelperTest" time="0.002"/>
+  <testcase name="testGetEventTypeLabel()" classname="com.beekeeper.desktop.util.EnumHelperTest" time="0.0"/>
+  <testcase name="testGetFeedTypes()" classname="com.beekeeper.desktop.util.EnumHelperTest" time="0.0"/>
+  <testcase name="testGetFrameTypeLabel()" classname="com.beekeeper.desktop.util.EnumHelperTest" time="0.0"/>
+  <testcase name="testGetFrameTypes()" classname="com.beekeeper.desktop.util.EnumHelperTest" time="0.0"/>
+  <testcase name="testGetFeedTypeLabel()" classname="com.beekeeper.desktop.util.EnumHelperTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

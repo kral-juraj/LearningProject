@@ -32,6 +32,8 @@ public class DatabaseManager {
             }
 
             createTables(conn);
+            migrateTaxationFrames(conn);
+            migrateTaxations(conn);
             initialized = true;
         }
     }
@@ -223,6 +225,64 @@ public class DatabaseManager {
                 "processed INTEGER, " +
                 "recordedAt INTEGER)"
             );
+        }
+    }
+
+    /**
+     * Migrate taxation_frames table to add new columns for stores.
+     * Adds cappedStoresDm and uncappedStoresDm columns if they don't exist.
+     */
+    private static void migrateTaxationFrames(Connection connection) throws SQLException {
+        try (Statement stmt = connection.createStatement()) {
+            // Try to add new columns - SQLite will ignore if they already exist
+            try {
+                stmt.execute("ALTER TABLE taxation_frames ADD COLUMN cappedStoresDm INTEGER DEFAULT 0");
+                System.out.println("[DatabaseManager] Added cappedStoresDm column to taxation_frames");
+            } catch (SQLException e) {
+                // Column already exists, ignore
+                if (!e.getMessage().contains("duplicate column name")) {
+                    throw e;
+                }
+            }
+
+            try {
+                stmt.execute("ALTER TABLE taxation_frames ADD COLUMN uncappedStoresDm INTEGER DEFAULT 0");
+                System.out.println("[DatabaseManager] Added uncappedStoresDm column to taxation_frames");
+            } catch (SQLException e) {
+                // Column already exists, ignore
+                if (!e.getMessage().contains("duplicate column name")) {
+                    throw e;
+                }
+            }
+        }
+    }
+
+    /**
+     * Migrate taxations table to add aggregated columns.
+     * Adds total columns for pollen, stores, and brood from all frames.
+     */
+    private static void migrateTaxations(Connection connection) throws SQLException {
+        try (Statement stmt = connection.createStatement()) {
+            String[] columns = {
+                "totalPollenDm",
+                "totalCappedStoresDm",
+                "totalUncappedStoresDm",
+                "totalCappedBroodDm",
+                "totalUncappedBroodDm",
+                "totalStarterFrames"
+            };
+
+            for (String column : columns) {
+                try {
+                    stmt.execute("ALTER TABLE taxations ADD COLUMN " + column + " INTEGER DEFAULT 0");
+                    System.out.println("[DatabaseManager] Added " + column + " column to taxations");
+                } catch (SQLException e) {
+                    // Column already exists, ignore
+                    if (!e.getMessage().contains("duplicate column name")) {
+                        throw e;
+                    }
+                }
+            }
         }
     }
 

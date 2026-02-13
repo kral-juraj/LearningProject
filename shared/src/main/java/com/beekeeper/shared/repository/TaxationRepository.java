@@ -82,6 +82,10 @@ public class TaxationRepository {
         return taxationDao.getByHiveIdAndDateRange(hiveId, startDate, endDate);
     }
 
+    public Flowable<List<Taxation>> getTaxationsByApiaryId(String apiaryId) {
+        return taxationDao.getByApiaryId(apiaryId);
+    }
+
     // TaxationFrame operations
     public Completable insertFrame(TaxationFrame frame) {
         if (frame.getId() == null || frame.getId().isEmpty()) {

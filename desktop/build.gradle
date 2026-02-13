@@ -37,13 +37,17 @@ dependencies {
     implementation 'org.apache.poi:poi-ooxml:5.2.5'
 
     // Testing
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.0'
     testImplementation 'org.mockito:mockito-core:5.3.1'
     testImplementation 'org.mockito:mockito-inline:5.2.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.3.1'
+}
 
-    // TestFX for UI testing
-    testImplementation 'org.testfx:testfx-core:4.0.16-alpha'
-    testImplementation 'org.testfx:testfx-junit:4.0.16-alpha'
+// Configure test task to use JUnit Platform
+test {
+    useJUnitPlatform()
 }
 
 // Task to run the desktop application

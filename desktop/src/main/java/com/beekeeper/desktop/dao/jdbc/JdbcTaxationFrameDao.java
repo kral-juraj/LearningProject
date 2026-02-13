@@ -23,8 +23,8 @@ public class JdbcTaxationFrameDao implements TaxationFrameDao {
     public Completable insert(TaxationFrame frame) {
         return Completable.fromAction(() -> {
             String sql = "INSERT OR REPLACE INTO taxation_frames (id, taxationId, position, cappedBroodDm, " +
-                        "uncappedBroodDm, pollenDm, frameType, frameYear, isStarter, hasQueen, hasCage, " +
-                        "hasNucBox, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        "uncappedBroodDm, pollenDm, cappedStoresDm, uncappedStoresDm, frameType, frameYear, " +
+                        "isStarter, hasQueen, hasCage, hasNucBox, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, frame.getId());
@@ -33,13 +33,15 @@ public class JdbcTaxationFrameDao implements TaxationFrameDao {
                 stmt.setInt(4, frame.getCappedBroodDm());
                 stmt.setInt(5, frame.getUncappedBroodDm());
                 stmt.setInt(6, frame.getPollenDm());
-                stmt.setString(7, frame.getFrameType());
-                stmt.setInt(8, frame.getFrameYear());
-                stmt.setInt(9, frame.isStarter() ? 1 : 0);
-                stmt.setInt(10, frame.isHasQueen() ? 1 : 0);
-                stmt.setInt(11, frame.isHasCage() ? 1 : 0);
-                stmt.setInt(12, frame.isHasNucBox() ? 1 : 0);
-                stmt.setString(13, frame.getNotes());
+                stmt.setInt(7, frame.getCappedStoresDm());
+                stmt.setInt(8, frame.getUncappedStoresDm());
+                stmt.setString(9, frame.getFrameType());
+                stmt.setInt(10, frame.getFrameYear());
+                stmt.setInt(11, frame.isStarter() ? 1 : 0);
+                stmt.setInt(12, frame.isHasQueen() ? 1 : 0);
+                stmt.setInt(13, frame.isHasCage() ? 1 : 0);
+                stmt.setInt(14, frame.isHasNucBox() ? 1 : 0);
+                stmt.setString(15, frame.getNotes());
                 stmt.executeUpdate();
             }
         });
@@ -49,8 +51,8 @@ public class JdbcTaxationFrameDao implements TaxationFrameDao {
     public Completable insertAll(List<TaxationFrame> frames) {
         return Completable.fromAction(() -> {
             String sql = "INSERT OR REPLACE INTO taxation_frames (id, taxationId, position, cappedBroodDm, " +
-                        "uncappedBroodDm, pollenDm, frameType, frameYear, isStarter, hasQueen, hasCage, " +
-                        "hasNucBox, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        "uncappedBroodDm, pollenDm, cappedStoresDm, uncappedStoresDm, frameType, frameYear, " +
+                        "isStarter, hasQueen, hasCage, hasNucBox, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 for (TaxationFrame frame : frames) {
@@ -60,13 +62,15 @@ public class JdbcTaxationFrameDao implements TaxationFrameDao {
                     stmt.setInt(4, frame.getCappedBroodDm());
                     stmt.setInt(5, frame.getUncappedBroodDm());
                     stmt.setInt(6, frame.getPollenDm());
-                    stmt.setString(7, frame.getFrameType());
-                    stmt.setInt(8, frame.getFrameYear());
-                    stmt.setInt(9, frame.isStarter() ? 1 : 0);
-                    stmt.setInt(10, frame.isHasQueen() ? 1 : 0);
-                    stmt.setInt(11, frame.isHasCage() ? 1 : 0);
-                    stmt.setInt(12, frame.isHasNucBox() ? 1 : 0);
-                    stmt.setString(13, frame.getNotes());
+                    stmt.setInt(7, frame.getCappedStoresDm());
+                    stmt.setInt(8, frame.getUncappedStoresDm());
+                    stmt.setString(9, frame.getFrameType());
+                    stmt.setInt(10, frame.getFrameYear());
+                    stmt.setInt(11, frame.isStarter() ? 1 : 0);
+                    stmt.setInt(12, frame.isHasQueen() ? 1 : 0);
+                    stmt.setInt(13, frame.isHasCage() ? 1 : 0);
+                    stmt.setInt(14, frame.isHasNucBox() ? 1 : 0);
+                    stmt.setString(15, frame.getNotes());
                     stmt.addBatch();
                 }
                 stmt.executeBatch();
@@ -78,8 +82,8 @@ public class JdbcTaxationFrameDao implements TaxationFrameDao {
     public Completable update(TaxationFrame frame) {
         return Completable.fromAction(() -> {
             String sql = "UPDATE taxation_frames SET taxationId=?, position=?, cappedBroodDm=?, " +
-                        "uncappedBroodDm=?, pollenDm=?, frameType=?, frameYear=?, isStarter=?, " +
-                        "hasQueen=?, hasCage=?, hasNucBox=?, notes=? WHERE id=?";
+                        "uncappedBroodDm=?, pollenDm=?, cappedStoresDm=?, uncappedStoresDm=?, frameType=?, " +
+                        "frameYear=?, isStarter=?, hasQueen=?, hasCage=?, hasNucBox=?, notes=? WHERE id=?";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, frame.getTaxationId());
@@ -87,14 +91,16 @@ public class JdbcTaxationFrameDao implements TaxationFrameDao {
                 stmt.setInt(3, frame.getCappedBroodDm());
                 stmt.setInt(4, frame.getUncappedBroodDm());
                 stmt.setInt(5, frame.getPollenDm());
-                stmt.setString(6, frame.getFrameType());
-                stmt.setInt(7, frame.getFrameYear());
-                stmt.setInt(8, frame.isStarter() ? 1 : 0);
-                stmt.setInt(9, frame.isHasQueen() ? 1 : 0);
-                stmt.setInt(10, frame.isHasCage() ? 1 : 0);
-                stmt.setInt(11, frame.isHasNucBox() ? 1 : 0);
-                stmt.setString(12, frame.getNotes());
-                stmt.setString(13, frame.getId());
+                stmt.setInt(6, frame.getCappedStoresDm());
+                stmt.setInt(7, frame.getUncappedStoresDm());
+                stmt.setString(8, frame.getFrameType());
+                stmt.setInt(9, frame.getFrameYear());
+                stmt.setInt(10, frame.isStarter() ? 1 : 0);
+                stmt.setInt(11, frame.isHasQueen() ? 1 : 0);
+                stmt.setInt(12, frame.isHasCage() ? 1 : 0);
+                stmt.setInt(13, frame.isHasNucBox() ? 1 : 0);
+                stmt.setString(14, frame.getNotes());
+                stmt.setString(15, frame.getId());
                 stmt.executeUpdate();
             }
         });
@@ -185,6 +191,8 @@ public class JdbcTaxationFrameDao implements TaxationFrameDao {
         frame.setCappedBroodDm(rs.getInt("cappedBroodDm"));
         frame.setUncappedBroodDm(rs.getInt("uncappedBroodDm"));
         frame.setPollenDm(rs.getInt("pollenDm"));
+        frame.setCappedStoresDm(rs.getInt("cappedStoresDm"));
+        frame.setUncappedStoresDm(rs.getInt("uncappedStoresDm"));
         frame.setFrameType(rs.getString("frameType"));
         frame.setFrameYear(rs.getInt("frameYear"));
         frame.setStarter(rs.getInt("isStarter") == 1);

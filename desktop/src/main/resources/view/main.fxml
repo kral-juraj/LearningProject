@@ -33,6 +33,15 @@
             <Tab fx:id="inspectionsTab" text="Prehliadky" disable="true">
                 <Label text="Vyberte úľ"/>
             </Tab>
+            <Tab fx:id="feedingTab" text="Krmenie" disable="true">
+                <Label text="Vyberte úľ"/>
+            </Tab>
+            <Tab fx:id="taxationTab" text="Taxácie" disable="true">
+                <Label text="Vyberte úľ"/>
+            </Tab>
+            <Tab fx:id="calendarTab" text="Kalendár">
+                <Label text="Načítavam..."/>
+            </Tab>
         </TabPane>
     </center>
 
