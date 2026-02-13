@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Včelárska Aplikácia</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Prehľad</string>
+    <string name="nav_apiaries">Včelnice</string>
+    <string name="nav_calendar">Kalendár</string>
+    <string name="nav_calculators">Kalkulačky</string>
+    <string name="nav_analytics">Analýza</string>
+    <string name="nav_settings">Nastavenia</string>
+
+    <!-- Common -->
+    <string name="save">Uložiť</string>
+    <string name="cancel">Zrušiť</string>
+    <string name="delete">Zmazať</string>
+    <string name="edit">Upraviť</string>
+    <string name="add">Pridať</string>
+    <string name="ok">OK</string>
+    <string name="yes">Áno</string>
+    <string name="no">Nie</string>
+    <string name="loading">Načítava sa…</string>
+    <string name="error">Chyba</string>
+    <string name="success">Úspech</string>
+
+    <!-- Apiary -->
+    <string name="apiary_name">Názov včelnice</string>
+    <string name="apiary_location">Lokalita</string>
+    <string name="add_apiary">Pridať včelnicu</string>
+    <string name="edit_apiary">Upraviť včelnicu</string>
+
+    <!-- Hive -->
+    <string name="hive_name">Názov úľa</string>
+    <string name="hive_type">Typ úľa</string>
+    <string name="hive_type_vertical">Vertikálny</string>
+    <string name="hive_type_horizontal">Ležatý</string>
+    <string name="hive_type_nuke">Oddielok</string>
+    <string name="add_hive">Pridať úľ</string>
+    <string name="edit_hive">Upraviť úľ</string>
+    <string name="queen_id">Číslo matky</string>
+    <string name="queen_year">Rok matky</string>
+    <string name="active">Aktívny</string>
+    <string name="inactive">Neaktívny</string>
+
+    <!-- Inspection -->
+    <string name="new_inspection">Nová prehliadka</string>
+    <string name="manual_inspection">Manuálne</string>
+    <string name="record_audio">Nahrať audio</string>
+    <string name="record_video">Nahrať video</string>
+    <string name="inspection_date">Dátum prehliadky</string>
+    <string name="temperature">Teplota (°C)</string>
+    <string name="strength_estimate">Sila včelstva</string>
+    <string name="food_stores">Zásoby (kg)</string>
+    <string name="brood_frames">Rámiky s plodom</string>
+    <string name="queen_seen">Matka videná</string>
+    <string name="varroa_present">Prítomnosť klieštika</string>
+    <string name="aggression">Agresivita (1-5)</string>
+    <string name="notes">Poznámky</string>
+
+    <!-- Feeding -->
+    <string name="new_feeding">Nové krmenie</string>
+    <string name="feeding_date">Dátum krmenia</string>
+    <string name="weight_before">Váha pred (kg)</string>
+    <string name="weight_after">Váha po (kg)</string>
+    <string name="feed_type">Typ krmiva</string>
+    <string name="amount">Množstvo (kg)</string>
+
+    <!-- Taxation -->
+    <string name="new_taxation">Nová taxácia</string>
+    <string name="taxation_date">Dátum taxácie</string>
+    <string name="frame_number">Rámik č.</string>
+    <string name="capped_brood">Zavíčkovaný plod (dm)</string>
+    <string name="uncapped_brood">Nezavíčkovaný plod (dm)</string>
+    <string name="pollen">Pel (dm)</string>
+
+    <!-- Settings -->
+    <string name="openai_api_key">OpenAI API kľúč</string>
+    <string name="import_excel">Importovať Excel</string>
+    <string name="about">O aplikácii</string>
+
+    <!-- Empty states -->
+    <string name="empty_apiaries">Zatiaľ nemáte žiadne včelnice.\nPridajte prvú včelnicu kliknutím na tlačidlo nižšie.</string>
+    <string name="empty_hives">Zatiaľ nemáte žiadne úle.\nPridajte prvý úľ kliknutím na tlačidlo nižšie.</string>
+</resources>

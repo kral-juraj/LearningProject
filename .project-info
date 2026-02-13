@@ -1,0 +1,31 @@
+PROJECT: Včelárska Aplikácia
+STARTED: 2025-02-13
+LANGUAGE: Java 100%
+PLATFORM: Android API 26+
+ARCHITECTURE: MVVM + Repository + RxJava2
+
+CURRENT_PHASE: 2
+PROGRESS: 25%
+STATUS: Active Development
+
+LAST_SESSION: 2025-02-13
+COMPLETED:
+- Phase 1: Foundation (100%)
+- Apiary CRUD (100%)
+- Hive CRUD (100%)
+
+NEXT_TASKS:
+1. Navigation Setup
+2. Inspection Entry Form
+3. Hive Detail Screen
+
+FILES: 73 total
+JAVA: 43
+XML: 20
+DOCS: 10
+
+KEY_FILES:
+- PROJECT_CONTEXT.md (full context)
+- QUICK_START.md (how to continue)
+- TODO.md (task list)
+- PHASE_2_PROGRESS.md (current progress)
