@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.beekeeper.app.data.local.entity.Hive;
@@ -15,30 +16,18 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class HiveListFragment extends BaseFragment<FragmentHiveListBinding> {
 
-    private static final String ARG_APIARY_ID = "apiary_id";
-    private static final String ARG_APIARY_NAME = "apiary_name";
-
     private HiveViewModel viewModel;
     private HiveAdapter adapter;
     private String apiaryId;
     private String apiaryName;
 
-    public static HiveListFragment newInstance(String apiaryId, String apiaryName) {
-        HiveListFragment fragment = new HiveListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_APIARY_ID, apiaryId);
-        args.putString(ARG_APIARY_NAME, apiaryName);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            apiaryId = getArguments().getString(ARG_APIARY_ID);
-            apiaryName = getArguments().getString(ARG_APIARY_NAME);
-        }
+        // Get arguments using Safe Args
+        HiveListFragmentArgs args = HiveListFragmentArgs.fromBundle(getArguments());
+        apiaryId = args.getApiaryId();
+        apiaryName = args.getApiaryName();
     }
 
     @Override

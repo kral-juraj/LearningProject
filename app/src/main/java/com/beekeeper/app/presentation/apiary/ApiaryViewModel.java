@@ -29,6 +29,11 @@ public class ApiaryViewModel extends BaseViewModel {
         );
     }
 
+    // Constructor for testing
+    public ApiaryViewModel(ApiaryRepository repository) {
+        this.repository = repository;
+    }
+
     public LiveData<List<Apiary>> getApiaries() {
         return apiaries;
     }

@@ -30,6 +30,11 @@ public class HiveViewModel extends BaseViewModel {
         );
     }
 
+    // Constructor for testing
+    public HiveViewModel(HiveRepository repository) {
+        this.repository = repository;
+    }
+
     public LiveData<List<Hive>> getHives() {
         return hives;
     }

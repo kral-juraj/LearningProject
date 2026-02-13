@@ -12,7 +12,23 @@
     <fragment
         android:id="@+id/nav_apiaries"
         android:name="com.beekeeper.app.presentation.apiary.ApiaryListFragment"
-        android:label="@string/nav_apiaries" />
+        android:label="@string/nav_apiaries">
+        <action
+            android:id="@+id/action_apiaries_to_hives"
+            app:destination="@id/hiveListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/hiveListFragment"
+        android:name="com.beekeeper.app.presentation.hive.HiveListFragment"
+        android:label="{apiaryName}">
+        <argument
+            android:name="apiaryId"
+            app:argType="string" />
+        <argument
+            android:name="apiaryName"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_calendar"

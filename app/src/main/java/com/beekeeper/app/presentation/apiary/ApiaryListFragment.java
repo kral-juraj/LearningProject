@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.beekeeper.app.data.local.entity.Apiary;
@@ -35,8 +36,13 @@ public class ApiaryListFragment extends BaseFragment<FragmentApiaryListBinding> 
         adapter.setOnApiaryClickListener(new ApiaryAdapter.OnApiaryClickListener() {
             @Override
             public void onApiaryClick(Apiary apiary) {
-                // TODO: Navigate to hive list for this apiary
-                showToast("Otvorenie včelnice: " + apiary.getName());
+                // Navigate to hive list for this apiary
+                NavApiariesDirections.ActionApiariesToHives action =
+                    NavApiariesDirections.actionApiariesToHives(
+                        apiary.getId(),
+                        apiary.getName()
+                    );
+                Navigation.findNavController(binding.getRoot()).navigate(action);
             }
 
             @Override

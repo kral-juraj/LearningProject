@@ -20,7 +20,9 @@
 
     <!-- Status Colors -->
     <color name="success">#4CAF50</color>
+    <color name="success_light">#C8E6C9</color>
     <color name="warning">#FF9800</color>
+    <color name="warning_light">#FFE0B2</color>
     <color name="error">#F44336</color>
     <color name="info">#2196F3</color>
 </resources>
