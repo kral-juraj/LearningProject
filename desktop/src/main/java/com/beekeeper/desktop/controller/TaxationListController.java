@@ -256,10 +256,14 @@ public class TaxationListController {
         try {
             List<TaxationFrame> frames = frameDao.getByTaxationId(selected.getId()).blockingFirst();
 
-            TaxationDialog dialog = new TaxationDialog(selected, frames, currentHiveId);
+            // Use selected taxation's hiveId, not currentHiveId (which may be null in apiary view)
+            TaxationDialog dialog = new TaxationDialog(selected, frames, selected.getHiveId());
             Optional<TaxationWithFrames> result = dialog.showAndWait();
 
-            result.ifPresent(data -> viewModel.createTaxationWithFrames(data.taxation, data.frames));
+            result.ifPresent(data -> {
+                // Update existing taxation, not create new one
+                viewModel.updateTaxationWithFrames(data.taxation, data.frames);
+            });
         } catch (Exception e) {
             showError("Chyba pri načítaní rámikov: " + e.getMessage());
         }

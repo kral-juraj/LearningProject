@@ -213,6 +213,43 @@ public class TaxationViewModel extends BaseViewModel {
         );
     }
 
+    public void updateTaxationWithFrames(Taxation taxation, List<TaxationFrame> frameList) {
+        taxation.setUpdatedAt(DateUtils.getCurrentTimestamp());
+
+        // Calculate aggregated values from all frames
+        calculateFrameAggregates(taxation, frameList);
+
+        loading.accept(true);
+
+        // First update the taxation header
+        addDisposable(
+            repository.updateTaxation(taxation)
+                .andThen(repository.getFramesByTaxationIdOnce(taxation.getId()))
+                .flatMapCompletable(oldFrames -> {
+                    // Delete all old frames
+                    List<io.reactivex.Completable> deletions = new java.util.ArrayList<>();
+                    for (TaxationFrame oldFrame : oldFrames) {
+                        deletions.add(repository.deleteFrame(oldFrame));
+                    }
+                    return io.reactivex.Completable.concat(deletions);
+                })
+                .andThen(repository.insertFrames(frameList))
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.mainThread())
+                .subscribe(
+                    () -> {
+                        success.accept("Taxácia úspešne aktualizovaná");
+                        loading.accept(false);
+                        reloadTaxations(); // Reload based on current context
+                    },
+                    throwable -> {
+                        error.accept("Chyba pri aktualizácii taxácie: " + throwable.getMessage());
+                        loading.accept(false);
+                    }
+                )
+        );
+    }
+
     public void deleteTaxation(Taxation taxation) {
         loading.accept(true);
         addDisposable(

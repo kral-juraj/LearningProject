@@ -33,3 +33,6 @@ bin/
 .gradle/
 build/
 **/build/
+
+### Test Databases ###
+test-db/
