@@ -6,7 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Multi-platform beekeeping management application with **55% shared codebase** between Desktop (JavaFX + JDBC) and Android (Room). The project uses MVVM architecture with RxJava2 for reactive programming.
 
-**Key Fact:** This is Slovak language application - all UI strings are in Slovak (slovenčina).
+**Key Facts:**
+- **Bilingual application:** Full Slovak/English support with 531 translation keys
+- **i18n Architecture:** TranslationManager + database-backed translations
+- **Language switcher:** Users can switch between Slovak (default) and English
+- **Primary audience:** Slovak beekeepers, with English for international users
 
 ## Build & Run Commands
 
@@ -167,13 +171,17 @@ viewModel.getApiaries()
 ```java
 @FXML
 public void initialize() {
+    TranslationManager tm = TranslationManager.getInstance();
+
     // CORRECT: Wrap subscriptions in Platform.runLater()
     Platform.runLater(() -> {
         viewModel.getApiaries()
             .subscribe(apiaries -> table.setItems(FXCollections.observableList(apiaries)));
 
         viewModel.getLoading()
-            .subscribe(loading -> statusLabel.setText(loading ? "Načítavam..." : ""));
+            .subscribe(loading -> statusLabel.setText(
+                loading ? tm.get("status.loading") : ""
+            ));
 
         viewModel.getError()
             .subscribe(error -> showErrorAlert(error));
@@ -264,8 +272,9 @@ private static void migrateTaxations(Connection conn) {
 **Key Facts:**
 - Desktop DB location: `~/beekeeper-desktop.db`
 - Android DB location: Internal app storage
-- 9 tables: apiaries, hives, inspections, feedings, taxations, taxation_frames, calendar_events, settings, inspection_recordings
+- 10 tables: apiaries, hives, inspections, feedings, taxations, taxation_frames, calendar_events, settings, inspection_recordings, **translations**
 - CASCADE DELETE enabled for referential integrity
+- translations table: 531 unique keys (1,062 SK+EN translations)
 
 ### 6. Repository Pattern (Business Logic Layer)
 
@@ -369,7 +378,16 @@ public void initialize() {
 ```java
 public class ApiaryDialog extends Dialog<Apiary> {
     public ApiaryDialog(Apiary existingApiary) {
-        setTitle(existingApiary == null ? "Pridať včelnicu" : "Upraviť včelnicu");
+        // CRITICAL: Always use TranslationManager for UI strings
+        TranslationManager tm = TranslationManager.getInstance();
+        setTitle(existingApiary == null
+            ? tm.get("dialog.title.add_apiary")
+            : tm.get("dialog.title.edit_apiary"));
+
+        // If dialog uses FXML, MUST pass ResourceBundle:
+        // FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dialog.fxml"));
+        // loader.setResources(new I18nResourceBundle(tm));
+        // Parent content = loader.load();
 
         // Create form fields
         TextField nameField = new TextField();
@@ -549,21 +567,362 @@ long timestamp = DateTimeConverter.toTimestamp(date, hour, minute);
 ### Required Field Markers
 Forms show `*` for required fields:
 ```java
-Label nameLabel = new Label("Názov *");  // Required field
+// Use translation key + asterisk for required fields
+TranslationManager tm = TranslationManager.getInstance();
+Label nameLabel = new Label(tm.get("label.name") + " *");  // Required field
 ```
 
-## Current Implementation Status (Phase 3 Complete)
+Or in FXML:
+```xml
+<!-- Translation value already includes * if required -->
+<Label text="%label.name_required"/>
+```
+
+## Internationalization (i18n) Rules - MANDATORY
+
+**CRITICAL:** This application is fully bilingual (Slovak/English) with 531 translation keys stored in the database. ALL new UI strings MUST follow i18n patterns.
+
+### 🚫 NEVER Do This (Hardcoded Strings)
+
+```java
+// ❌ WRONG - Hardcoded Slovak string
+Button addButton = new Button("Pridať včelnicu");
+alert.setTitle("Chyba");
+label.setText("Názov:");
+tooltip.setText("Koľko litrov krmiva");
+```
+
+```xml
+<!-- ❌ WRONG - Hardcoded Slovak string in FXML -->
+<Button text="Pridať včelnicu" onAction="#handleAdd"/>
+<Label text="Názov:"/>
+<TableColumn text="Lokalita"/>
+```
+
+### ✅ ALWAYS Do This (Translation Keys)
+
+**Rule 1: FXML files MUST use %key syntax**
+
+```xml
+<!-- ✅ CORRECT - Translation key -->
+<Button text="%button.add_apiary" onAction="#handleAdd"/>
+<Label text="%label.name"/>
+<TableColumn text="%label.location"/>
+<Tooltip text="%tooltip.feed_amount"/>
+```
+
+**Rule 2: Java code MUST use TranslationManager**
+
+```java
+// ✅ CORRECT - Get translation from TranslationManager
+TranslationManager tm = TranslationManager.getInstance();
+Button addButton = new Button(tm.get("button.add_apiary"));
+alert.setTitle(tm.get("error.title"));
+label.setText(tm.get("label.name"));
+tooltip.setText(tm.get("tooltip.feed_amount"));
+
+// ✅ CORRECT - Formatted strings with parameters
+alert.setHeaderText(tm.get("dialog.header.delete_apiary", apiary.getName()));
+statusLabel.setText(tm.get("status.loaded_count", apiaries.size()));
+```
+
+**Rule 3: Dialog classes MUST pass ResourceBundle to FXMLLoader**
+
+```java
+// ✅ CORRECT - Pass ResourceBundle before loading FXML
+public class MyDialog extends Dialog<Result> {
+    public MyDialog() {
+        TranslationManager tm = TranslationManager.getInstance();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/my_dialog.fxml"));
+        loader.setResources(new I18nResourceBundle(tm));  // CRITICAL!
+        Parent content = loader.load();
+
+        getDialogPane().setContent(content);
+        setTitle(tm.get("dialog.my_dialog.title"));
+    }
+}
+```
+
+### 🔄 Workflow: Adding New UI Strings
+
+**Step 1: Choose a translation key**
+
+Follow hierarchical naming convention:
+- Menu items: `menu.file`, `menu.edit`
+- Buttons: `button.add`, `button.save`, `button.delete`
+- Labels: `label.name`, `label.location`, `label.date`
+- Table columns: `table.column.name`, `table.column.date`
+- Dialog titles: `dialog.title.add_apiary`, `dialog.title.edit_hive`
+- Tooltips: `tooltip.worker_offspring`, `tooltip.feed_amount`
+- Error messages: `error.loading`, `error.validation.required`
+- Success messages: `success.created`, `success.updated`
+- Status messages: `status.loading`, `status.saved`
+- Calculator-specific: `varroa.label.mortality`, `queen.std.start_cells`
+
+**Step 2: Add translations to database**
+
+Create SQL file `/tmp/new_translations.sql`:
+```sql
+-- Add Slovak and English translations
+INSERT OR REPLACE INTO translations (id, key, language, value, category, createdAt) VALUES
+(lower(hex(randomblob(16))), 'button.export_data', 'sk', 'Exportovať dáta', 'button', datetime('now')),
+(lower(hex(randomblob(16))), 'button.export_data', 'en', 'Export Data', 'button', datetime('now')),
+
+(lower(hex(randomblob(16))), 'tooltip.export_data', 'sk', 'Exportuje všetky dáta do CSV súboru', 'tooltip', datetime('now')),
+(lower(hex(randomblob(16))), 'tooltip.export_data', 'en', 'Exports all data to CSV file', 'tooltip', datetime('now'));
+```
+
+**Step 3: Insert translations**
+```bash
+sqlite3 ~/beekeeper-desktop.db < /tmp/new_translations.sql
+```
+
+**Step 4: Use translation key in code**
+
+FXML:
+```xml
+<Button text="%button.export_data">
+    <tooltip><Tooltip text="%tooltip.export_data"/></tooltip>
+</Button>
+```
+
+Java:
+```java
+TranslationManager tm = TranslationManager.getInstance();
+Button exportButton = new Button(tm.get("button.export_data"));
+Tooltip tooltip = new Tooltip(tm.get("tooltip.export_data"));
+exportButton.setTooltip(tooltip);
+```
+
+**Step 5: Verify no [key] placeholders**
+
+Run application in both languages and check:
+- No `[button.export_data]` visible on screen
+- Text displays correctly in Slovak and English
+
+**Step 6: Update SQL init script (MANDATORY)**
+
+After adding new translations, ALWAYS export updated translations to keep SQL init script current:
+
+```bash
+# Export all translations to SQL file
+sqlite3 ~/beekeeper-desktop.db << 'EOF' > desktop/src/main/resources/sql/07_translations_all.sql
+.mode list
+.separator ''
+SELECT '-- Complete translations export (' || COUNT(*) || ' translations, ' || COUNT(DISTINCT key) || ' unique keys)' || char(10) ||
+'-- Generated: ' || datetime('now') || char(10) ||
+'-- Categories: app, button, label, table, dialog, calculator, varroa, queen, treatment, feed_type, event_type, validation, error, success, status' || char(10) || char(10) ||
+'INSERT OR REPLACE INTO translations (id, key, language, value, category, createdAt) VALUES' || char(10)
+FROM translations;
+
+SELECT
+  CASE
+    WHEN rownum > 1 THEN ',' || char(10)
+    ELSE ''
+  END ||
+  '(lower(hex(randomblob(16))), ''' || key || ''', ''' || language || ''', ''' || replace(value, '''', '''''') || ''', ''' || COALESCE(category, '') || ''', datetime(''now''))'
+FROM (
+  SELECT
+    key, language, value, category,
+    ROW_NUMBER() OVER (ORDER BY category, key, language) as rownum
+  FROM translations
+  ORDER BY category, key, language
+);
+
+SELECT ';' || char(10);
+EOF
+```
+
+Or use the provided script:
+```bash
+# Automated export script (easier)
+cd desktop/src/main/resources/sql/
+./export_translations.sh
+```
+
+**Why this is critical:**
+- New developers can initialize database with latest translations
+- CI/CD pipelines get correct translations
+- Database backup/restore works correctly
+- Prevents "missing translation" bugs in fresh installations
+
+**When to update:**
+- ✅ After adding any new translation keys
+- ✅ After fixing translation values
+- ✅ Before committing UI changes
+- ✅ Before creating pull requests
+
+**Verify export worked:**
+```bash
+# Check file size increased
+ls -lh desktop/src/main/resources/sql/07_translations_all.sql
+
+# Check translation count in SQL file
+grep -c "^(lower" desktop/src/main/resources/sql/07_translations_all.sql
+# Should match: sqlite3 ~/beekeeper-desktop.db "SELECT COUNT(*) FROM translations;"
+```
+
+### 📝 Categories for Organization
+
+Use these categories when adding translations:
+
+| Category | Usage | Examples |
+|----------|-------|----------|
+| `menu` | Menu bar items | menu.file, menu.edit, menu.help |
+| `button` | Button labels | button.add, button.save, button.delete |
+| `label` | Form field labels | label.name, label.location, label.date |
+| `table` | Table column headers | table.column.name, table.column.status |
+| `dialog` | Dialog titles/content | dialog.title.add_apiary, dialog.header.confirm |
+| `tooltip` | Tooltip text | tooltip.feed_amount, tooltip.worker_cycle |
+| `error` | Error messages | error.loading, error.validation.required |
+| `success` | Success messages | success.created, success.updated |
+| `status` | Status bar messages | status.loading, status.saved |
+| `validation` | Validation errors | validation.required, validation.invalid_number |
+| `calculator` | Calculator UI | calculator.varroa.title, calculator.feed.result |
+| `varroa` | Varroa calculator | varroa.label.mortality, varroa.tooltip.drone_offspring |
+| `queen` | Queen rearing | queen.std.start_cells, queen.split.broodless_period |
+| `treatment` | Treatment types | treatment.thymol, treatment.oxalic_acid |
+| `feed_type` | Feed types | feed_type.sugar_syrup, feed_type.fondant |
+| `event_type` | Calendar events | event_type.treatment, event_type.inspection |
+
+### 🧪 Testing i18n Changes
+
+After adding new translations:
+
+1. **Build and run:**
+   ```bash
+   gradle desktop:run
+   ```
+
+2. **Test in Slovak (default):**
+   - Launch app, verify text displays correctly
+
+3. **Test in English:**
+   - Click `Language → English (EN)`
+   - Restart application
+   - Verify all new text displays in English
+
+4. **Check for missing keys:**
+   - Look for `[button.my_key]` placeholders on screen
+   - If found, translation key is missing from database
+
+5. **Switch back to Slovak:**
+   - Click `Language → Slovenčina (SK)`
+   - Restart application
+
+### 📚 Translation Database Schema
+
+```sql
+CREATE TABLE translations (
+    id TEXT PRIMARY KEY NOT NULL,
+    key TEXT NOT NULL,
+    language TEXT NOT NULL,
+    value TEXT NOT NULL,
+    category TEXT,
+    context TEXT,
+    createdAt INTEGER,
+    updatedAt INTEGER,
+    UNIQUE(key, language)
+);
+
+-- Query translations
+SELECT key, value FROM translations WHERE language = 'sk' AND category = 'button';
+
+-- Count translations
+SELECT COUNT(DISTINCT key) as total_keys FROM translations;
+-- Result: 531 keys (as of 2025-02-16)
+```
+
+### ⚠️ Common Mistakes to Avoid
+
+1. **❌ Hardcoding strings in Java:**
+   ```java
+   // WRONG
+   alert.setTitle("Chyba pri načítaní");
+
+   // CORRECT
+   alert.setTitle(tm.get("error.loading_title"));
+   ```
+
+2. **❌ Forgetting ResourceBundle in dialogs:**
+   ```java
+   // WRONG - causes "No resource specified" error
+   FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dialog.fxml"));
+   Parent content = loader.load();
+
+   // CORRECT
+   FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dialog.fxml"));
+   loader.setResources(new I18nResourceBundle(TranslationManager.getInstance()));
+   Parent content = loader.load();
+   ```
+
+3. **❌ Using inconsistent key naming:**
+   ```java
+   // WRONG - inconsistent
+   "buttonAdd", "add_button", "Button.Add"
+
+   // CORRECT - hierarchical, consistent
+   "button.add", "button.save", "button.delete"
+   ```
+
+4. **❌ Only adding Slovak translation:**
+   ```sql
+   -- WRONG - only SK
+   INSERT INTO translations VALUES (..., 'button.new', 'sk', 'Nový', ...);
+
+   -- CORRECT - both SK and EN
+   INSERT INTO translations VALUES (..., 'button.new', 'sk', 'Nový', ...);
+   INSERT INTO translations VALUES (..., 'button.new', 'en', 'New', ...);
+   ```
+
+5. **❌ Forgetting to update SQL init script:**
+   ```bash
+   # WRONG - add translations but don't export
+   sqlite3 ~/beekeeper-desktop.db < /tmp/new_translations.sql
+   git commit -m "Add new feature"  # ❌ Other devs won't have translations!
+
+   # CORRECT - always export after adding translations
+   sqlite3 ~/beekeeper-desktop.db < /tmp/new_translations.sql
+   cd desktop/src/main/resources/sql/
+   ./export_translations.sh  # ✅ Updates 07_translations_all.sql
+   git add desktop/src/main/resources/sql/07_translations_all.sql
+   git commit -m "Add new feature with translations"
+   ```
+
+   **Why this matters:**
+   - Fresh database installations get latest translations
+   - CI/CD builds have correct translations
+   - Other developers don't see `[missing.key]` placeholders
+   - Database backup/restore works correctly
+
+### 📖 Reference Documentation
+
+- **I18N_IMPLEMENTATION_PLAN.md** - Original implementation plan
+- **I18N_IMPLEMENTATION_STATUS.md** - Complete status report (531 keys)
+- **Translation database:** `~/beekeeper-desktop.db` (translations table)
+- **TranslationManager:** `shared/i18n/TranslationManager.java`
+- **I18nResourceBundle:** `desktop/i18n/I18nResourceBundle.java`
+- **JdbcTranslationDao:** `desktop/dao/jdbc/JdbcTranslationDao.java`
+
+## Current Implementation Status
 
 **Implemented Features:**
 - ✅ Apiaries (Včelnice) - CRUD operations
 - ✅ Hives (Úle) - CRUD, active/inactive toggle
 - ✅ Inspections (Prehliadky) - 23-field form with create/edit
 - ✅ Feeding (Krmenie) - 9-field form with auto-calculations
-- ✅ Taxation (Taxácie) - Master-detail with frames, **apiary-based display**
+- ✅ Taxation (Taxácie) - Master-detail with frames, apiary-based display
 - ✅ Calendar (Kalendár) - 11-field events, global tab
-- ✅ 41 tests passing
+- ✅ **Internationalization (i18n)** - Full Slovak/English bilingual support
+  - 531 translation keys (1,062 SK+EN translations)
+  - Language switcher in menu bar
+  - All UI components fully translated (FXML + Java)
+  - Calculators: Varroa, Queen Rearing, Feed Calculator
+- ✅ 102 tests passing (updated for i18n)
 
 **Key Recent Changes:**
+- **2025-02-16:** Complete i18n implementation (531 keys, all UI bilingual)
 - Taxation changed from hive-based to apiary-based display
 - Added `hiveName` and `totalStarterFrames` columns to taxation table
 - Context tracking in ViewModels for correct reload after CRUD operations
@@ -582,6 +941,8 @@ Label nameLabel = new Label("Názov *");  // Required field
 - **TESTING.md** - Manual testing checklist for all features
 - **DEVELOPMENT_PLAN.md** - Future roadmap (Phases 4-13)
 - **EXCEL_MIGRATION.md** - One-time Excel → DB migration strategies
+- **I18N_IMPLEMENTATION_PLAN.md** - Original i18n implementation plan (9 phases)
+- **I18N_IMPLEMENTATION_STATUS.md** - Complete i18n status report (531 keys, 100% done)
 
 ## Troubleshooting
 
@@ -632,12 +993,20 @@ git commit -m "Add feature X with Y changes"
 
 **Database Schema:**
 - `desktop/src/main/java/com/beekeeper/desktop/db/DatabaseManager.java`
+- `~/beekeeper-desktop.db` (SQLite database with 10 tables)
+
+**Internationalization (i18n):**
+- `shared/src/main/java/com/beekeeper/shared/i18n/TranslationManager.java` (singleton, O(1) lookups)
+- `shared/src/main/java/com/beekeeper/shared/i18n/TranslationLoader.java` (interface)
+- `desktop/src/main/java/com/beekeeper/desktop/dao/jdbc/JdbcTranslationDao.java` (JDBC impl)
+- `desktop/src/main/java/com/beekeeper/desktop/i18n/I18nResourceBundle.java` (FXML bridge)
+- `desktop/src/main/java/com/beekeeper/desktop/util/TranslationMigration.java` (population script)
 
 **Shared ViewModels:**
-- `shared/src/main/java/com/beekeeper/shared/viewmodel/` (6 ViewModels)
+- `shared/src/main/java/com/beekeeper/shared/viewmodel/` (7 ViewModels)
 
 **Desktop Controllers:**
-- `desktop/src/main/java/com/beekeeper/desktop/controller/` (6 controllers)
+- `desktop/src/main/java/com/beekeeper/desktop/controller/` (8 controllers)
 
 **Dialogs:**
-- `desktop/src/main/java/com/beekeeper/desktop/dialog/` (7 dialogs)
+- `desktop/src/main/java/com/beekeeper/desktop/dialog/` (8 dialogs)
