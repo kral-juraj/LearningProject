@@ -2,6 +2,7 @@ package com.beekeeper.desktop.dialog;
 
 import com.beekeeper.desktop.calculator.TreatmentType;
 import com.beekeeper.desktop.calculator.VarroaTreatment;
+import com.beekeeper.shared.i18n.TranslationManager;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -22,10 +23,12 @@ public class VarroaTreatmentDialog extends Dialog<VarroaTreatment> {
     private final TextField effectivenessField;
     private final TextArea descriptionArea;
     private final Label effectivenessLabel;
+    private final TranslationManager tm;
 
     public VarroaTreatmentDialog(VarroaTreatment existingTreatment, LocalDate measurementDate, int projectionDays) {
-        setTitle(existingTreatment == null ? "Pridať liečenie" : "Upraviť liečenie");
-        setHeaderText(existingTreatment == null ? "Zadajte údaje o liečení" : "Upravte údaje o liečení");
+        tm = TranslationManager.getInstance();
+        setTitle(existingTreatment == null ? tm.get("dialog.add_treatment.title") : tm.get("dialog.edit_treatment.title"));
+        setHeaderText(existingTreatment == null ? tm.get("dialog.treatment.header_add") : tm.get("dialog.treatment.header_edit"));
 
         // Layout
         VBox content = new VBox(15);
@@ -36,9 +39,9 @@ public class VarroaTreatmentDialog extends Dialog<VarroaTreatment> {
         grid.setVgap(10);
 
         // Date picker
-        Label dateLabel = new Label("Dátum liečenia *");
+        Label dateLabel = new Label(tm.get("label.treatment_date"));
         treatmentDatePicker = new DatePicker();
-        treatmentDatePicker.setPromptText("Vyberte dátum");
+        treatmentDatePicker.setPromptText(tm.get("prompt.select_date"));
 
         // Set min/max dates based on projection period
         LocalDate minDate = measurementDate;
@@ -52,10 +55,10 @@ public class VarroaTreatmentDialog extends Dialog<VarroaTreatment> {
         });
 
         // Treatment type
-        Label typeLabel = new Label("Typ liečenia *");
+        Label typeLabel = new Label(tm.get("label.treatment_type"));
         treatmentTypeCombo = new ComboBox<>();
         treatmentTypeCombo.getItems().addAll(TreatmentType.values());
-        treatmentTypeCombo.setPromptText("Vyberte typ");
+        treatmentTypeCombo.setPromptText(tm.get("prompt.select_type"));
         treatmentTypeCombo.setMaxWidth(Double.MAX_VALUE);
 
         // Help button for treatment type
@@ -67,21 +70,21 @@ public class VarroaTreatmentDialog extends Dialog<VarroaTreatment> {
             if (selected != null) {
                 showTreatmentInfoDialog(selected);
             } else {
-                showInfoAlert("Info", "Najprv vyberte typ liečenia.");
+                showInfoAlert(tm.get("info.title"), tm.get("info.select_treatment_first"));
             }
         });
 
         // Effectiveness field
-        Label effectivenessFieldLabel = new Label("Efektivita (\\%) *");
+        Label effectivenessFieldLabel = new Label(tm.get("label.effectiveness"));
         effectivenessField = new TextField();
         effectivenessField.setPromptText("0-100");
         effectivenessLabel = new Label();
         effectivenessLabel.setStyle("-fx-text-fill: gray; -fx-font-size: 10px;");
 
         // Description
-        Label descLabel = new Label("Poznámka");
+        Label descLabel = new Label(tm.get("label.note"));
         descriptionArea = new TextArea();
-        descriptionArea.setPromptText("Voliteľná poznámka...");
+        descriptionArea.setPromptText(tm.get("prompt.optional_note"));
         descriptionArea.setPrefRowCount(3);
         descriptionArea.setWrapText(true);
 
@@ -104,7 +107,7 @@ public class VarroaTreatmentDialog extends Dialog<VarroaTreatment> {
         getDialogPane().setContent(content);
 
         // Buttons
-        ButtonType saveButton = new ButtonType("Uložiť", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveButton = new ButtonType(tm.get("button.save"), ButtonBar.ButtonData.OK_DONE);
         getDialogPane().getButtonTypes().addAll(saveButton, ButtonType.CANCEL);
 
         // Auto-fill effectiveness when treatment type selected
@@ -125,7 +128,7 @@ public class VarroaTreatmentDialog extends Dialog<VarroaTreatment> {
                     double value = Double.parseDouble(newVal);
                     if (value >= 0 && value <= 100) {
                         effectivenessLabel.setText(selected.getDescription() +
-                            String.format(" (zlikviduje %.0f\\%% kliešťov)", value));
+                            String.format(" (" + tm.get("treatment.eliminates_mites") + ")", value));
                     }
                 } catch (NumberFormatException ignored) {
                 }
@@ -188,7 +191,7 @@ public class VarroaTreatmentDialog extends Dialog<VarroaTreatment> {
 
                     return treatment;
                 } catch (Exception e) {
-                    showErrorAlert("Chyba pri ukladaní: " + e.getMessage());
+                    showErrorAlert(tm.get("error.saving", e.getMessage()));
                     return null;
                 }
             }
@@ -207,7 +210,7 @@ public class VarroaTreatmentDialog extends Dialog<VarroaTreatment> {
 
     private void showErrorAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Chyba");
+        alert.setTitle(tm.get("error.title"));
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
@@ -223,7 +226,7 @@ public class VarroaTreatmentDialog extends Dialog<VarroaTreatment> {
 
     private void showTreatmentInfoDialog(TreatmentType type) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Informácie o liečení: " + type.getDisplayName());
+        alert.setTitle(tm.get("dialog.treatment_info.title", type.getDisplayName()));
         alert.setHeaderText(type.getDisplayName());
 
         // Create TextArea for scrollable content

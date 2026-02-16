@@ -5,6 +5,7 @@ import com.beekeeper.desktop.dialog.CalendarEventDialog;
 import com.beekeeper.desktop.scheduler.DesktopSchedulerProvider;
 import com.beekeeper.desktop.util.EnumHelper;
 import com.beekeeper.shared.entity.CalendarEvent;
+import com.beekeeper.shared.i18n.TranslationManager;
 import com.beekeeper.shared.repository.CalendarEventRepository;
 import com.beekeeper.shared.util.DateUtils;
 import com.beekeeper.shared.viewmodel.CalendarEventViewModel;
@@ -61,9 +62,13 @@ public class CalendarEventListController {
     private CalendarEventViewModel viewModel;
     private CompositeDisposable disposables = new CompositeDisposable();
     private ObservableList<CalendarEvent> eventList = FXCollections.observableArrayList();
+    private TranslationManager tm;
 
     @FXML
     public void initialize() {
+        // Get TranslationManager instance
+        tm = TranslationManager.getInstance();
+
         // Initialize ViewModel
         JdbcCalendarEventDao calendarEventDao = new JdbcCalendarEventDao();
         CalendarEventRepository repository = new CalendarEventRepository(calendarEventDao);
@@ -109,7 +114,7 @@ public class CalendarEventListController {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(item ? "Áno" : "Nie");
+                    setText(item ? tm.get("common.yes") : tm.get("common.no"));
                 }
             }
         });
@@ -149,10 +154,10 @@ public class CalendarEventListController {
                     events -> {
                         eventList.clear();
                         eventList.addAll(events);
-                        statusLabel.setText(events.size() + " udalostí");
+                        statusLabel.setText(tm.get("status.events_count", events.size()));
                         statusLabel.setStyle("-fx-text-fill: black;");
                     },
-                    error -> showError("Chyba: " + error.getMessage())
+                    error -> showError(tm.get("error.loading_events", error.getMessage()))
                 )
         );
 
@@ -203,9 +208,9 @@ public class CalendarEventListController {
         if (selected == null) return;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Zmazať udalosť");
-        alert.setHeaderText("Zmazať udalosť: " + selected.getTitle());
-        alert.setContentText("Naozaj chcete zmazať túto udalosť?");
+        alert.setTitle(tm.get("dialog.delete_event.title"));
+        alert.setHeaderText(tm.get("dialog.delete_event.header", selected.getTitle()));
+        alert.setContentText(tm.get("dialog.delete_event.content"));
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -228,7 +233,7 @@ public class CalendarEventListController {
     }
 
     private void showError(String message) {
-        statusLabel.setText("Chyba: " + message);
+        statusLabel.setText(tm.get("error.prefix") + " " + message);
         statusLabel.setStyle("-fx-text-fill: red;");
     }
 

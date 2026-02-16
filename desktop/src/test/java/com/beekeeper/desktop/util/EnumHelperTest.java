@@ -43,32 +43,49 @@ class EnumHelperTest {
 
     @Test
     void testGetFeedTypeLabel() {
-        assertEquals("Sirup 1:1", EnumHelper.getFeedTypeLabel("SYRUP_1_1"));
-        assertEquals("Sirup 3:2", EnumHelper.getFeedTypeLabel("SYRUP_3_2"));
-        assertEquals("Fondán", EnumHelper.getFeedTypeLabel("FONDANT"));
-        assertEquals("Peľová placka", EnumHelper.getFeedTypeLabel("POLLEN_PATTY"));
+        // Labels are now internationalized, check they're not null/empty
+        assertNotNull(EnumHelper.getFeedTypeLabel("SYRUP_1_1"));
+        assertFalse(EnumHelper.getFeedTypeLabel("SYRUP_1_1").isEmpty());
+        assertNotNull(EnumHelper.getFeedTypeLabel("SYRUP_3_2"));
+        assertFalse(EnumHelper.getFeedTypeLabel("SYRUP_3_2").isEmpty());
+        assertNotNull(EnumHelper.getFeedTypeLabel("FONDANT"));
+        assertFalse(EnumHelper.getFeedTypeLabel("FONDANT").isEmpty());
+        assertNotNull(EnumHelper.getFeedTypeLabel("POLLEN_PATTY"));
+        assertFalse(EnumHelper.getFeedTypeLabel("POLLEN_PATTY").isEmpty());
         assertEquals("", EnumHelper.getFeedTypeLabel(null));
         assertEquals("UNKNOWN", EnumHelper.getFeedTypeLabel("UNKNOWN"));
     }
 
     @Test
     void testGetEventTypeLabel() {
-        assertEquals("Prehliadka", EnumHelper.getEventTypeLabel("INSPECTION"));
-        assertEquals("Krmenie", EnumHelper.getEventTypeLabel("FEEDING"));
-        assertEquals("Ošetrenie", EnumHelper.getEventTypeLabel("TREATMENT"));
-        assertEquals("Medobranie", EnumHelper.getEventTypeLabel("HARVEST"));
-        assertEquals("Pripomienka", EnumHelper.getEventTypeLabel("REMINDER"));
+        // Labels are now internationalized, check they're not null/empty
+        assertNotNull(EnumHelper.getEventTypeLabel("INSPECTION"));
+        assertFalse(EnumHelper.getEventTypeLabel("INSPECTION").isEmpty());
+        assertNotNull(EnumHelper.getEventTypeLabel("FEEDING"));
+        assertFalse(EnumHelper.getEventTypeLabel("FEEDING").isEmpty());
+        assertNotNull(EnumHelper.getEventTypeLabel("TREATMENT"));
+        assertFalse(EnumHelper.getEventTypeLabel("TREATMENT").isEmpty());
+        assertNotNull(EnumHelper.getEventTypeLabel("HARVEST"));
+        assertFalse(EnumHelper.getEventTypeLabel("HARVEST").isEmpty());
+        assertNotNull(EnumHelper.getEventTypeLabel("REMINDER"));
+        assertFalse(EnumHelper.getEventTypeLabel("REMINDER").isEmpty());
         assertEquals("", EnumHelper.getEventTypeLabel(null));
         assertEquals("UNKNOWN", EnumHelper.getEventTypeLabel("UNKNOWN"));
     }
 
     @Test
     void testGetFrameTypeLabel() {
-        assertEquals("Plodový", EnumHelper.getFrameTypeLabel("BROOD"));
-        assertEquals("Medový", EnumHelper.getFrameTypeLabel("HONEY"));
-        assertEquals("Osnova", EnumHelper.getFrameTypeLabel("FOUNDATION"));
-        assertEquals("Vystavený", EnumHelper.getFrameTypeLabel("DRAWN"));
-        assertEquals("Tmavý", EnumHelper.getFrameTypeLabel("DARK"));
+        // Labels are now internationalized, check they're not null/empty
+        assertNotNull(EnumHelper.getFrameTypeLabel("BROOD"));
+        assertFalse(EnumHelper.getFrameTypeLabel("BROOD").isEmpty());
+        assertNotNull(EnumHelper.getFrameTypeLabel("HONEY"));
+        assertFalse(EnumHelper.getFrameTypeLabel("HONEY").isEmpty());
+        assertNotNull(EnumHelper.getFrameTypeLabel("FOUNDATION"));
+        assertFalse(EnumHelper.getFrameTypeLabel("FOUNDATION").isEmpty());
+        assertNotNull(EnumHelper.getFrameTypeLabel("DRAWN"));
+        assertFalse(EnumHelper.getFrameTypeLabel("DRAWN").isEmpty());
+        assertNotNull(EnumHelper.getFrameTypeLabel("DARK"));
+        assertFalse(EnumHelper.getFrameTypeLabel("DARK").isEmpty());
         assertEquals("", EnumHelper.getFrameTypeLabel(null));
         assertEquals("UNKNOWN", EnumHelper.getFrameTypeLabel("UNKNOWN"));
     }

@@ -1,5 +1,7 @@
 package com.beekeeper.desktop.calculator;
 
+import com.beekeeper.shared.i18n.TranslationManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -35,70 +37,71 @@ public class QueenRearingCalculator {
      * Štandardná metóda - pôvodný odchov matiek (základný timeline).
      */
     private static List<QueenMilestone> calculateStandardMilestones(long startDate) {
+        TranslationManager tm = TranslationManager.getInstance();
         List<QueenMilestone> milestones = new ArrayList<>();
 
         // Farby: #FFFFCC = AKCIA (včelár musí zasiahnuť), #FFFFFF = INFO (len sledovanie)
 
         // D+0 - AKCIA
         milestones.add(createMilestone(
-                "Založenie matečníkov",
+                tm.get("queen.std.start_cells"),
                 0,
                 startDate,
-                "Prekladanie larvičiek do matečníkov. Ideálny vek larvičiek: 12-24 hodín.",
+                tm.get("queen.std.start_cells.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+5 - AKCIA
         milestones.add(createMilestone(
-                "Priloženie mriežky",
+                tm.get("queen.std.add_excluder"),
                 5,
                 startDate,
-                "Kontrola prijatia matečníkov. Priloženie materskej mriežky.",
+                tm.get("queen.std.add_excluder.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+7 - AKCIA
         milestones.add(createMilestone(
-                "Prehliadka plodu",
+                tm.get("queen.std.inspect_brood"),
                 7,
                 startDate,
-                "Kontrola matečníkov, odstránenie nekvalitných. Larvičky sa začínajú zavíčkovať.",
+                tm.get("queen.std.inspect_brood.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+10 - AKCIA
         milestones.add(createMilestone(
-                "Prehliadka matečníkov",
+                tm.get("queen.std.inspect_cells"),
                 10,
                 startDate,
-                "Všetky matečníky zavíčkované. Kontrola správnosti zavíčkovania.",
+                tm.get("queen.std.inspect_cells.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+12 - INFO
         milestones.add(createMilestone(
-                "Zavíčkovanie matečníkov",
+                tm.get("queen.std.capping_complete"),
                 12,
                 startDate,
-                "Matky sa vyvíjajú v zavíčkovaných matečníkoch. Príprava oddielkov.",
+                tm.get("queen.std.capping_complete.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+16 - AKCIA
         milestones.add(createMilestone(
-                "Presadenie do oddielkov",
+                tm.get("queen.std.place_cells"),
                 16,
                 startDate,
-                "Matečníky tesne pred vyhryznutím. Presadenie do oddielkov alebo oplodniačikov.",
+                tm.get("queen.std.place_cells.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+21 - AKCIA
         milestones.add(createMilestone(
-                "Kontrola kládky",
+                tm.get("queen.std.check_laying"),
                 21,
                 startDate,
-                "Kontrola kládky mladých matiek. Matky začínajú klásť vajíčka.",
+                tm.get("queen.std.check_laying.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
@@ -112,193 +115,188 @@ public class QueenRearingCalculator {
      * maximalizácia lietavok pred znaskou.
      */
     private static List<QueenMilestone> calculateOpacnenecMilestones(long startDate) {
+        TranslationManager tm = TranslationManager.getInstance();
         List<QueenMilestone> milestones = new ArrayList<>();
 
         // Farby: #FFFFCC = AKCIA (včelár musí zasiahnuť), #FFFFFF = INFO (len sledovanie)
 
         // D+0 - AKCIA
         milestones.add(createMilestone(
-                "Vytvorenie opačnenca",
+                tm.get("queen.split.make_split"),
                 0,
                 startDate,
-                "Odobrať matku + 2-3 plodové plasty + 3 zásobné plasty so včelami. " +
-                "V pôvodnom úli včely natiahnu núdzové matečníky.",
+                tm.get("queen.split.make_split.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+5 - AKCIA
         milestones.add(createMilestone(
-                "Vylamať zavíčkované matečníky",
+                tm.get("queen.split.break_cells"),
                 5,
                 startDate,
-                "Kontrola matečníkov, vylamať všetky okrem jedného najlepšieho.",
+                tm.get("queen.split.break_cells.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+7 - AKCIA
         milestones.add(createMilestone(
-                "Zvoliť si len 1 matečník",
+                tm.get("queen.split.choose_one"),
                 7,
                 startDate,
-                "Finálna kontrola, nechať len jeden kvalitný matečník.",
+                tm.get("queen.split.choose_one.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+9 - AKCIA
         milestones.add(createMilestone(
-                "Školkovanie matečníkov",
+                tm.get("queen.split.nurse_cells"),
                 9,
                 startDate,
-                "Kontrola stavu matečníkov, prípadné doškôlkovanie.",
+                tm.get("queen.split.nurse_cells.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+13 - INFO
         milestones.add(createMilestone(
-                "Liahnutie matky",
+                tm.get("queen.split.queen_emerges"),
                 13,
                 startDate,
-                "Mladá matka sa vylíahla z matečníka.",
+                tm.get("queen.split.queen_emerges.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+13 - AKCIA (Varroa pasca - príprava)
         milestones.add(createMilestone(
-                "Pripraviť varroa pascu v oddielku",
+                tm.get("queen.split.prepare_trap"),
                 13,
                 startDate,
-                "Príprava rámika na varroa pascu v oddielku (nová rodina z opačnenca).",
+                tm.get("queen.split.prepare_trap.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+16 - AKCIA (Varroa pasca - vloženie vajíčka)
         milestones.add(createMilestone(
-                "Vložiť varroa pascu (vajíčka)",
+                tm.get("queen.split.insert_trap_eggs"),
                 16,
                 startDate,
-                "Vložiť rámik s vajíčkami zo zdrojového úľa. " +
-                "Foretické kliešte zlezú z včiel na tento rámik a invadujú bunky.",
+                tm.get("queen.split.insert_trap_eggs.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+19 - INFO
         milestones.add(createMilestone(
-                "Pohlavné dospievanie matky",
+                tm.get("queen.split.sexual_maturity"),
                 19,
                 startDate,
-                "Matka pohlavne dospievа (D+19 až D+21). Pripravuje sa na páriace prelety.",
+                tm.get("queen.split.sexual_maturity.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+19 - AKCIA (Varroa pasca - vloženie larvy)
         milestones.add(createMilestone(
-                "Vložiť varroa pascu (larvy)",
+                tm.get("queen.split.insert_trap_larvae"),
                 19,
                 startDate,
-                "Vložiť rámik s larvami (viac lariev = viac kliešťov). " +
-                "Alternatívna pasca s otvoreným plodom.",
+                tm.get("queen.split.insert_trap_larvae.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+20 - INFO
         milestones.add(createMilestone(
-                "Posledný starý robotníci plod",
+                tm.get("queen.split.last_worker_brood"),
                 20,
                 startDate,
-                "Posledný starý liahnuci sa robotníci plod zo starej matky.",
+                tm.get("queen.split.last_worker_brood.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+22 - INFO
         milestones.add(createMilestone(
-                "Orientačné páriace prelety",
+                tm.get("queen.split.mating_flights"),
                 22,
                 startDate,
-                "Matka robí orientačné a páriace prelety (D+20 až D+25).",
+                tm.get("queen.split.mating_flights.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+23 - INFO
         milestones.add(createMilestone(
-                "Posledný starý trúdi plod",
+                tm.get("queen.split.last_drone_brood"),
                 23,
                 startDate,
-                "Posledný starý liahnuci sa trúdi plod zo starej matky.",
+                tm.get("queen.split.last_drone_brood.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+25 - AKCIA (Bezplodové obdobie - preliečenie)
         milestones.add(createMilestone(
-                "Bezplodové obdobie - preliečenie",
+                tm.get("queen.split.broodless_treatment"),
                 25,
                 startDate,
-                "Bezplodové obdobie (D+24 až D+26). Ideálny čas na preliečenie proti varroa. " +
-                "Možnosť varroa pasca alebo fumigácia.",
+                tm.get("queen.split.broodless_treatment.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+25 - AKCIA (Varroa pasca - odstránenie vajíčka)
         milestones.add(createMilestone(
-                "Odstrániť varroa pascu (vajíčka)",
+                tm.get("queen.split.remove_trap_eggs"),
                 25,
                 startDate,
-                "Odstrániť a zlikvidovať zavíčkovaný rámik s kliešťami. " +
-                "Mechanické odstránenie veľkého množstva kliešťov.",
+                tm.get("queen.split.remove_trap_eggs.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+27 - INFO
         milestones.add(createMilestone(
-                "Začiatok kládenia novej matky",
+                tm.get("queen.split.new_queen_laying"),
                 27,
                 startDate,
-                "Mladá matka začína klásť vajíčka (D+26 až D+29).",
+                tm.get("queen.split.new_queen_laying.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+30 - AKCIA (Varroa pasca - odstránenie larvy)
         milestones.add(createMilestone(
-                "Odstrániť varroa pascu (larvy)",
+                tm.get("queen.split.remove_trap_larvae"),
                 30,
                 startDate,
-                "Odstrániť a zlikvidovať rámik s larvami a kliešťami. " +
-                "Druhá fáza mechanického odstránenia.",
+                tm.get("queen.split.remove_trap_larvae.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+32 - AKCIA
         milestones.add(createMilestone(
-                "Kontrola plodovania novej matky",
+                tm.get("queen.split.check_laying"),
                 32,
                 startDate,
-                "Kontrola či mladá matka správne plodí (D+31 až D+33). Hľadať vajíčka a larvičky.",
+                tm.get("queen.split.check_laying.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+41 - INFO
         milestones.add(createMilestone(
-                "Posledné staré lietavky",
+                tm.get("queen.split.old_foragers_birth"),
                 41,
                 startDate,
-                "Narodenie posledných starých lietavok (zo starého plodu).",
+                tm.get("queen.split.old_foragers_birth.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+68 - INFO
         milestones.add(createMilestone(
-                "Prvé nové lietavky",
+                tm.get("queen.split.new_foragers_start"),
                 68,
                 startDate,
-                "Prvé lietavky z nového plodu začínajú lietať.",
+                tm.get("queen.split.new_foragers_start.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+76 - INFO
         milestones.add(createMilestone(
-                "Úmrtie starých lietavok",
+                tm.get("queen.split.old_foragers_death"),
                 76,
                 startDate,
-                "Úmrtie posledných starých lietavok. Rodina už má len mladé včely.",
+                tm.get("queen.split.old_foragers_death.desc"),
                 "#FFFFFF" // INFO
         ));
 
@@ -314,137 +312,134 @@ public class QueenRearingCalculator {
      * Po vylíahnutí plodu -> presypanie na medzistienky (obnova diela, zníženie vírusov).
      */
     private static List<QueenMilestone> calculateKlietkovanieMilestones(long startDate) {
+        TranslationManager tm = TranslationManager.getInstance();
         List<QueenMilestone> milestones = new ArrayList<>();
 
         // Farby: #FFFFCC = AKCIA (včelár musí zasiahnuť), #FFFFFF = INFO (len sledovanie)
 
         // D+0 - AKCIA
         milestones.add(createMilestone(
-                "Klietkovanie matky",
+                tm.get("queen.caging.cage_queen"),
                 0,
                 startDate,
-                "Matku zaklietkovať do klietky. Matka prestane klásť vajíčka.",
+                tm.get("queen.caging.cage_queen.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+21 - INFO
         milestones.add(createMilestone(
-                "Posledný starý robotníci plod",
+                tm.get("queen.caging.last_worker_brood"),
                 21,
                 startDate,
-                "Posledný starý liahnuci sa robotníci plod vylíahnutý.",
+                tm.get("queen.caging.last_worker_brood.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+24 - INFO
         milestones.add(createMilestone(
-                "Posledný starý trúdi plod",
+                tm.get("queen.caging.last_drone_brood"),
                 24,
                 startDate,
-                "Posledný starý liahnuci sa trúdi plod vylíahnutý.",
+                tm.get("queen.caging.last_drone_brood.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+25 - INFO
         milestones.add(createMilestone(
-                "Bezplodové obdobie - začiatok",
+                tm.get("queen.caging.broodless_start"),
                 25,
                 startDate,
-                "Začiatok bezplodového obdobia. Všetok plod sa vylíahol.",
+                tm.get("queen.caging.broodless_start.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+25 - AKCIA (Presypanie)
         milestones.add(createMilestone(
-                "Presypanie na medzistienky",
+                tm.get("queen.caging.shook_swarm"),
                 25,
                 startDate,
-                "Norské zimovanie: Presypať včely na medzistienky, presunúť medníky. " +
-                "Obnova diela, získanie nových plastov, zníženie tlaku vírusov. " +
-                "Ak nie je znaška, prikrmiť roztokom 1:1 (3x 0.5L).",
+                tm.get("queen.caging.shook_swarm.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+26 - AKCIA (Varroa pasca - vloženie)
         milestones.add(createMilestone(
-                "Vložiť varroa pascu (vajíčka)",
+                tm.get("queen.caging.insert_trap"),
                 26,
                 startDate,
-                "Počas bezplodového obdobia vložiť rámik s vajíčkami. " +
-                "Foretické kliešte zlezú na rámik.",
+                tm.get("queen.caging.insert_trap.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+30 - AKCIA (Preliečenie)
         milestones.add(createMilestone(
-                "Preliečenie kyselinou šťavelovou",
+                tm.get("queen.caging.oxalic_treatment"),
                 30,
                 startDate,
-                "Preliečenie pokapom kyselinou šťavelovou. Možná aj fumigácia.",
+                tm.get("queen.caging.oxalic_treatment.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+31 - AKCIA (Vypustenie matky)
         milestones.add(createMilestone(
-                "Vypustenie matky z klietky",
+                tm.get("queen.caging.release_queen"),
                 31,
                 startDate,
-                "Matku vypustiť z klietky. Matka začne opäť klásť vajíčka.",
+                tm.get("queen.caging.release_queen.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+31 - INFO
         milestones.add(createMilestone(
-                "Začiatok kládenia matky",
+                tm.get("queen.caging.laying_resumes"),
                 31,
                 startDate,
-                "Matka začína klásť vajíčka po plodovej pauze.",
+                tm.get("queen.caging.laying_resumes.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+35 - AKCIA (Varroa pasca - odstránenie)
         milestones.add(createMilestone(
-                "Odstrániť varroa pascu",
+                tm.get("queen.caging.remove_trap"),
                 35,
                 startDate,
-                "Odstrániť a zlikvidovať zavíčkovaný rámik s kliešťami. " +
-                "Kombinuje sa s presypaním na MS a preliečením.",
+                tm.get("queen.caging.remove_trap.desc"),
                 "#FFFFCC" // AKCIA
         ));
 
         // D+42 - INFO
         milestones.add(createMilestone(
-                "Posledné staré lietavky - narodenie",
+                tm.get("queen.caging.old_foragers_birth"),
                 42,
                 startDate,
-                "Narodenie posledných starých lietavok (D+24+21 = D+45, ale Excel ukazuje D+42).",
+                tm.get("queen.caging.old_foragers_birth.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+51 - INFO
         milestones.add(createMilestone(
-                "Prvý plod po pauze",
+                tm.get("queen.caging.first_new_brood"),
                 51,
                 startDate,
-                "Prvý liahnuci sa plod po plodovej pauze (D+31+20).",
+                tm.get("queen.caging.first_new_brood.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+72 - INFO
         milestones.add(createMilestone(
-                "Prvé nové lietavky",
+                tm.get("queen.caging.new_foragers_start"),
                 72,
                 startDate,
-                "Prvé lietavky z nového plodu začínajú lietať (D+51+21).",
+                tm.get("queen.caging.new_foragers_start.desc"),
                 "#FFFFFF" // INFO
         ));
 
         // D+77 - INFO
         milestones.add(createMilestone(
-                "Posledné staré lietavky - úmrtie",
+                tm.get("queen.caging.old_foragers_death"),
                 77,
                 startDate,
-                "Úmrtie posledných starých lietavok. Výrazné slabnutie rodiny.",
+                tm.get("queen.caging.old_foragers_death.desc"),
                 "#FFFFFF" // INFO
         ));
 

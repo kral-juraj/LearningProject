@@ -3,6 +3,7 @@ package com.beekeeper.desktop.controller;
 import com.beekeeper.desktop.dao.jdbc.JdbcApiaryDao;
 import com.beekeeper.desktop.scheduler.DesktopSchedulerProvider;
 import com.beekeeper.shared.entity.Apiary;
+import com.beekeeper.shared.i18n.TranslationManager;
 import com.beekeeper.shared.repository.ApiaryRepository;
 import com.beekeeper.shared.viewmodel.ApiaryViewModel;
 import io.reactivex.disposables.CompositeDisposable;
@@ -50,9 +51,13 @@ public class ApiaryListController {
     private CompositeDisposable disposables = new CompositeDisposable();
     private ObservableList<Apiary> apiaryList = FXCollections.observableArrayList();
     private Consumer<Apiary> onApiarySelected;
+    private TranslationManager tm;
 
     @FXML
     public void initialize() {
+        // Get TranslationManager instance
+        tm = TranslationManager.getInstance();
+
         // Initialize ViewModel with dependencies
         JdbcApiaryDao apiaryDao = new JdbcApiaryDao();
         ApiaryRepository repository = new ApiaryRepository(apiaryDao);
@@ -99,9 +104,9 @@ public class ApiaryListController {
                     apiaries -> {
                         apiaryList.clear();
                         apiaryList.addAll(apiaries);
-                        statusLabel.setText(apiaries.size() + " včelníc");
+                        statusLabel.setText(tm.get("status.apiaries_count", apiaries.size()));
                     },
-                    error -> showError("Chyba pri načítaní: " + error.getMessage())
+                    error -> showError(tm.get("error.loading_apiaries", error.getMessage()))
                 )
         );
 
@@ -114,7 +119,7 @@ public class ApiaryListController {
                         addButton.setDisable(loading);
                         apiaryTable.setDisable(loading);
                         if (loading) {
-                            statusLabel.setText("Načítavam...");
+                            statusLabel.setText(tm.get("status.loading"));
                         }
                     }
                 )
@@ -139,9 +144,9 @@ public class ApiaryListController {
     private void handleAddApiary() {
         // Show dialog to add new apiary
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Nová včelnica");
-        dialog.setHeaderText("Vytvorenie novej včelnice");
-        dialog.setContentText("Názov včelnice:");
+        dialog.setTitle(tm.get("dialog.add_apiary.title"));
+        dialog.setHeaderText(tm.get("dialog.add_apiary.header"));
+        dialog.setContentText(tm.get("dialog.add_apiary.content"));
 
         dialog.showAndWait().ifPresent(name -> {
             if (!name.trim().isEmpty()) {
@@ -156,9 +161,9 @@ public class ApiaryListController {
         if (selected == null) return;
 
         TextInputDialog dialog = new TextInputDialog(selected.getName());
-        dialog.setTitle("Upraviť včelnicu");
-        dialog.setHeaderText("Úprava včelnice");
-        dialog.setContentText("Názov včelnice:");
+        dialog.setTitle(tm.get("dialog.edit_apiary.title"));
+        dialog.setHeaderText(tm.get("dialog.edit_apiary.header"));
+        dialog.setContentText(tm.get("dialog.edit_apiary.content"));
 
         dialog.showAndWait().ifPresent(name -> {
             if (!name.trim().isEmpty()) {
@@ -174,9 +179,9 @@ public class ApiaryListController {
         if (selected == null) return;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Zmazať včelnicu");
-        alert.setHeaderText("Zmazať včelnicu: " + selected.getName());
-        alert.setContentText("Naozaj chcete zmazať túto včelnicu? Táto akcia je nevratná.");
+        alert.setTitle(tm.get("dialog.delete_apiary.title"));
+        alert.setHeaderText(tm.get("dialog.delete_apiary.header", selected.getName()));
+        alert.setContentText(tm.get("dialog.delete_apiary.content"));
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -199,7 +204,7 @@ public class ApiaryListController {
     }
 
     private void showError(String message) {
-        statusLabel.setText("Chyba: " + message);
+        statusLabel.setText(tm.get("error.prefix") + " " + message);
         statusLabel.setStyle("-fx-text-fill: red;");
     }
 

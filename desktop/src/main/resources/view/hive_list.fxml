@@ -10,14 +10,14 @@
     <!-- Top Toolbar -->
     <top>
         <ToolBar>
-            <Button fx:id="addButton" text="Pridať úľ" onAction="#handleAddHive"/>
-            <Button fx:id="editButton" text="Upraviť" onAction="#handleEditHive"/>
-            <Button fx:id="deleteButton" text="Zmazať" onAction="#handleDeleteHive"/>
-            <Button fx:id="toggleActiveButton" text="Zmeniť stav" onAction="#handleToggleActive"/>
+            <Button fx:id="addButton" text="%button.add_hive" onAction="#handleAddHive"/>
+            <Button fx:id="editButton" text="%button.edit" onAction="#handleEditHive"/>
+            <Button fx:id="deleteButton" text="%button.delete" onAction="#handleDeleteHive"/>
+            <Button fx:id="toggleActiveButton" text="%button.toggle_active" onAction="#handleToggleActive"/>
             <Separator orientation="VERTICAL"/>
-            <Button fx:id="showInspectionsButton" text="Zobraziť prehliadky" onAction="#handleShowInspections" style="-fx-font-weight: bold;"/>
+            <Button fx:id="showInspectionsButton" text="%button.show_inspections" onAction="#handleShowInspections" style="-fx-font-weight: bold;"/>
             <Separator orientation="VERTICAL"/>
-            <Button text="Obnoviť" onAction="#handleRefresh"/>
+            <Button text="%button.refresh" onAction="#handleRefresh"/>
         </ToolBar>
     </top>
 
@@ -25,9 +25,9 @@
     <center>
         <TableView fx:id="hiveTable" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="nameColumn" text="Názov" prefWidth="250"/>
-                <TableColumn fx:id="typeColumn" text="Typ" prefWidth="150"/>
-                <TableColumn fx:id="activeColumn" text="Aktívny" prefWidth="100"/>
+                <TableColumn fx:id="nameColumn" text="%table.name" prefWidth="250"/>
+                <TableColumn fx:id="typeColumn" text="%table.type" prefWidth="150"/>
+                <TableColumn fx:id="activeColumn" text="%table.active" prefWidth="100"/>
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
@@ -38,7 +38,7 @@
     <!-- Bottom Status Bar -->
     <bottom>
         <HBox style="-fx-background-color: #f9f9f9; -fx-padding: 8;">
-            <Label fx:id="statusLabel" text="Vyberte včelnicu"/>
+            <Label fx:id="statusLabel" text="%status.select_apiary"/>
         </HBox>
     </bottom>
 

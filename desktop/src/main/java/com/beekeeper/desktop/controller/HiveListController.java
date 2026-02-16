@@ -3,6 +3,7 @@ package com.beekeeper.desktop.controller;
 import com.beekeeper.desktop.dao.jdbc.JdbcHiveDao;
 import com.beekeeper.desktop.scheduler.DesktopSchedulerProvider;
 import com.beekeeper.shared.entity.Hive;
+import com.beekeeper.shared.i18n.TranslationManager;
 import com.beekeeper.shared.repository.HiveRepository;
 import com.beekeeper.shared.viewmodel.HiveViewModel;
 import io.reactivex.disposables.CompositeDisposable;
@@ -57,9 +58,13 @@ public class HiveListController {
     private ObservableList<Hive> hiveList = FXCollections.observableArrayList();
     private String currentApiaryId;
     private Consumer<Hive> onHiveSelected;
+    private TranslationManager tm;
 
     @FXML
     public void initialize() {
+        // Get TranslationManager instance
+        tm = TranslationManager.getInstance();
+
         // Initialize ViewModel
         JdbcHiveDao hiveDao = new JdbcHiveDao();
         HiveRepository repository = new HiveRepository(hiveDao);
@@ -112,9 +117,9 @@ public class HiveListController {
                     hives -> {
                         hiveList.clear();
                         hiveList.addAll(hives);
-                        statusLabel.setText(hives.size() + " úľov");
+                        statusLabel.setText(tm.get("status.hives_count", hives.size()));
                     },
-                    error -> showError("Chyba: " + error.getMessage())
+                    error -> showError(tm.get("error.loading_hives", error.getMessage()))
                 )
         );
 
@@ -143,14 +148,14 @@ public class HiveListController {
     @FXML
     private void handleAddHive() {
         if (currentApiaryId == null) {
-            showError("Najprv vyberte včelnicu");
+            showError(tm.get("error.select_apiary_first"));
             return;
         }
 
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Nový úľ");
-        dialog.setHeaderText("Vytvorenie nového úľa");
-        dialog.setContentText("Názov úľa:");
+        dialog.setTitle(tm.get("dialog.add_hive.title"));
+        dialog.setHeaderText(tm.get("dialog.add_hive.header"));
+        dialog.setContentText(tm.get("dialog.add_hive.content"));
 
         dialog.showAndWait().ifPresent(name -> {
             if (!name.trim().isEmpty()) {
@@ -165,9 +170,9 @@ public class HiveListController {
         if (selected == null) return;
 
         TextInputDialog dialog = new TextInputDialog(selected.getName());
-        dialog.setTitle("Upraviť úľ");
-        dialog.setHeaderText("Úprava úľa");
-        dialog.setContentText("Názov úľa:");
+        dialog.setTitle(tm.get("dialog.edit_hive.title"));
+        dialog.setHeaderText(tm.get("dialog.edit_hive.header"));
+        dialog.setContentText(tm.get("dialog.edit_hive.content"));
 
         dialog.showAndWait().ifPresent(name -> {
             if (!name.trim().isEmpty()) {
@@ -183,9 +188,9 @@ public class HiveListController {
         if (selected == null) return;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Zmazať úľ");
-        alert.setHeaderText("Zmazať úľ: " + selected.getName());
-        alert.setContentText("Naozaj chcete zmazať tento úľ?");
+        alert.setTitle(tm.get("dialog.delete_hive.title"));
+        alert.setHeaderText(tm.get("dialog.delete_hive.header", selected.getName()));
+        alert.setContentText(tm.get("dialog.delete_hive.content"));
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -218,7 +223,7 @@ public class HiveListController {
     }
 
     private void showError(String message) {
-        statusLabel.setText("Chyba: " + message);
+        statusLabel.setText(tm.get("error.prefix") + " " + message);
         statusLabel.setStyle("-fx-text-fill: red;");
     }
 

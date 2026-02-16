@@ -5,6 +5,7 @@ import com.beekeeper.desktop.dialog.FeedingDialog;
 import com.beekeeper.desktop.scheduler.DesktopSchedulerProvider;
 import com.beekeeper.desktop.util.EnumHelper;
 import com.beekeeper.shared.entity.Feeding;
+import com.beekeeper.shared.i18n.TranslationManager;
 import com.beekeeper.shared.repository.FeedingRepository;
 import com.beekeeper.shared.util.DateUtils;
 import com.beekeeper.shared.viewmodel.FeedingViewModel;
@@ -58,10 +59,14 @@ public class FeedingListController {
     private FeedingViewModel viewModel;
     private CompositeDisposable disposables = new CompositeDisposable();
     private ObservableList<Feeding> feedingList = FXCollections.observableArrayList();
+    private TranslationManager tm;
     private String currentHiveId;
 
     @FXML
     public void initialize() {
+        // Get TranslationManager instance
+        tm = TranslationManager.getInstance();
+
         // Initialize ViewModel
         JdbcFeedingDao feedingDao = new JdbcFeedingDao();
         FeedingRepository repository = new FeedingRepository(feedingDao);
@@ -136,10 +141,10 @@ public class FeedingListController {
                     feedings -> {
                         feedingList.clear();
                         feedingList.addAll(feedings);
-                        statusLabel.setText(feedings.size() + " kŕmení");
+                        statusLabel.setText(tm.get("status.feedings_count", feedings.size()));
                         statusLabel.setStyle("-fx-text-fill: black;");
                     },
-                    error -> showError("Chyba: " + error.getMessage())
+                    error -> showError(tm.get("error.loading_feedings", error.getMessage()))
                 )
         );
 
@@ -168,7 +173,7 @@ public class FeedingListController {
     @FXML
     private void handleAddFeeding() {
         if (currentHiveId == null) {
-            showError("Najprv vyberte úľ");
+            showError(tm.get("error.select_hive_first"));
             return;
         }
 
@@ -195,9 +200,9 @@ public class FeedingListController {
         if (selected == null) return;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Zmazať krmenie");
-        alert.setHeaderText("Zmazať krmenie z " + DateUtils.formatDate(selected.getFeedingDate()));
-        alert.setContentText("Naozaj chcete zmazať toto krmenie?");
+        alert.setTitle(tm.get("dialog.delete_feeding.title"));
+        alert.setHeaderText(tm.get("dialog.delete_feeding.header", DateUtils.formatDate(selected.getFeedingDate())));
+        alert.setContentText(tm.get("dialog.delete_feeding.content"));
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -214,7 +219,7 @@ public class FeedingListController {
     }
 
     private void showError(String message) {
-        statusLabel.setText("Chyba: " + message);
+        statusLabel.setText(tm.get("error.prefix") + " " + message);
         statusLabel.setStyle("-fx-text-fill: red;");
     }
 

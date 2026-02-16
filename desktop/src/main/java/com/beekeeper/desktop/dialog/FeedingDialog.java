@@ -1,9 +1,11 @@
 package com.beekeeper.desktop.dialog;
 
+import com.beekeeper.desktop.i18n.I18nResourceBundle;
 import com.beekeeper.desktop.util.DateTimeConverter;
 import com.beekeeper.desktop.util.EnumHelper;
 import com.beekeeper.desktop.util.ValidationHelper;
 import com.beekeeper.shared.entity.Feeding;
+import com.beekeeper.shared.i18n.TranslationManager;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -31,10 +33,12 @@ public class FeedingDialog extends Dialog<Feeding> {
 
     private Feeding existingFeeding;
     private String hiveId;
+    private TranslationManager tm;
 
     public FeedingDialog(Feeding feeding, String hiveId) {
         this.existingFeeding = feeding;
         this.hiveId = hiveId;
+        this.tm = TranslationManager.getInstance();
 
         initDialog();
         setupAutoCalculation();
@@ -42,16 +46,17 @@ public class FeedingDialog extends Dialog<Feeding> {
     }
 
     private void initDialog() {
-        setTitle(existingFeeding == null ? "Nové krmenie" : "Upraviť krmenie");
+        setTitle(existingFeeding == null ? tm.get("dialog.add_feeding.title") : tm.get("dialog.edit_feeding.title"));
         initModality(Modality.APPLICATION_MODAL);
         setResizable(true);
 
-        ButtonType saveButtonType = new ButtonType("Uložiť", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Zrušiť", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType saveButtonType = new ButtonType(tm.get("button.save"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(tm.get("button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/feeding_dialog.fxml"));
+            loader.setResources(new I18nResourceBundle(tm));
             GridPane gridPane = loader.load();
             getDialogPane().setContent(gridPane);
 
@@ -71,7 +76,7 @@ public class FeedingDialog extends Dialog<Feeding> {
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Chyba pri načítaní formulára: " + e.getMessage());
+            alert.setContentText(tm.get("error.loading_form", e.getMessage()));
             alert.showAndWait();
         }
 
@@ -148,17 +153,17 @@ public class FeedingDialog extends Dialog<Feeding> {
 
     private boolean validateInput() {
         if (datePicker.getValue() == null) {
-            ValidationHelper.showValidationError("Dátum je povinný");
+            ValidationHelper.showValidationError(tm.get("validation.date_required"));
             return false;
         }
 
         if (!ValidationHelper.isValidInteger(hourField.getText())) {
-            ValidationHelper.showValidationError("Hodina musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.hour_must_be_number"));
             return false;
         }
 
         if (!ValidationHelper.isValidInteger(minuteField.getText())) {
-            ValidationHelper.showValidationError("Minúta musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.minute_must_be_number"));
             return false;
         }
 
@@ -166,39 +171,39 @@ public class FeedingDialog extends Dialog<Feeding> {
         int minute = ValidationHelper.parseInt(minuteField.getText());
 
         if (!ValidationHelper.isInRange(hour, 0, 23)) {
-            ValidationHelper.showValidationError("Hodina musí byť medzi 0 a 23");
+            ValidationHelper.showValidationError(tm.get("validation.hour_range"));
             return false;
         }
 
         if (!ValidationHelper.isInRange(minute, 0, 59)) {
-            ValidationHelper.showValidationError("Minúta musí byť medzi 0 a 59");
+            ValidationHelper.showValidationError(tm.get("validation.minute_range"));
             return false;
         }
 
         if (feedTypeCombo.getSelectionModel().getSelectedItem() == null) {
-            ValidationHelper.showValidationError("Typ krmiva je povinný");
+            ValidationHelper.showValidationError(tm.get("validation.feed_type_required"));
             return false;
         }
 
         if (!ValidationHelper.isValidDouble(amountField.getText())) {
-            ValidationHelper.showValidationError("Množstvo musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.amount_must_be_number"));
             return false;
         }
 
         double amount = ValidationHelper.parseDouble(amountField.getText());
         if (amount <= 0) {
-            ValidationHelper.showValidationError("Množstvo musí byť väčšie ako 0");
+            ValidationHelper.showValidationError(tm.get("validation.amount_greater_than_zero"));
             return false;
         }
 
         // Validate weight fields if provided
         if (!weightBeforeField.getText().trim().isEmpty() && !ValidationHelper.isValidDouble(weightBeforeField.getText())) {
-            ValidationHelper.showValidationError("Hmotnosť pred musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.weight_before_must_be_number"));
             return false;
         }
 
         if (!weightAfterField.getText().trim().isEmpty() && !ValidationHelper.isValidDouble(weightAfterField.getText())) {
-            ValidationHelper.showValidationError("Hmotnosť po musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.weight_after_must_be_number"));
             return false;
         }
 

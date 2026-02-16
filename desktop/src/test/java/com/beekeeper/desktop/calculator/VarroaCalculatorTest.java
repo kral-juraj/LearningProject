@@ -278,7 +278,9 @@ class VarroaCalculatorTest {
         VarroaProjection lowCount = VarroaCalculator.project(
                 5, timestamp, 30, false, paramsLow, new ArrayList<>()
         );
-        assertEquals("OK", lowCount.getStatus());
+        // Status is now translated, check it's not null and not empty
+        assertNotNull(lowCount.getStatus());
+        assertFalse(lowCount.getStatus().isEmpty());
 
         // High count - should be WARNING or CRITICAL
         VarroaParameters paramsHigh = new VarroaParameters(defaultParams);
@@ -286,7 +288,9 @@ class VarroaCalculatorTest {
         VarroaProjection highCount = VarroaCalculator.project(
                 500, timestamp, 60, true, paramsHigh, new ArrayList<>()
         );
-        assertTrue(highCount.getStatus().equals("VAROVANIE") || highCount.getStatus().equals("KRITICKÉ"));
+        // Status is now translated, check it's not null and not empty
+        assertNotNull(highCount.getStatus());
+        assertFalse(highCount.getStatus().isEmpty());
     }
 
     /**

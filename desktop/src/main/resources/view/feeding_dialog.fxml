@@ -13,12 +13,12 @@
     <!-- Row 0: Date -->
     <HBox spacing="0" GridPane.columnIndex="0" GridPane.rowIndex="0">
         <Label text="*" style="-fx-text-fill: red; -fx-font-weight: bold;"/>
-        <Label text=" Dátum:"/>
+        <Label text="%label.date"/>
     </HBox>
     <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.columnSpan="2" maxWidth="Infinity"/>
 
     <!-- Row 1: Time -->
-    <Label text="Čas:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <Label text="%label.time" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="2">
         <TextField fx:id="hourField" promptText="HH" prefWidth="50" maxWidth="50"/>
         <Label text=":"/>
@@ -28,27 +28,27 @@
     <!-- Row 2: Feed Type -->
     <HBox spacing="0" GridPane.columnIndex="0" GridPane.rowIndex="2">
         <Label text="*" style="-fx-text-fill: red; -fx-font-weight: bold;"/>
-        <Label text=" Typ krmiva:"/>
+        <Label text="%label.feed_type"/>
     </HBox>
     <ComboBox fx:id="feedTypeCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="2" maxWidth="Infinity"/>
 
     <!-- Row 3: Weight Before -->
-    <Label text="Hmotnosť pred (kg):" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <Label text="%label.weight_before" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
     <TextField fx:id="weightBeforeField" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
 
     <!-- Row 4: Weight After -->
-    <Label text="Hmotnosť po (kg):" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+    <Label text="%label.weight_after" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
     <TextField fx:id="weightAfterField" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.columnSpan="2"/>
 
     <!-- Row 5: Amount -->
     <HBox spacing="0" GridPane.columnIndex="0" GridPane.rowIndex="5">
         <Label text="*" style="-fx-text-fill: red; -fx-font-weight: bold;"/>
-        <Label text=" Množstvo (kg):"/>
+        <Label text="%label.amount_kg"/>
     </HBox>
     <TextField fx:id="amountField" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.columnSpan="2"/>
 
     <!-- Row 6: Notes -->
-    <Label text="Poznámky:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.valignment="TOP"/>
+    <Label text="%label.notes" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.valignment="TOP"/>
     <TextArea fx:id="notesArea" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.columnSpan="2"
               prefHeight="80" wrapText="true"/>
 

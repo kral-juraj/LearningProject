@@ -13,59 +13,59 @@
     <!-- Position -->
     <HBox spacing="0" GridPane.columnIndex="0" GridPane.rowIndex="0">
         <Label text="*" style="-fx-text-fill: red; -fx-font-weight: bold;"/>
-        <Label text=" Pozícia:"/>
+        <Label text="%label.position"/>
     </HBox>
     <TextField fx:id="positionField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
     <!-- Frame Type -->
     <HBox spacing="0" GridPane.columnIndex="0" GridPane.rowIndex="1">
         <Label text="*" style="-fx-text-fill: red; -fx-font-weight: bold;"/>
-        <Label text=" Typ rámika:"/>
+        <Label text="%label.frame_type"/>
     </HBox>
     <ComboBox fx:id="frameTypeCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity"/>
 
     <!-- Capped Brood -->
-    <Label text="Zavíčkovaný plod (dm):" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <Label text="%label.capped_brood_dm" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
     <TextField fx:id="cappedBroodField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
     <!-- Uncapped Brood -->
-    <Label text="Otvorený plod (dm):" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <Label text="%label.uncapped_brood_dm" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
     <TextField fx:id="uncappedBroodField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
     <!-- Pollen -->
-    <Label text="Peľ (dm):" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+    <Label text="%label.pollen_dm" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
     <TextField fx:id="pollenField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
     <!-- Capped Stores -->
-    <Label text="Zavíčkované zásoby (dm):" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+    <Label text="%label.capped_stores_dm" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
     <TextField fx:id="cappedStoresField" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
     <!-- Uncapped Stores -->
-    <Label text="Nezavíčkované zásoby (dm):" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+    <Label text="%label.uncapped_stores_dm" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
     <TextField fx:id="uncappedStoresField" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
 
     <!-- Frame Year -->
-    <Label text="Rok rámika:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+    <Label text="%label.frame_year" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
     <TextField fx:id="frameYearField" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
 
     <!-- Is Starter -->
-    <Label text="Stavebný rámik:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+    <Label text="%label.is_starter" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
     <CheckBox fx:id="isStarterCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
 
     <!-- Has Queen -->
-    <Label text="Má matku:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+    <Label text="%label.has_queen" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
     <CheckBox fx:id="hasQueenCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
 
     <!-- Has Cage -->
-    <Label text="Má klietku:" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+    <Label text="%label.has_cage" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
     <CheckBox fx:id="hasCageCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
 
     <!-- Has Nuc Box -->
-    <Label text="Opačnenec:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
+    <Label text="%label.has_nuc_box" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
     <CheckBox fx:id="hasNucBoxCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
 
     <!-- Notes -->
-    <Label text="Poznámky:" GridPane.columnIndex="0" GridPane.rowIndex="12" GridPane.valignment="TOP"/>
+    <Label text="%label.notes" GridPane.columnIndex="0" GridPane.rowIndex="12" GridPane.valignment="TOP"/>
     <TextArea fx:id="notesArea" GridPane.columnIndex="1" GridPane.rowIndex="12" prefHeight="80" wrapText="true"/>
 
     <columnConstraints>

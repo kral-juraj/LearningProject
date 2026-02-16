@@ -1,8 +1,10 @@
 package com.beekeeper.desktop.dialog;
 
+import com.beekeeper.desktop.i18n.I18nResourceBundle;
 import com.beekeeper.desktop.util.DateTimeConverter;
 import com.beekeeper.desktop.util.ValidationHelper;
 import com.beekeeper.shared.entity.Inspection;
+import com.beekeeper.shared.i18n.TranslationManager;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -54,10 +56,12 @@ public class InspectionDialog extends Dialog<Inspection> {
 
     private Inspection existingInspection;
     private String hiveId;
+    private TranslationManager tm;
 
     public InspectionDialog(Inspection inspection, String hiveId) {
         this.existingInspection = inspection;
         this.hiveId = hiveId;
+        this.tm = TranslationManager.getInstance();
 
         initDialog();
         setupBindings();
@@ -65,16 +69,17 @@ public class InspectionDialog extends Dialog<Inspection> {
     }
 
     private void initDialog() {
-        setTitle(existingInspection == null ? "Nová prehliadka" : "Upraviť prehliadku");
+        setTitle(existingInspection == null ? tm.get("dialog.add_inspection.title") : tm.get("dialog.edit_inspection.title"));
         initModality(Modality.APPLICATION_MODAL);
         setResizable(true);
 
-        ButtonType saveButtonType = new ButtonType("Uložiť", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Zrušiť", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType saveButtonType = new ButtonType(tm.get("button.save"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(tm.get("button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/inspection_dialog.fxml"));
+            loader.setResources(new I18nResourceBundle(tm));
             ScrollPane scrollPane = loader.load();
             getDialogPane().setContent(scrollPane);
 
@@ -111,7 +116,7 @@ public class InspectionDialog extends Dialog<Inspection> {
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Chyba pri načítaní formulára: " + e.getMessage());
+            alert.setContentText(tm.get("error.loading_form", e.getMessage()));
             alert.showAndWait();
         }
 
@@ -208,17 +213,17 @@ public class InspectionDialog extends Dialog<Inspection> {
 
     private boolean validateInput() {
         if (datePicker.getValue() == null) {
-            ValidationHelper.showValidationError("Dátum je povinný");
+            ValidationHelper.showValidationError(tm.get("validation.date_required"));
             return false;
         }
 
         if (!ValidationHelper.isValidInteger(hourField.getText())) {
-            ValidationHelper.showValidationError("Hodina musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.hour_must_be_number"));
             return false;
         }
 
         if (!ValidationHelper.isValidInteger(minuteField.getText())) {
-            ValidationHelper.showValidationError("Minúta musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.minute_must_be_number"));
             return false;
         }
 
@@ -226,53 +231,53 @@ public class InspectionDialog extends Dialog<Inspection> {
         int minute = ValidationHelper.parseInt(minuteField.getText());
 
         if (!ValidationHelper.isInRange(hour, 0, 23)) {
-            ValidationHelper.showValidationError("Hodina musí byť medzi 0 a 23");
+            ValidationHelper.showValidationError(tm.get("validation.hour_range"));
             return false;
         }
 
         if (!ValidationHelper.isInRange(minute, 0, 59)) {
-            ValidationHelper.showValidationError("Minúta musí byť medzi 0 a 59");
+            ValidationHelper.showValidationError(tm.get("validation.minute_range"));
             return false;
         }
 
         // Validate numeric fields
         if (!temperatureField.getText().trim().isEmpty() && !ValidationHelper.isValidDouble(temperatureField.getText())) {
-            ValidationHelper.showValidationError("Teplota musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.temperature_must_be_number"));
             return false;
         }
 
         if (!foodStoresField.getText().trim().isEmpty() && !ValidationHelper.isValidDouble(foodStoresField.getText())) {
-            ValidationHelper.showValidationError("Zásoby musia byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.food_stores_must_be_number"));
             return false;
         }
 
         if (!totalFramesField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(totalFramesField.getText())) {
-            ValidationHelper.showValidationError("Celkový počet rámikov musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.total_frames_must_be_number"));
             return false;
         }
 
         if (!broodFramesField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(broodFramesField.getText())) {
-            ValidationHelper.showValidationError("Plodové rámiky musia byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.brood_frames_must_be_number"));
             return false;
         }
 
         if (!pollenFramesField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(pollenFramesField.getText())) {
-            ValidationHelper.showValidationError("Peľové rámiky musia byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.pollen_frames_must_be_number"));
             return false;
         }
 
         if (!cappedBroodField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(cappedBroodField.getText())) {
-            ValidationHelper.showValidationError("Zapečatený plod musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.capped_brood_must_be_number"));
             return false;
         }
 
         if (!uncappedBroodField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(uncappedBroodField.getText())) {
-            ValidationHelper.showValidationError("Nezapečatený plod musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.uncapped_brood_must_be_number"));
             return false;
         }
 
         if (!varroaCountField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(varroaCountField.getText())) {
-            ValidationHelper.showValidationError("Počet varry musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.varroa_count_must_be_number"));
             return false;
         }
 

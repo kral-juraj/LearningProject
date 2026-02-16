@@ -10,13 +10,25 @@
     <!-- Top Menu Bar -->
     <top>
         <MenuBar>
-            <Menu text="Súbor">
-                <MenuItem text="Nastavenia"/>
+            <Menu text="%menu.file">
+                <MenuItem text="%menu.settings"/>
                 <SeparatorMenuItem/>
-                <MenuItem text="Ukončiť"/>
+                <MenuItem text="%menu.exit"/>
             </Menu>
-            <Menu text="Nápoveda">
-                <MenuItem text="O aplikácii"/>
+
+            <Menu text="%menu.language">
+                <RadioMenuItem fx:id="langSlovak" text="Slovenčina (SK)"
+                               onAction="#handleLanguageChange" selected="true">
+                    <toggleGroup><ToggleGroup fx:id="languageGroup"/></toggleGroup>
+                </RadioMenuItem>
+                <RadioMenuItem fx:id="langEnglish" text="English (EN)"
+                               onAction="#handleLanguageChange">
+                    <toggleGroup><fx:reference source="languageGroup"/></toggleGroup>
+                </RadioMenuItem>
+            </Menu>
+
+            <Menu text="%menu.help">
+                <MenuItem text="%menu.about"/>
             </Menu>
         </MenuBar>
     </top>
@@ -24,26 +36,26 @@
     <!-- Main Content Area with Tabs -->
     <center>
         <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE">
-            <Tab fx:id="apiariesTab" text="Včelnice">
+            <Tab fx:id="apiariesTab" text="%tab.apiaries">
                 <!-- Content will be loaded dynamically -->
             </Tab>
-            <Tab fx:id="hivesTab" text="Úle" disable="true">
-                <Label text="Vyberte včelnicu"/>
+            <Tab fx:id="hivesTab" text="%tab.hives" disable="true">
+                <Label text="%status.select_apiary"/>
             </Tab>
-            <Tab fx:id="inspectionsTab" text="Prehliadky" disable="true">
-                <Label text="Vyberte úľ"/>
+            <Tab fx:id="inspectionsTab" text="%tab.inspections" disable="true">
+                <Label text="%status.select_hive"/>
             </Tab>
-            <Tab fx:id="feedingTab" text="Krmenie" disable="true">
-                <Label text="Vyberte úľ"/>
+            <Tab fx:id="feedingTab" text="%tab.feeding" disable="true">
+                <Label text="%status.select_hive"/>
             </Tab>
-            <Tab fx:id="taxationTab" text="Taxácie" disable="true">
-                <Label text="Vyberte úľ"/>
+            <Tab fx:id="taxationTab" text="%tab.taxation" disable="true">
+                <Label text="%status.select_hive"/>
             </Tab>
-            <Tab fx:id="calendarTab" text="Kalendár">
-                <Label text="Načítavam..."/>
+            <Tab fx:id="calendarTab" text="%tab.calendar">
+                <Label text="%status.loading"/>
             </Tab>
-            <Tab fx:id="calculatorsTab" text="Kalkulačky">
-                <Label text="Načítavam..."/>
+            <Tab fx:id="calculatorsTab" text="%tab.calculators">
+                <Label text="%status.loading"/>
             </Tab>
         </TabPane>
     </center>
@@ -51,7 +63,7 @@
     <!-- Bottom Status Bar -->
     <bottom>
         <HBox style="-fx-background-color: #f0f0f0; -fx-padding: 5;">
-            <Label text="Beekeeper Desktop v1.0" style="-fx-font-size: 10px;"/>
+            <Label text="%app.version" style="-fx-font-size: 10px;"/>
         </HBox>
     </bottom>
 </BorderPane>

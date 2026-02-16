@@ -10,11 +10,11 @@
     <!-- Top Toolbar -->
     <top>
         <ToolBar>
-            <Button fx:id="addButton" text="Nová prehliadka" onAction="#handleAddInspection"/>
-            <Button fx:id="viewButton" text="Zobraziť" onAction="#handleViewInspection"/>
-            <Button fx:id="deleteButton" text="Zmazať" onAction="#handleDeleteInspection"/>
+            <Button fx:id="addButton" text="%button.add_inspection" onAction="#handleAddInspection"/>
+            <Button fx:id="viewButton" text="%button.view" onAction="#handleViewInspection"/>
+            <Button fx:id="deleteButton" text="%button.delete" onAction="#handleDeleteInspection"/>
             <Separator orientation="VERTICAL"/>
-            <Button text="Obnoviť" onAction="#handleRefresh"/>
+            <Button text="%button.refresh" onAction="#handleRefresh"/>
         </ToolBar>
     </top>
 
@@ -22,9 +22,9 @@
     <center>
         <TableView fx:id="inspectionTable" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="dateColumn" text="Dátum" prefWidth="200"/>
-                <TableColumn fx:id="temperatureColumn" text="Teplota (°C)" prefWidth="150"/>
-                <TableColumn fx:id="strengthColumn" text="Sila (1-10)" prefWidth="150"/>
+                <TableColumn fx:id="dateColumn" text="%table.date" prefWidth="200"/>
+                <TableColumn fx:id="temperatureColumn" text="%table.temperature" prefWidth="150"/>
+                <TableColumn fx:id="strengthColumn" text="%table.strength" prefWidth="150"/>
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
@@ -35,7 +35,7 @@
     <!-- Bottom Status Bar -->
     <bottom>
         <HBox style="-fx-background-color: #f9f9f9; -fx-padding: 8;">
-            <Label fx:id="statusLabel" text="Vyberte úľ"/>
+            <Label fx:id="statusLabel" text="%status.select_hive"/>
         </HBox>
     </bottom>
 

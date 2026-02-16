@@ -11,24 +11,24 @@
             <Insets top="15" right="15" bottom="15" left="15"/>
         </padding>
 
-        <!-- Section 1: Základné údaje -->
-        <Label text="Základné údaje" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+        <!-- Section 1: Basic Information -->
+        <Label text="%inspection.section.basic" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
         <Separator/>
         <GridPane hgap="10" vgap="10">
             <HBox spacing="0" GridPane.columnIndex="0" GridPane.rowIndex="0">
                 <Label text="*" style="-fx-text-fill: red; -fx-font-weight: bold;"/>
-                <Label text=" Dátum:"/>
+                <Label text="%label.date"/>
             </HBox>
             <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="Infinity"/>
 
-            <Label text="Čas:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="%label.time" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <TextField fx:id="hourField" promptText="HH" prefWidth="50" maxWidth="50"/>
                 <Label text=":"/>
                 <TextField fx:id="minuteField" promptText="MM" prefWidth="50" maxWidth="50"/>
             </HBox>
 
-            <Label text="Teplota (°C):" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Label text="%label.temperature" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
             <TextField fx:id="temperatureField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
             <columnConstraints>
@@ -37,18 +37,18 @@
             </columnConstraints>
         </GridPane>
 
-        <!-- Section 2: Sila a zásoby -->
-        <Label text="Sila a zásoby" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+        <!-- Section 2: Strength and Stores -->
+        <Label text="%inspection.section.strength" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
         <Separator/>
         <GridPane hgap="10" vgap="10">
-            <Label text="Odhad sily (1-10):" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label text="%label.strength_estimate" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
                 <Slider fx:id="strengthSlider" min="1" max="10" value="5" showTickLabels="true" showTickMarks="true"
                         majorTickUnit="1" minorTickCount="0" snapToTicks="true" prefWidth="200"/>
                 <Label fx:id="strengthLabel" text="5" style="-fx-font-weight: bold;"/>
             </HBox>
 
-            <Label text="Zásoby (kg):" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="%label.food_stores" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <TextField fx:id="foodStoresField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
             <columnConstraints>
@@ -57,23 +57,23 @@
             </columnConstraints>
         </GridPane>
 
-        <!-- Section 3: Rámiky a plod -->
-        <Label text="Rámiky a plod" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+        <!-- Section 3: Frames and Brood -->
+        <Label text="%inspection.section.frames" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
         <Separator/>
         <GridPane hgap="10" vgap="10">
-            <Label text="Celkový počet rámikov:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label text="%label.total_frames" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <TextField fx:id="totalFramesField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-            <Label text="Plodové rámiky:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="%label.brood_frames" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <TextField fx:id="broodFramesField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-            <Label text="Peľové rámiky:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Label text="%label.pollen_frames" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
             <TextField fx:id="pollenFramesField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-            <Label text="Zapečatený plod (dm):" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <Label text="%label.capped_brood" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
             <TextField fx:id="cappedBroodField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
-            <Label text="Nezapečatený plod (dm):" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <Label text="%label.uncapped_brood" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
             <TextField fx:id="uncappedBroodField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
             <columnConstraints>
@@ -82,14 +82,14 @@
             </columnConstraints>
         </GridPane>
 
-        <!-- Section 4: Matka -->
-        <Label text="Matka" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+        <!-- Section 4: Queen -->
+        <Label text="%inspection.section.queen" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
         <Separator/>
         <GridPane hgap="10" vgap="10">
-            <Label text="Matka videná:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label text="%label.queen_seen" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <CheckBox fx:id="queenSeenCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-            <Label text="Poznámka o matke:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="%label.queen_note" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <TextField fx:id="queenNoteField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
             <columnConstraints>
@@ -99,13 +99,13 @@
         </GridPane>
 
         <!-- Section 5: Varroa -->
-        <Label text="Varroa" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+        <Label text="%inspection.section.varroa" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
         <Separator/>
         <GridPane hgap="10" vgap="10">
-            <Label text="Varroa prítomná:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label text="%label.varroa_check" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <CheckBox fx:id="varroaCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-            <Label text="Počet varry:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="%label.varroa_count" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <TextField fx:id="varroaCountField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
             <columnConstraints>
@@ -114,18 +114,18 @@
             </columnConstraints>
         </GridPane>
 
-        <!-- Section 6: Správanie -->
-        <Label text="Správanie" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+        <!-- Section 6: Behavior -->
+        <Label text="%inspection.section.behavior" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
         <Separator/>
         <GridPane hgap="10" vgap="10">
-            <Label text="Agresivita (1-5):" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label text="%label.aggression" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
                 <Slider fx:id="aggressionSlider" min="1" max="5" value="1" showTickLabels="true" showTickMarks="true"
                         majorTickUnit="1" minorTickCount="0" snapToTicks="true" prefWidth="200"/>
                 <Label fx:id="aggressionLabel" text="1" style="-fx-font-weight: bold;"/>
             </HBox>
 
-            <Label text="Správanie:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="%label.behavior" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <TextField fx:id="behaviorField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
             <columnConstraints>
@@ -134,8 +134,8 @@
             </columnConstraints>
         </GridPane>
 
-        <!-- Section 7: Poznámky -->
-        <Label text="Poznámky" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+        <!-- Section 7: Notes -->
+        <Label text="%inspection.section.notes" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
         <Separator/>
         <TextArea fx:id="notesArea" wrapText="true" prefHeight="100"/>
 

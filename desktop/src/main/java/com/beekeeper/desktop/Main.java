@@ -1,6 +1,9 @@
 package com.beekeeper.desktop;
 
+import com.beekeeper.desktop.dao.jdbc.JdbcTranslationDao;
 import com.beekeeper.desktop.db.DatabaseManager;
+import com.beekeeper.desktop.i18n.I18nResourceBundle;
+import com.beekeeper.shared.i18n.TranslationManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,14 +24,24 @@ public class Main extends Application {
         System.out.println("Initializing database at: " + dbPath);
         DatabaseManager.initialize(dbPath);
 
-        // Load main view
+        // Initialize translation system
+        TranslationManager tm = TranslationManager.getInstance();
+        JdbcTranslationDao translationDao = new JdbcTranslationDao();
+
+        // Load user's preferred language (or default to Slovak)
+        String language = translationDao.getSavedLanguage();
+        tm.loadTranslations(translationDao, language);
+        System.out.println("Loaded translations for language: " + language);
+
+        // Load main view with translations
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/main.fxml"));
+        loader.setResources(new I18nResourceBundle(tm));
         Parent root = loader.load();
 
         // Configure primary stage with explicit size to avoid macOS resize issues
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Beekeeper Desktop - Včelársky denník");
+        primaryStage.setTitle(tm.get("app.title"));
 
         // Set size AFTER scene is set to avoid NSTrackingRectTag issues
         primaryStage.setWidth(1200);

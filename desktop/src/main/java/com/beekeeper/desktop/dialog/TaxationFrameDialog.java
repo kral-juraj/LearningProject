@@ -1,8 +1,10 @@
 package com.beekeeper.desktop.dialog;
 
+import com.beekeeper.desktop.i18n.I18nResourceBundle;
 import com.beekeeper.desktop.util.EnumHelper;
 import com.beekeeper.desktop.util.ValidationHelper;
 import com.beekeeper.shared.entity.TaxationFrame;
+import com.beekeeper.shared.i18n.TranslationManager;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -34,26 +36,29 @@ public class TaxationFrameDialog extends Dialog<TaxationFrame> {
 
     private TaxationFrame existingFrame;
     private String taxationId;
+    private TranslationManager tm;
 
     public TaxationFrameDialog(TaxationFrame frame, String taxationId) {
         this.existingFrame = frame;
         this.taxationId = taxationId;
+        this.tm = TranslationManager.getInstance();
 
         initDialog();
         populateFields();
     }
 
     private void initDialog() {
-        setTitle(existingFrame == null ? "Nový rámik" : "Upraviť rámik");
+        setTitle(existingFrame == null ? tm.get("dialog.add_frame.title") : tm.get("dialog.edit_frame.title"));
         initModality(Modality.APPLICATION_MODAL);
         setResizable(true);
 
-        ButtonType saveButtonType = new ButtonType("Uložiť", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Zrušiť", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType saveButtonType = new ButtonType(tm.get("button.save"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(tm.get("button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/taxation_frame_dialog.fxml"));
+            loader.setResources(new I18nResourceBundle(tm));
             GridPane gridPane = loader.load();
             getDialogPane().setContent(gridPane);
 
@@ -78,7 +83,7 @@ public class TaxationFrameDialog extends Dialog<TaxationFrame> {
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Chyba pri načítaní formulára: " + e.getMessage());
+            alert.setContentText(tm.get("error.loading_form", e.getMessage()));
             alert.showAndWait();
         }
 
@@ -136,48 +141,48 @@ public class TaxationFrameDialog extends Dialog<TaxationFrame> {
 
     private boolean validateInput() {
         if (positionField.getText() == null || positionField.getText().trim().isEmpty()) {
-            ValidationHelper.showValidationError("Pozícia je povinná");
+            ValidationHelper.showValidationError(tm.get("validation.position_required"));
             return false;
         }
 
         if (!ValidationHelper.isValidInteger(positionField.getText())) {
-            ValidationHelper.showValidationError("Pozícia musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.position_must_be_number"));
             return false;
         }
 
         if (frameTypeCombo.getSelectionModel().getSelectedItem() == null) {
-            ValidationHelper.showValidationError("Typ rámika je povinný");
+            ValidationHelper.showValidationError(tm.get("validation.frame_type_required"));
             return false;
         }
 
         // Validate optional numeric fields
         if (!cappedBroodField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(cappedBroodField.getText())) {
-            ValidationHelper.showValidationError("Zapečatený plod musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.capped_brood_must_be_number"));
             return false;
         }
 
         if (!uncappedBroodField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(uncappedBroodField.getText())) {
-            ValidationHelper.showValidationError("Nezapečatený plod musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.uncapped_brood_must_be_number"));
             return false;
         }
 
         if (!pollenField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(pollenField.getText())) {
-            ValidationHelper.showValidationError("Peľ musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.pollen_must_be_number"));
             return false;
         }
 
         if (!cappedStoresField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(cappedStoresField.getText())) {
-            ValidationHelper.showValidationError("Zavíčkované zásoby musia byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.capped_stores_must_be_number"));
             return false;
         }
 
         if (!uncappedStoresField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(uncappedStoresField.getText())) {
-            ValidationHelper.showValidationError("Nezavíčkované zásoby musia byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.uncapped_stores_must_be_number"));
             return false;
         }
 
         if (!frameYearField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(frameYearField.getText())) {
-            ValidationHelper.showValidationError("Rok rámika musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.frame_year_must_be_number"));
             return false;
         }
 

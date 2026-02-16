@@ -2,12 +2,14 @@ package com.beekeeper.desktop.dialog;
 
 import com.beekeeper.desktop.dao.jdbc.JdbcApiaryDao;
 import com.beekeeper.desktop.dao.jdbc.JdbcHiveDao;
+import com.beekeeper.desktop.i18n.I18nResourceBundle;
 import com.beekeeper.desktop.util.DateTimeConverter;
 import com.beekeeper.desktop.util.EnumHelper;
 import com.beekeeper.desktop.util.ValidationHelper;
 import com.beekeeper.shared.entity.Apiary;
 import com.beekeeper.shared.entity.CalendarEvent;
 import com.beekeeper.shared.entity.Hive;
+import com.beekeeper.shared.i18n.TranslationManager;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -39,11 +41,13 @@ public class CalendarEventDialog extends Dialog<CalendarEvent> {
     private CalendarEvent existingEvent;
     private JdbcApiaryDao apiaryDao;
     private JdbcHiveDao hiveDao;
+    private TranslationManager tm;
 
     public CalendarEventDialog(CalendarEvent event) {
         this.existingEvent = event;
         this.apiaryDao = new JdbcApiaryDao();
         this.hiveDao = new JdbcHiveDao();
+        this.tm = TranslationManager.getInstance();
 
         initDialog();
         loadUIComponents();
@@ -51,16 +55,17 @@ public class CalendarEventDialog extends Dialog<CalendarEvent> {
     }
 
     private void initDialog() {
-        setTitle(existingEvent == null ? "Nová udalosť" : "Upraviť udalosť");
+        setTitle(existingEvent == null ? tm.get("dialog.add_event.title") : tm.get("dialog.edit_event.title"));
         initModality(Modality.APPLICATION_MODAL);
         setResizable(true);
 
-        ButtonType saveButtonType = new ButtonType("Uložiť", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Zrušiť", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType saveButtonType = new ButtonType(tm.get("button.save"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(tm.get("button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/calendar_event_dialog.fxml"));
+            loader.setResources(new I18nResourceBundle(tm));
             GridPane gridPane = loader.load();
             getDialogPane().setContent(gridPane);
 
@@ -79,7 +84,7 @@ public class CalendarEventDialog extends Dialog<CalendarEvent> {
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Chyba pri načítaní formulára: " + e.getMessage());
+            alert.setContentText(tm.get("error.loading_form", e.getMessage()));
             alert.showAndWait();
         }
 
@@ -106,7 +111,7 @@ public class CalendarEventDialog extends Dialog<CalendarEvent> {
         // Populate apiaries
         try {
             List<Apiary> apiaries = apiaryDao.getAll().blockingFirst();
-            apiaryCombo.getItems().add(new ApiaryItem(null, "(Žiadna včelnica)"));
+            apiaryCombo.getItems().add(new ApiaryItem(null, tm.get("option.no_apiary")));
             for (Apiary apiary : apiaries) {
                 apiaryCombo.getItems().add(new ApiaryItem(apiary.getId(), apiary.getName()));
             }
@@ -120,14 +125,14 @@ public class CalendarEventDialog extends Dialog<CalendarEvent> {
         }
 
         // Initialize hive combo
-        hiveCombo.getItems().add(new HiveItem(null, "(Žiadny úľ)"));
+        hiveCombo.getItems().add(new HiveItem(null, tm.get("option.no_hive")));
         hiveCombo.getSelectionModel().selectFirst();
     }
 
     private void loadHivesForApiary() {
         ApiaryItem selectedApiary = apiaryCombo.getSelectionModel().getSelectedItem();
         hiveCombo.getItems().clear();
-        hiveCombo.getItems().add(new HiveItem(null, "(Žiadny úľ)"));
+        hiveCombo.getItems().add(new HiveItem(null, tm.get("option.no_hive")));
 
         if (selectedApiary != null && selectedApiary.id != null) {
             try {
@@ -194,22 +199,22 @@ public class CalendarEventDialog extends Dialog<CalendarEvent> {
 
     private boolean validateInput() {
         if (titleField.getText() == null || titleField.getText().trim().isEmpty()) {
-            ValidationHelper.showValidationError("Názov je povinný");
+            ValidationHelper.showValidationError(tm.get("validation.name_required"));
             return false;
         }
 
         if (datePicker.getValue() == null) {
-            ValidationHelper.showValidationError("Dátum je povinný");
+            ValidationHelper.showValidationError(tm.get("validation.date_required"));
             return false;
         }
 
         if (!ValidationHelper.isValidInteger(hourField.getText())) {
-            ValidationHelper.showValidationError("Hodina musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.hour_must_be_number"));
             return false;
         }
 
         if (!ValidationHelper.isValidInteger(minuteField.getText())) {
-            ValidationHelper.showValidationError("Minúta musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.minute_must_be_number"));
             return false;
         }
 
@@ -217,17 +222,17 @@ public class CalendarEventDialog extends Dialog<CalendarEvent> {
         int minute = ValidationHelper.parseInt(minuteField.getText());
 
         if (!ValidationHelper.isInRange(hour, 0, 23)) {
-            ValidationHelper.showValidationError("Hodina musí byť medzi 0 a 23");
+            ValidationHelper.showValidationError(tm.get("validation.hour_range"));
             return false;
         }
 
         if (!ValidationHelper.isInRange(minute, 0, 59)) {
-            ValidationHelper.showValidationError("Minúta musí byť medzi 0 a 59");
+            ValidationHelper.showValidationError(tm.get("validation.minute_range"));
             return false;
         }
 
         if (eventTypeCombo.getSelectionModel().getSelectedItem() == null) {
-            ValidationHelper.showValidationError("Typ udalosti je povinný");
+            ValidationHelper.showValidationError(tm.get("validation.event_type_required"));
             return false;
         }
 

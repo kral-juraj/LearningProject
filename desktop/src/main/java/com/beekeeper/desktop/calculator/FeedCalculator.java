@@ -1,5 +1,7 @@
 package com.beekeeper.desktop.calculator;
 
+import com.beekeeper.shared.i18n.TranslationManager;
+
 /**
  * Calculator for bee feed requirements.
  * Converts weight to volume and calculates sugar/water ratios for different feed types.
@@ -20,12 +22,13 @@ public class FeedCalculator {
      * @return FeedResult with calculated amounts and instructions
      */
     public static FeedResult calculate(double currentStores, double targetStores, String feedType) {
+        TranslationManager tm = TranslationManager.getInstance();
+
         // Calculate needed amount
         double neededKg = targetStores - currentStores;
 
         if (neededKg <= 0) {
-            return new FeedResult(0, 0, 0, 0,
-                    "Včelstvo má dostatok zásob. Krmenie nie je potrebné.");
+            return new FeedResult(0, 0, 0, 0, tm.get("feed.no_feeding_needed"));
         }
 
         // Calculate based on feed type
@@ -53,11 +56,11 @@ public class FeedCalculator {
                 neededLiters = neededKg; // Fondant is solid, no volume conversion
                 sugarKg = 0;
                 waterLiters = 0;
-                instructions = "Fondant je už hotový výrobok. Podávajte priamo na rámky.";
+                instructions = tm.get("feed.fondant_ready");
                 break;
 
             default:
-                return new FeedResult(0, 0, 0, 0, "Neznámy typ krmiva.");
+                return new FeedResult(0, 0, 0, 0, tm.get("feed.unknown_type"));
         }
 
         return new FeedResult(neededKg, neededLiters, sugarKg, waterLiters, instructions);
@@ -83,19 +86,20 @@ public class FeedCalculator {
      * Builds preparation instructions for syrup.
      */
     private static String buildInstructions(String feedType, double sugarKg, double waterLiters) {
+        TranslationManager tm = TranslationManager.getInstance();
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Príprava ").append(feedType).append(":\n\n");
-        sb.append(String.format("1. Zohrejte %.1f L vody na 50-60°C\n", waterLiters));
-        sb.append(String.format("2. Postupne rozpúšťajte %.1f kg cukru za miešania\n", sugarKg));
-        sb.append("3. Miešajte až do úplného rozpustenia\n");
-        sb.append("4. Nechajte vychladnúť na 30-35°C\n");
-        sb.append("5. Podávajte do kŕmidiel večer\n\n");
+        sb.append(tm.get("feed.preparation", feedType)).append("\n\n");
+        sb.append(tm.get("feed.step1", waterLiters)).append("\n");
+        sb.append(tm.get("feed.step2", sugarKg)).append("\n");
+        sb.append(tm.get("feed.step3")).append("\n");
+        sb.append(tm.get("feed.step4")).append("\n");
+        sb.append(tm.get("feed.step5")).append("\n\n");
 
         if (feedType.equals(SYRUP_1_1)) {
-            sb.append("Poznámka: Sirup 1:1 je vhodný na jarné a letné prikrmovanie.");
+            sb.append(tm.get("feed.note_1_1"));
         } else if (feedType.equals(SYRUP_3_2)) {
-            sb.append("Poznámka: Sirup 3:2 je vhodný na jesenné zakrmovanie na zimu.");
+            sb.append(tm.get("feed.note_3_2"));
         }
 
         return sb.toString();

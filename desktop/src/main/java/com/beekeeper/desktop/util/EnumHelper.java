@@ -1,11 +1,13 @@
 package com.beekeeper.desktop.util;
 
+import com.beekeeper.shared.i18n.TranslationManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
  * Utility class for providing enum values as ObservableLists for ComboBoxes.
  * Maintains consistency with database enum values.
+ * Labels are internationalized using TranslationManager.
  */
 public class EnumHelper {
 
@@ -51,48 +53,54 @@ public class EnumHelper {
     }
 
     /**
-     * Returns user-friendly Slovak labels for feed types.
+     * Returns translated labels for feed types.
+     * Uses TranslationManager to support multiple languages.
      */
     public static String getFeedTypeLabel(String feedType) {
         if (feedType == null) return "";
 
+        TranslationManager tm = TranslationManager.getInstance();
         switch (feedType) {
-            case "SYRUP_1_1": return "Sirup 1:1";
-            case "SYRUP_3_2": return "Sirup 3:2";
-            case "FONDANT": return "Fondán";
-            case "POLLEN_PATTY": return "Peľová placka";
+            case "SYRUP_1_1": return tm.get("feedtype.syrup_1_1");
+            case "SYRUP_3_2": return tm.get("feedtype.syrup_3_2");
+            case "FONDANT": return tm.get("feedtype.fondant");
+            case "POLLEN_PATTY": return tm.get("feedtype.pollen_patty");
             default: return feedType;
         }
     }
 
     /**
-     * Returns user-friendly Slovak labels for event types.
+     * Returns translated labels for event types.
+     * Uses TranslationManager to support multiple languages.
      */
     public static String getEventTypeLabel(String eventType) {
         if (eventType == null) return "";
 
+        TranslationManager tm = TranslationManager.getInstance();
         switch (eventType) {
-            case "INSPECTION": return "Prehliadka";
-            case "FEEDING": return "Krmenie";
-            case "TREATMENT": return "Ošetrenie";
-            case "HARVEST": return "Medobranie";
-            case "REMINDER": return "Pripomienka";
+            case "INSPECTION": return tm.get("eventtype.inspection");
+            case "FEEDING": return tm.get("eventtype.feeding");
+            case "TREATMENT": return tm.get("eventtype.treatment");
+            case "HARVEST": return tm.get("eventtype.harvest");
+            case "REMINDER": return tm.get("eventtype.reminder");
             default: return eventType;
         }
     }
 
     /**
-     * Returns user-friendly Slovak labels for frame types.
+     * Returns translated labels for frame types.
+     * Uses TranslationManager to support multiple languages.
      */
     public static String getFrameTypeLabel(String frameType) {
         if (frameType == null) return "";
 
+        TranslationManager tm = TranslationManager.getInstance();
         switch (frameType) {
-            case "BROOD": return "Plodový";
-            case "HONEY": return "Medový";
-            case "FOUNDATION": return "Osnova";
-            case "DRAWN": return "Vystavený";
-            case "DARK": return "Tmavý";
+            case "BROOD": return tm.get("frametype.brood");
+            case "HONEY": return tm.get("frametype.honey");
+            case "FOUNDATION": return tm.get("frametype.foundation");
+            case "DRAWN": return tm.get("frametype.drawn");
+            case "DARK": return tm.get("frametype.dark");
             default: return frameType;
         }
     }

@@ -1,10 +1,12 @@
 package com.beekeeper.desktop.dialog;
 
+import com.beekeeper.desktop.i18n.I18nResourceBundle;
 import com.beekeeper.desktop.util.DateTimeConverter;
 import com.beekeeper.desktop.util.EnumHelper;
 import com.beekeeper.desktop.util.ValidationHelper;
 import com.beekeeper.shared.entity.Taxation;
 import com.beekeeper.shared.entity.TaxationFrame;
+import com.beekeeper.shared.i18n.TranslationManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -51,10 +53,12 @@ public class TaxationDialog extends Dialog<TaxationWithFrames> {
     private String hiveId;
     private String temporaryTaxationId; // For new taxations
     private ObservableList<TaxationFrame> frameList = FXCollections.observableArrayList();
+    private TranslationManager tm;
 
     public TaxationDialog(Taxation taxation, List<TaxationFrame> frames, String hiveId) {
         this.existingTaxation = taxation;
         this.hiveId = hiveId;
+        this.tm = TranslationManager.getInstance();
 
         // Generate temporary ID for new taxation so frames can reference it
         if (taxation == null) {
@@ -73,16 +77,17 @@ public class TaxationDialog extends Dialog<TaxationWithFrames> {
     }
 
     private void initDialog() {
-        setTitle(existingTaxation == null ? "Nová taxácia" : "Upraviť taxáciu");
+        setTitle(existingTaxation == null ? tm.get("dialog.add_taxation.title") : tm.get("dialog.edit_taxation.title"));
         initModality(Modality.APPLICATION_MODAL);
         setResizable(true);
 
-        ButtonType saveButtonType = new ButtonType("Uložiť", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Zrušiť", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType saveButtonType = new ButtonType(tm.get("button.save"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(tm.get("button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/taxation_dialog.fxml"));
+            loader.setResources(new I18nResourceBundle(tm));
             VBox vbox = loader.load();
             getDialogPane().setContent(vbox);
 
@@ -148,7 +153,7 @@ public class TaxationDialog extends Dialog<TaxationWithFrames> {
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Chyba pri načítaní formulára: " + e.getMessage());
+            alert.setContentText(tm.get("error.loading_form", e.getMessage()));
             alert.showAndWait();
         }
 
@@ -262,9 +267,9 @@ public class TaxationDialog extends Dialog<TaxationWithFrames> {
         if (selected == null) return;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Zmazať rámik");
-        alert.setHeaderText("Zmazať rámik na pozícii " + selected.getPosition());
-        alert.setContentText("Naozaj chcete zmazať tento rámik?");
+        alert.setTitle(tm.get("dialog.delete_frame.title"));
+        alert.setHeaderText(tm.get("dialog.delete_frame.header", selected.getPosition()));
+        alert.setContentText(tm.get("dialog.delete_frame.content"));
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -275,17 +280,17 @@ public class TaxationDialog extends Dialog<TaxationWithFrames> {
 
     private boolean validateInput() {
         if (datePicker.getValue() == null) {
-            ValidationHelper.showValidationError("Dátum je povinný");
+            ValidationHelper.showValidationError(tm.get("validation.date_required"));
             return false;
         }
 
         if (!ValidationHelper.isValidInteger(hourField.getText())) {
-            ValidationHelper.showValidationError("Hodina musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.hour_must_be_number"));
             return false;
         }
 
         if (!ValidationHelper.isValidInteger(minuteField.getText())) {
-            ValidationHelper.showValidationError("Minúta musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.minute_must_be_number"));
             return false;
         }
 
@@ -293,28 +298,28 @@ public class TaxationDialog extends Dialog<TaxationWithFrames> {
         int minute = ValidationHelper.parseInt(minuteField.getText());
 
         if (!ValidationHelper.isInRange(hour, 0, 23)) {
-            ValidationHelper.showValidationError("Hodina musí byť medzi 0 a 23");
+            ValidationHelper.showValidationError(tm.get("validation.hour_range"));
             return false;
         }
 
         if (!ValidationHelper.isInRange(minute, 0, 59)) {
-            ValidationHelper.showValidationError("Minúta musí byť medzi 0 a 59");
+            ValidationHelper.showValidationError(tm.get("validation.minute_range"));
             return false;
         }
 
         // Validate optional numeric fields
         if (!temperatureField.getText().trim().isEmpty() && !ValidationHelper.isValidDouble(temperatureField.getText())) {
-            ValidationHelper.showValidationError("Teplota musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.temperature_must_be_number"));
             return false;
         }
 
         if (!totalFramesField.getText().trim().isEmpty() && !ValidationHelper.isValidInteger(totalFramesField.getText())) {
-            ValidationHelper.showValidationError("Celkový počet rámikov musí byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.total_frames_must_be_number"));
             return false;
         }
 
         if (!foodStoresField.getText().trim().isEmpty() && !ValidationHelper.isValidDouble(foodStoresField.getText())) {
-            ValidationHelper.showValidationError("Zásoby musia byť číslo");
+            ValidationHelper.showValidationError(tm.get("validation.food_stores_must_be_number"));
             return false;
         }
 

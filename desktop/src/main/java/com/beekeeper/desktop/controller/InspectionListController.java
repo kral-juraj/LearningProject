@@ -3,6 +3,7 @@ package com.beekeeper.desktop.controller;
 import com.beekeeper.desktop.dao.jdbc.JdbcInspectionDao;
 import com.beekeeper.desktop.scheduler.DesktopSchedulerProvider;
 import com.beekeeper.shared.entity.Inspection;
+import com.beekeeper.shared.i18n.TranslationManager;
 import com.beekeeper.shared.repository.InspectionRepository;
 import com.beekeeper.shared.util.DateUtils;
 import com.beekeeper.shared.viewmodel.InspectionViewModel;
@@ -49,9 +50,13 @@ public class InspectionListController {
     private CompositeDisposable disposables = new CompositeDisposable();
     private ObservableList<Inspection> inspectionList = FXCollections.observableArrayList();
     private String currentHiveId;
+    private TranslationManager tm;
 
     @FXML
     public void initialize() {
+        // Get TranslationManager instance
+        tm = TranslationManager.getInstance();
+
         // Initialize ViewModel
         JdbcInspectionDao inspectionDao = new JdbcInspectionDao();
         InspectionRepository repository = new InspectionRepository(inspectionDao);
@@ -112,9 +117,9 @@ public class InspectionListController {
                     inspections -> {
                         inspectionList.clear();
                         inspectionList.addAll(inspections);
-                        statusLabel.setText(inspections.size() + " prehliadok");
+                        statusLabel.setText(tm.get("status.inspections_count", inspections.size()));
                     },
-                    error -> showError("Chyba: " + error.getMessage())
+                    error -> showError(tm.get("error.loading_inspections", error.getMessage()))
                 )
         );
 
@@ -143,7 +148,7 @@ public class InspectionListController {
     @FXML
     private void handleAddInspection() {
         if (currentHiveId == null) {
-            showError("Najprv vyberte úľ");
+            showError(tm.get("error.select_hive_first"));
             return;
         }
 
@@ -172,9 +177,9 @@ public class InspectionListController {
         if (selected == null) return;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Zmazať prehliadku");
-        alert.setHeaderText("Zmazať prehliadku z " + DateUtils.formatDate(selected.getInspectionDate()));
-        alert.setContentText("Naozaj chcete zmazať túto prehliadku?");
+        alert.setTitle(tm.get("dialog.delete_inspection.title"));
+        alert.setHeaderText(tm.get("dialog.delete_inspection.header", DateUtils.formatDate(selected.getInspectionDate())));
+        alert.setContentText(tm.get("dialog.delete_inspection.content"));
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -191,7 +196,7 @@ public class InspectionListController {
     }
 
     private void showError(String message) {
-        statusLabel.setText("Chyba: " + message);
+        statusLabel.setText(tm.get("error.prefix") + " " + message);
         statusLabel.setStyle("-fx-text-fill: red;");
     }
 

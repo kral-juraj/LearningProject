@@ -34,6 +34,7 @@ public class DatabaseManager {
             createTables(conn);
             migrateTaxationFrames(conn);
             migrateTaxations(conn);
+            migrateSettings(conn);
             initialized = true;
         }
     }
@@ -225,6 +226,22 @@ public class DatabaseManager {
                 "processed INTEGER, " +
                 "recordedAt INTEGER)"
             );
+
+            // 10. Translations table (for i18n support)
+            stmt.execute(
+                "CREATE TABLE IF NOT EXISTS translations (" +
+                "id TEXT PRIMARY KEY NOT NULL, " +
+                "key TEXT NOT NULL, " +
+                "language TEXT NOT NULL, " +
+                "value TEXT NOT NULL, " +
+                "category TEXT, " +
+                "context TEXT, " +
+                "createdAt INTEGER, " +
+                "updatedAt INTEGER, " +
+                "UNIQUE(key, language))"
+            );
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_translations_key_language ON translations(key, language)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_translations_category ON translations(category)");
         }
     }
 
@@ -287,6 +304,24 @@ public class DatabaseManager {
     }
 
     /**
+     * Migrate settings table to add language column for i18n support.
+     * Adds language column with default value 'sk' (Slovak).
+     */
+    private static void migrateSettings(Connection connection) throws SQLException {
+        try (Statement stmt = connection.createStatement()) {
+            try {
+                stmt.execute("ALTER TABLE settings ADD COLUMN language TEXT DEFAULT 'sk'");
+                System.out.println("[DatabaseManager] Added language column to settings");
+            } catch (SQLException e) {
+                // Column already exists, ignore
+                if (!e.getMessage().contains("duplicate column name")) {
+                    throw e;
+                }
+            }
+        }
+    }
+
+    /**
      * Drop all tables (for testing purposes).
      * WARNING: This will delete all data!
      */
@@ -302,6 +337,7 @@ public class DatabaseManager {
             stmt.execute("DROP TABLE IF EXISTS hives");
             stmt.execute("DROP TABLE IF EXISTS apiaries");
             stmt.execute("DROP TABLE IF EXISTS settings");
+            stmt.execute("DROP TABLE IF EXISTS translations");
         }
     }
 }

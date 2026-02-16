@@ -9,6 +9,7 @@ import com.beekeeper.desktop.scheduler.DesktopSchedulerProvider;
 import com.beekeeper.shared.entity.Hive;
 import com.beekeeper.shared.entity.Taxation;
 import com.beekeeper.shared.entity.TaxationFrame;
+import com.beekeeper.shared.i18n.TranslationManager;
 import com.beekeeper.shared.repository.TaxationRepository;
 import com.beekeeper.shared.util.DateUtils;
 import com.beekeeper.shared.viewmodel.TaxationViewModel;
@@ -82,11 +83,15 @@ public class TaxationListController {
     private CompositeDisposable disposables = new CompositeDisposable();
     private ObservableList<Taxation> taxationList = FXCollections.observableArrayList();
     private String currentApiaryId;
+    private TranslationManager tm;
     private String currentHiveId; // Pre vytvorenie novej taxácie potrebujeme hiveId
     private JdbcTaxationFrameDao frameDao;
 
     @FXML
     public void initialize() {
+        // Get TranslationManager instance
+        tm = TranslationManager.getInstance();
+
         // Initialize ViewModel
         JdbcTaxationDao taxationDao = new JdbcTaxationDao();
         frameDao = new JdbcTaxationFrameDao();
@@ -164,10 +169,10 @@ public class TaxationListController {
                     taxations -> {
                         taxationList.clear();
                         taxationList.addAll(taxations);
-                        statusLabel.setText(taxations.size() + " taxácií");
+                        statusLabel.setText(tm.get("status.taxations_count", taxations.size()));
                         statusLabel.setStyle("-fx-text-fill: black;");
                     },
-                    error -> showError("Chyba: " + error.getMessage())
+                    error -> showError(tm.get("error.loading_taxations", error.getMessage()))
                 )
         );
 
@@ -196,7 +201,7 @@ public class TaxationListController {
     @FXML
     private void handleAddTaxation() {
         if (currentApiaryId == null) {
-            showError("Najprv vyberte včelnicu");
+            showError(tm.get("error.select_apiary_first"));
             return;
         }
 
@@ -206,7 +211,7 @@ public class TaxationListController {
             List<Hive> hives = hiveDao.getByApiaryId(currentApiaryId).blockingFirst();
 
             if (hives.isEmpty()) {
-                showError("V tejto včelnici nie sú žiadne úle");
+                showError(tm.get("error.no_hives_in_apiary"));
                 return;
             }
 
@@ -217,9 +222,9 @@ public class TaxationListController {
             }
 
             ChoiceDialog<String> hiveDialog = new ChoiceDialog<>(hiveNames.get(0), hiveNames);
-            hiveDialog.setTitle("Vybrať úľ");
-            hiveDialog.setHeaderText("Vyberte úľ pre novú taxáciu");
-            hiveDialog.setContentText("Úľ:");
+            hiveDialog.setTitle(tm.get("dialog.select_hive.title"));
+            hiveDialog.setHeaderText(tm.get("dialog.select_hive.header"));
+            hiveDialog.setContentText(tm.get("dialog.select_hive.content"));
 
             Optional<String> selectedHiveName = hiveDialog.showAndWait();
 
@@ -243,7 +248,7 @@ public class TaxationListController {
             }
 
         } catch (Exception e) {
-            showError("Chyba pri načítaní úľov: " + e.getMessage());
+            showError(tm.get("error.loading_hives", e.getMessage()));
         }
     }
 
@@ -265,7 +270,7 @@ public class TaxationListController {
                 viewModel.updateTaxationWithFrames(data.taxation, data.frames);
             });
         } catch (Exception e) {
-            showError("Chyba pri načítaní rámikov: " + e.getMessage());
+            showError(tm.get("error.loading_frames", e.getMessage()));
         }
     }
 
@@ -275,9 +280,9 @@ public class TaxationListController {
         if (selected == null) return;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Zmazať taxáciu");
-        alert.setHeaderText("Zmazať taxáciu z " + DateUtils.formatDate(selected.getTaxationDate()));
-        alert.setContentText("Naozaj chcete zmazať túto taxáciu? Všetky rámiky budú tiež zmazané.");
+        alert.setTitle(tm.get("dialog.delete_taxation.title"));
+        alert.setHeaderText(tm.get("dialog.delete_taxation.header", DateUtils.formatDate(selected.getTaxationDate())));
+        alert.setContentText(tm.get("dialog.delete_taxation.content_with_frames"));
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -294,7 +299,7 @@ public class TaxationListController {
     }
 
     private void showError(String message) {
-        statusLabel.setText("Chyba: " + message);
+        statusLabel.setText(tm.get("error.prefix") + " " + message);
         statusLabel.setStyle("-fx-text-fill: red;");
     }
 

@@ -2,6 +2,7 @@ package com.beekeeper.desktop.dialog;
 
 import com.beekeeper.desktop.calculator.VarroaParameters;
 import com.beekeeper.desktop.util.ValidationHelper;
+import com.beekeeper.shared.i18n.TranslationManager;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -16,6 +17,7 @@ public class VarroaSettingsDialog extends Dialog<VarroaParameters> {
 
     private VarroaParameters parameters;
     private VarroaParameters defaultParameters;
+    private TranslationManager tm;
 
     // Input fields
     private TextField workerOffspringField;
@@ -34,101 +36,88 @@ public class VarroaSettingsDialog extends Dialog<VarroaParameters> {
     public VarroaSettingsDialog(VarroaParameters currentParameters) {
         this.parameters = new VarroaParameters(currentParameters);
         this.defaultParameters = VarroaParameters.createDefault();
+        this.tm = TranslationManager.getInstance();
 
-        setTitle("Nastavenia Varroa kalkulačky");
-        setHeaderText("Biologické parametre modelu");
+        setTitle(tm.get("dialog.varroa_settings.title"));
+        setHeaderText(tm.get("dialog.varroa_settings.header"));
 
         // Create form
         VBox content = new VBox(15);
         content.setPadding(new Insets(20));
 
         // Section 1: Reproduction rates
-        content.getChildren().add(createSectionLabel("Reprodukčné miery"));
+        content.getChildren().add(createSectionLabel(tm.get("varroa.section.reproduction")));
         GridPane reproductionGrid = createGrid();
         int row = 0;
 
-        addFieldToGrid(reproductionGrid, row++, "Potomstvo - robotnice:",
+        addFieldToGrid(reproductionGrid, row++, tm.get("varroa.label.worker_offspring"),
                 workerOffspringField = createTextField(parameters.getWorkerOffspring()),
-                "Koľko životaschopných samičiek vznikne z jedného reprodukčného cyklu v robotničej bunke. " +
-                "Vyššia hodnota = rýchlejší rast populácie. Rozsah: 0-3, default: 1.3 (na základe výskumu)");
+                tm.get("varroa.tooltip.worker_offspring"));
 
-        addFieldToGrid(reproductionGrid, row++, "Potomstvo - trúdy:",
+        addFieldToGrid(reproductionGrid, row++, tm.get("varroa.label.drone_offspring"),
                 droneOffspringField = createTextField(parameters.getDroneOffspring()),
-                "Koľko životaschopných samičiek vznikne z jedného reprodukčného cyklu v trúdej bunke. " +
-                "Trúdie bunky umožňujú viac potomstva vďaka dlhšiemu času zapečatenia. " +
-                "Rozsah: 0-5, default: 2.4");
+                tm.get("varroa.tooltip.drone_offspring"));
 
-        addFieldToGrid(reproductionGrid, row++, "Zlyhanie - robotnice (%):",
+        addFieldToGrid(reproductionGrid, row++, tm.get("varroa.label.worker_failure"),
                 workerFailureField = createTextField(parameters.getWorkerFailureRate() * 100),
-                "Percento reprodukčných cyklov, ktoré nezanechajú žiadne životaschopné potomstvo v robotničej bunke. " +
-                "Príčiny: neplodnosť, nedostatok času, úmrtie. Default: 25%");
+                tm.get("varroa.tooltip.worker_failure"));
 
-        addFieldToGrid(reproductionGrid, row++, "Zlyhanie - trúdy (%):",
+        addFieldToGrid(reproductionGrid, row++, tm.get("varroa.label.drone_failure"),
                 droneFailureField = createTextField(parameters.getDroneFailureRate() * 100),
-                "Percento reprodukčných cyklov, ktoré nezanechajú žiadne životaschopné potomstvo v trúdej bunke. " +
-                "Nižšie než pri robotniciach vďaka dlhšiemu času. Default: 12.5%");
+                tm.get("varroa.tooltip.drone_failure"));
 
         content.getChildren().add(reproductionGrid);
 
         // Section 2: Life cycle
-        content.getChildren().add(createSectionLabel("Životný cyklus (dni)"));
+        content.getChildren().add(createSectionLabel(tm.get("varroa.section.lifecycle")));
         GridPane cycleGrid = createGrid();
         row = 0;
 
-        addFieldToGrid(cycleGrid, row++, "Cyklus - robotnice:",
+        addFieldToGrid(cycleGrid, row++, tm.get("varroa.label.worker_cycle"),
                 workerCycleLengthField = createTextField(parameters.getWorkerCycleLength()),
-                "Čas od vniknutia kliešťa do robotničej bunky po vylúčenie potomstva (zapečatenie až otvorenie). " +
-                "Robotničia bunka je zapečatená 12 dní. Default: 12 dní");
+                tm.get("varroa.tooltip.worker_cycle"));
 
-        addFieldToGrid(cycleGrid, row++, "Cyklus - trúdy:",
+        addFieldToGrid(cycleGrid, row++, tm.get("varroa.label.drone_cycle"),
                 droneCycleLengthField = createTextField(parameters.getDroneCycleLength()),
-                "Čas od vniknutia kliešťa do trúdej bunky po vylúčenie potomstva. " +
-                "Trúdia bunka je zapečatená dlhšie (14-15 dní), čo umožňuje viac potomstva. Default: 15 dní");
+                tm.get("varroa.tooltip.drone_cycle"));
 
-        addFieldToGrid(cycleGrid, row++, "Foretická fáza:",
+        addFieldToGrid(cycleGrid, row++, tm.get("varroa.label.phoretic_phase"),
                 phoreticPhaseField = createTextField(parameters.getPhoreticPhaseDays()),
-                "Čas, ktorý kliešť strávi na dospelej včele medzi reprodukčnými cyklami. " +
-                "V tejto fáze sa kliešť živí hemolymfou a hľadá ďalšiu bunku. Default: 5.5 dní");
+                tm.get("varroa.tooltip.phoretic_phase"));
 
         content.getChildren().add(cycleGrid);
 
         // Section 3: Behavior
-        content.getChildren().add(createSectionLabel("Správanie kliešťov"));
+        content.getChildren().add(createSectionLabel(tm.get("varroa.section.behavior")));
         GridPane behaviorGrid = createGrid();
         row = 0;
 
-        addFieldToGrid(behaviorGrid, row++, "Preferencia trúdov:",
+        addFieldToGrid(behaviorGrid, row++, tm.get("varroa.label.drone_preference"),
                 dronePreferenceField = createTextField(parameters.getDronePreference()),
-                "O koľkokrát sú trúdie bunky atraktívnejšie pre kliešte než robotničie bunky. " +
-                "Výskum ukázal, že kliešte preferujú trúdie bunky 8-12x viac. " +
-                "Vyššia hodnota = väčší podiel kliešťov ide do trúdov. Default: 10x");
+                tm.get("varroa.tooltip.drone_preference"));
 
-        addFieldToGrid(behaviorGrid, row++, "Trúdí plod (%):",
+        addFieldToGrid(behaviorGrid, row++, tm.get("varroa.label.drone_brood_percent"),
                 droneBroodPercentageField = createTextField(parameters.getDroneBroodPercentage() * 100),
-                "Aké percento celkového plodu tvorí trúdí plod. Bežne 10-15%, závisí od ročného obdobia " +
-                "a manažmentu včelára. Vyššie percento = rýchlejší rast populácie kliešťov. Default: 10%");
+                tm.get("varroa.tooltip.drone_brood_percent"));
 
-        addFieldToGrid(behaviorGrid, row++, "Miera invázie (%):",
+        addFieldToGrid(behaviorGrid, row++, tm.get("varroa.label.cell_invasion"),
                 cellInvasionField = createTextField(parameters.getCellInvasionRate() * 100),
-                "Aké percento foretických kliešťov (na včelách) úspešne vnikne do buniek každý deň. " +
-                "Závisí od dostupnosti vhodného plodu a zdravia kolónie. Default: 20%");
+                tm.get("varroa.tooltip.cell_invasion"));
 
         content.getChildren().add(behaviorGrid);
 
         // Section 4: Mortality
-        content.getChildren().add(createSectionLabel("Úmrtnosť"));
+        content.getChildren().add(createSectionLabel(tm.get("varroa.section.mortality")));
         GridPane mortalityGrid = createGrid();
         row = 0;
 
-        addFieldToGrid(mortalityGrid, row++, "Úmrtnosť na cyklus (%):",
+        addFieldToGrid(mortalityGrid, row++, tm.get("varroa.label.mortality_per_cycle"),
                 mortalityPerCycleField = createTextField(parameters.getMortalityPerCycle() * 100),
-                "Percento kliešťov, ktoré zahynú počas kompletného reprodukčného cyklu (foretická fáza + rozmnožovanie). " +
-                "Zahŕňa úmrtnosť z dôvodu veku, chorôb a hygieny včiel. Default: 17.5%");
+                tm.get("varroa.tooltip.mortality_per_cycle"));
 
-        addFieldToGrid(mortalityGrid, row++, "Foretická úmrtnosť (%/deň):",
+        addFieldToGrid(mortalityGrid, row++, tm.get("varroa.label.phoretic_mortality"),
                 phoreticMortalityField = createTextField(parameters.getPhoreticMortalityPerDay() * 100),
-                "Denná úmrtnosť kliešťov, ktoré sa nachádzajú na dospelých včelách (foretická fáza). " +
-                "Vyššia v lete kvôli aktivite včiel a očisťovaniu. Default: 1% denne");
+                tm.get("varroa.tooltip.phoretic_mortality"));
 
         content.getChildren().add(mortalityGrid);
 
@@ -140,7 +129,7 @@ public class VarroaSettingsDialog extends Dialog<VarroaParameters> {
         getDialogPane().setContent(scrollPane);
 
         // Buttons
-        ButtonType resetButtonType = new ButtonType("Reset na default", ButtonBar.ButtonData.LEFT);
+        ButtonType resetButtonType = new ButtonType(tm.get("button.reset_defaults"), ButtonBar.ButtonData.LEFT);
         ButtonType okButtonType = ButtonType.OK;
         ButtonType cancelButtonType = ButtonType.CANCEL;
 
@@ -293,7 +282,7 @@ public class VarroaSettingsDialog extends Dialog<VarroaParameters> {
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Chyba validácie");
+        alert.setTitle(tm.get("error.validation_title"));
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

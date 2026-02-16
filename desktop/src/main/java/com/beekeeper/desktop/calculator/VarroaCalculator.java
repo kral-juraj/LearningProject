@@ -1,5 +1,7 @@
 package com.beekeeper.desktop.calculator;
 
+import com.beekeeper.shared.i18n.TranslationManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -178,14 +180,15 @@ public class VarroaCalculator {
      * Determines status based on projected count.
      */
     private static String getStatus(int count) {
+        TranslationManager tm = TranslationManager.getInstance();
         if (count < THRESHOLD_OK) {
-            return "OK";
+            return tm.get("varroa.status.ok");
         } else if (count < THRESHOLD_WARNING) {
-            return "VAROVANIE";
+            return tm.get("varroa.status.warning");
         } else if (count < THRESHOLD_CRITICAL) {
-            return "VAROVANIE";
+            return tm.get("varroa.status.warning");
         } else {
-            return "KRITICKÉ";
+            return tm.get("varroa.status.critical");
         }
     }
 
@@ -194,39 +197,40 @@ public class VarroaCalculator {
      */
     private static String getRecommendation(int projectedCount, int days, boolean broodPresent,
                                             VarroaParameters params) {
+        TranslationManager tm = TranslationManager.getInstance();
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Projekcia na ").append(days).append(" dní: ").append(projectedCount).append(" kliešťov\n");
-        sb.append("Model: ").append(broodPresent ? "s plodom" : "bez plodu").append("\n");
-        sb.append("Trúdie bunky: ").append(String.format("%.0f%%", params.getDroneBroodPercentage() * 100)).append("\n\n");
+        sb.append(tm.get("varroa.projection_for_days", days, projectedCount)).append("\n");
+        sb.append(tm.get(broodPresent ? "varroa.model_with_brood" : "varroa.model_without_brood")).append("\n");
+        sb.append(tm.get("varroa.drone_cells", params.getDroneBroodPercentage() * 100)).append("\n\n");
 
         if (projectedCount < THRESHOLD_OK) {
-            sb.append("✓ Žiadna akcia potrebná\n");
-            sb.append("Populácia kliešťov je pod kontrolou.\n");
-            sb.append("Pokračujte v pravidelnom monitoringu každých 30 dní.");
+            sb.append(tm.get("varroa.rec.ok.title")).append("\n");
+            sb.append(tm.get("varroa.rec.ok.detail1")).append("\n");
+            sb.append(tm.get("varroa.rec.ok.detail2"));
         } else if (projectedCount < THRESHOLD_WARNING) {
-            sb.append("⚠ Sledovať situáciu\n");
-            sb.append("Populácia kliešťov rastie.\n");
-            sb.append("Kontrolujte každých 14-21 dní.\n");
-            sb.append("Pripravte si ošetrovacie prostriedky.\n\n");
-            sb.append("Odporúčanie: Zvážte odstránenie trúdieho plodu.");
+            sb.append(tm.get("varroa.rec.low_warning.title")).append("\n");
+            sb.append(tm.get("varroa.rec.low_warning.detail1")).append("\n");
+            sb.append(tm.get("varroa.rec.low_warning.detail2")).append("\n");
+            sb.append(tm.get("varroa.rec.low_warning.detail3")).append("\n\n");
+            sb.append(tm.get("varroa.rec.low_warning.action"));
         } else if (projectedCount < THRESHOLD_CRITICAL) {
-            sb.append("⚠ Plánovať ošetrenie\n");
-            sb.append("Populácia kliešťov ohrozuje zdravie včelstva.\n");
-            sb.append("Odporúčame ošetrenie v najbližších 7-14 dňoch.\n\n");
-            sb.append("Možnosti:\n");
-            sb.append("- Organické kyseliny (mravčia, šťavelová)\n");
-            sb.append("- Odstrániť všetok trúdí plod\n");
-            sb.append("- Biotechnické metódy (plodová prestávka)");
+            sb.append(tm.get("varroa.rec.high_warning.title")).append("\n");
+            sb.append(tm.get("varroa.rec.high_warning.detail1")).append("\n");
+            sb.append(tm.get("varroa.rec.high_warning.detail2")).append("\n\n");
+            sb.append(tm.get("varroa.rec.high_warning.options")).append("\n");
+            sb.append(tm.get("varroa.rec.high_warning.option1")).append("\n");
+            sb.append(tm.get("varroa.rec.high_warning.option2")).append("\n");
+            sb.append(tm.get("varroa.rec.high_warning.option3"));
         } else {
-            sb.append("🔴 KRITICKÉ - Ošetriť ihneď!\n");
-            sb.append("Vysoká populácia kliešťov!\n");
-            sb.append("Včelstvo je v ohrození kolapsu.\n\n");
-            sb.append("Okamžité kroky:\n");
-            sb.append("1. Aplikujte schválené ošetrenie DNES\n");
-            sb.append("2. Odstráňte všetok trúdí plod\n");
-            sb.append("3. Kontrolujte po 7 dňoch\n");
-            sb.append("4. Opakujte ošetrenie ak je potrebné");
+            sb.append(tm.get("varroa.rec.critical.title")).append("\n");
+            sb.append(tm.get("varroa.rec.critical.detail1")).append("\n");
+            sb.append(tm.get("varroa.rec.critical.detail2")).append("\n\n");
+            sb.append(tm.get("varroa.rec.critical.steps")).append("\n");
+            sb.append(tm.get("varroa.rec.critical.step1")).append("\n");
+            sb.append(tm.get("varroa.rec.critical.step2")).append("\n");
+            sb.append(tm.get("varroa.rec.critical.step3")).append("\n");
+            sb.append(tm.get("varroa.rec.critical.step4"));
         }
 
         return sb.toString();

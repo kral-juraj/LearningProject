@@ -10,6 +10,7 @@ import com.beekeeper.desktop.util.DateTimeConverter;
 import com.beekeeper.desktop.util.ValidationHelper;
 import com.beekeeper.desktop.util.DateFormatter;
 import com.beekeeper.shared.entity.CalendarEvent;
+import com.beekeeper.shared.i18n.TranslationManager;
 import com.beekeeper.shared.repository.CalendarEventRepository;
 import com.beekeeper.shared.scheduler.SchedulerProvider;
 import com.beekeeper.shared.viewmodel.CalendarEventViewModel;
@@ -88,12 +89,16 @@ public class CalculatorsController {
 
     // Varroa parameters (configurable)
     private VarroaParameters varroaParameters = VarroaParameters.createDefault();
+    private TranslationManager tm;
 
     // Varroa treatments list
     private ObservableList<VarroaTreatment> varroaTreatments = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        // Get TranslationManager instance
+        tm = TranslationManager.getInstance();
+
         setupCalendarViewModel();
         setupVarroaCalculator();
         setupQueenCalculator();
@@ -152,25 +157,25 @@ public class CalculatorsController {
         // Validate inputs
         String countText = varroaCountField.getText();
         if (!ValidationHelper.isValidInteger(countText)) {
-            showError("Varroa kalkulačka", "Zadajte platný počet kliešťov (celé číslo).");
+            showError("error.title", "error.varroa.invalid_count");
             return;
         }
 
         int count = Integer.parseInt(countText);
         if (count <= 0) {
-            showError("Varroa kalkulačka", "Počet kliešťov musí byť väčší ako 0.");
+            showError("error.title", "error.varroa.count_positive");
             return;
         }
 
         LocalDate measurementDate = varroaMeasurementDate.getValue();
         if (measurementDate == null) {
-            showError("Varroa kalkulačka", "Vyberte dátum merania.");
+            showError("error.title", "error.varroa.select_date");
             return;
         }
 
         String daysText = varroaProjectionDays.getValue();
         if (daysText == null) {
-            showError("Varroa kalkulačka", "Vyberte počet dní projekcie.");
+            showError("error.title", "error.varroa.select_days");
             return;
         }
 
@@ -180,13 +185,13 @@ public class CalculatorsController {
         // Validate drone brood percentage
         String droneBroodText = varroaDroneBroodField.getText();
         if (!ValidationHelper.isValidDouble(droneBroodText)) {
-            showError("Varroa kalkulačka", "Zadajte platné percento trúdieho plodu (0-100).");
+            showError("error.title", "error.varroa.invalid_drone_percent");
             return;
         }
 
         double droneBroodPercent = Double.parseDouble(droneBroodText);
         if (droneBroodPercent < 0 || droneBroodPercent > 100) {
-            showError("Varroa kalkulačka", "Percento trúdieho plodu musí byť medzi 0 a 100.");
+            showError("error.title", "error.varroa.drone_percent_range");
             return;
         }
 
@@ -214,7 +219,7 @@ public class CalculatorsController {
         varroaChart.getData().clear();
 
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        series.setName("Varroa projekcia");
+        series.setName(tm.get("chart.varroa_projection"));
 
         // Formatters for display
         java.time.format.DateTimeFormatter xAxisFormatter = java.time.format.DateTimeFormatter.ofPattern("d.M.");
@@ -249,7 +254,8 @@ public class CalculatorsController {
 
             // Add tooltip to each data point
             String tooltipDate = date.format(tooltipFormatter);
-            String tooltipText = String.format("Dátum: %s\nPočet kliešťov: %d", tooltipDate, point.getCount());
+            String tooltipText = tm.get("chart.tooltip.date", tooltipDate) + "\n" +
+                               tm.get("chart.tooltip.mite_count", point.getCount());
 
             // Install tooltip after node is created
             dataPoint.nodeProperty().addListener((obs, oldNode, newNode) -> {
@@ -267,7 +273,7 @@ public class CalculatorsController {
         // Add treatment markers as a separate series
         if (!varroaTreatments.isEmpty()) {
             XYChart.Series<Number, Number> treatmentSeries = new XYChart.Series<>();
-            treatmentSeries.setName("Liečenia");
+            treatmentSeries.setName(tm.get("chart.treatments"));
 
             long measurementTimestamp = projection.getDataPoints().get(0).getDate();
 
@@ -292,11 +298,11 @@ public class CalculatorsController {
                     // Add tooltip with treatment info
                     LocalDate treatmentDate = Instant.ofEpochMilli(treatment.getTreatmentDate())
                             .atZone(ZoneId.systemDefault()).toLocalDate();
-                    String tooltipText = String.format("Liečenie: %s\nDátum: %s\nEfektivita: %.0f%%",
-                            treatment.getTreatmentType(),
-                            treatmentDate.format(java.time.format.DateTimeFormatter.ofPattern("d. MMMM yyyy",
-                                    new java.util.Locale("sk", "SK"))),
-                            treatment.getEffectivenessPercent());
+                    String formattedDate = treatmentDate.format(java.time.format.DateTimeFormatter.ofPattern("d. MMMM yyyy",
+                            new java.util.Locale("sk", "SK")));
+                    String tooltipText = tm.get("chart.tooltip.treatment", treatment.getTreatmentType()) + "\n" +
+                                       tm.get("chart.tooltip.date", formattedDate) + "\n" +
+                                       tm.get("chart.tooltip.effectiveness", treatment.getEffectivenessPercent());
 
                     // Install tooltip after node is created
                     marker.nodeProperty().addListener((obs, oldNode, newNode) -> {
@@ -345,7 +351,7 @@ public class CalculatorsController {
 
         // Set status with color
         String status = projection.getStatus();
-        varroaStatusLabel.setText("Status: " + status);
+        varroaStatusLabel.setText(tm.get("varroa.status_label", status));
         varroaStatusLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: " +
                 getStatusColor(status) + ";");
 
@@ -354,15 +360,15 @@ public class CalculatorsController {
     }
 
     private String getStatusColor(String status) {
-        switch (status) {
-            case "OK":
-                return "#4CAF50"; // green
-            case "VAROVANIE":
-                return "#FF9800"; // orange
-            case "KRITICKÉ":
-                return "#F44336"; // red
-            default:
-                return "#000000"; // black
+        // Check against translated values
+        if (status.equals(tm.get("varroa.status.ok"))) {
+            return "#4CAF50"; // green
+        } else if (status.equals(tm.get("varroa.status.warning"))) {
+            return "#FF9800"; // orange
+        } else if (status.equals(tm.get("varroa.status.critical"))) {
+            return "#F44336"; // red
+        } else {
+            return "#000000"; // black
         }
     }
 
@@ -371,13 +377,13 @@ public class CalculatorsController {
         // Validate that we have measurement date and projection days
         LocalDate measurementDate = varroaMeasurementDate.getValue();
         if (measurementDate == null) {
-            showError("Pridať liečenie", "Najprv zadajte dátum merania.");
+            showError("dialog.add_treatment.title", "error.treatment.enter_date_first");
             return;
         }
 
         String daysText = varroaProjectionDays.getValue();
         if (daysText == null) {
-            showError("Pridať liečenie", "Najprv vyberte počet dní projekcie.");
+            showError("dialog.add_treatment.title", "error.treatment.select_days_first");
             return;
         }
 
@@ -403,13 +409,13 @@ public class CalculatorsController {
 
         LocalDate measurementDate = varroaMeasurementDate.getValue();
         if (measurementDate == null) {
-            showError("Upraviť liečenie", "Chyba: Dátum merania nie je nastavený.");
+            showError("dialog.edit_treatment.title", "error.treatment.date_not_set");
             return;
         }
 
         String daysText = varroaProjectionDays.getValue();
         if (daysText == null) {
-            showError("Upraviť liečenie", "Chyba: Projekcia nie je nastavená.");
+            showError("dialog.edit_treatment.title", "error.treatment.projection_not_set");
             return;
         }
 
@@ -439,9 +445,9 @@ public class CalculatorsController {
 
         // Confirm deletion
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Zmazať liečenie");
+        confirm.setTitle(tm.get("dialog.delete_treatment.title"));
         confirm.setHeaderText(null);
-        confirm.setContentText("Naozaj chcete zmazať toto liečenie?");
+        confirm.setContentText(tm.get("dialog.delete_treatment.content"));
 
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -458,12 +464,12 @@ public class CalculatorsController {
     @FXML
     private void handleVarroaExport() {
         if (currentVarroaProjection == null) {
-            showError("Export", "Najprv vypočítajte projekciu.");
+            showError("error.title", "error.export.calculate_first");
             return;
         }
 
         if (varroaTreatments.isEmpty()) {
-            showError("Export", "Pridajte aspoň jedno liečenie do plánu.");
+            showError("error.title", "error.export.add_treatment");
             return;
         }
 
@@ -472,19 +478,19 @@ public class CalculatorsController {
         for (VarroaTreatment treatment : varroaTreatments) {
             CalendarEvent event = new CalendarEvent();
             event.setId(UUID.randomUUID().toString());
-            event.setTitle("Varroa liečenie: " + treatment.getTreatmentType());
+            event.setTitle(tm.get("calendar.varroa_treatment", treatment.getTreatmentType()));
 
             // Build description with effectiveness and recommendation
             StringBuilder description = new StringBuilder();
-            description.append("Typ: ").append(treatment.getTreatmentType()).append("\n");
-            description.append("Efektivita: ").append(String.format("%.0f%%", treatment.getEffectivenessPercent())).append("\n");
+            description.append(tm.get("label.type")).append(" ").append(treatment.getTreatmentType()).append("\n");
+            description.append(tm.get("label.effectiveness")).append(" ").append(String.format("%.0f%%", treatment.getEffectivenessPercent())).append("\n");
 
             if (treatment.getDescription() != null && !treatment.getDescription().trim().isEmpty()) {
-                description.append("\nPoznámka: ").append(treatment.getDescription()).append("\n");
+                description.append("\n").append(tm.get("label.note")).append(" ").append(treatment.getDescription()).append("\n");
             }
 
-            description.append("\n--- Projekcia Varroa ---\n");
-            description.append("Status: ").append(currentVarroaProjection.getStatus()).append("\n");
+            description.append("\n--- ").append(tm.get("chart.varroa_projection")).append(" ---\n");
+            description.append(tm.get("varroa.status_label", currentVarroaProjection.getStatus())).append("\n");
             description.append(currentVarroaProjection.getRecommendation());
 
             event.setDescription(description.toString());
@@ -496,7 +502,7 @@ public class CalculatorsController {
             count++;
         }
 
-        showInfo("Export úspešný", count + " udalostí bolo vytvorených v kalendári.");
+        showInfo(tm.get("info.export_success"), tm.get("info.events_created", count));
     }
 
     @FXML
@@ -506,7 +512,7 @@ public class CalculatorsController {
             varroaParameters = params;
             // Update drone brood field from parameters
             varroaDroneBroodField.setText(String.format("%.0f", params.getDroneBroodPercentage() * 100));
-            showInfo("Nastavenia", "Parametre boli aktualizované.");
+            showInfo(tm.get("button.settings"), tm.get("info.settings_updated"));
 
             // Automatically recalculate if we have input data
             if (hasValidVarroaInputs()) {
@@ -542,11 +548,11 @@ public class CalculatorsController {
         // Set default values
         queenStartDate.setValue(LocalDate.now());
         queenMethodCombo.setItems(FXCollections.observableArrayList(
-                "Štandardná",
-                "Vytvorenie opačnenca",
-                "Klietkovanie matky + Norské zimovanie"
+                tm.get("queen.method.standard"),
+                tm.get("queen.method.split"),
+                tm.get("queen.method.caging")
         ));
-        queenMethodCombo.setValue("Štandardná");
+        queenMethodCombo.setValue(tm.get("queen.method.standard"));
 
         // Setup table columns
         queenDayColumn.setCellValueFactory(cellData ->
@@ -588,13 +594,13 @@ public class CalculatorsController {
     private void handleQueenCalculate() {
         LocalDate startDate = queenStartDate.getValue();
         if (startDate == null) {
-            showError("Queen Timeline", "Vyberte dátum začiatku.");
+            showError("error.title", "error.queen.select_start_date");
             return;
         }
 
         String method = queenMethodCombo.getValue();
         if (method == null) {
-            method = "Štandardná";
+            method = tm.get("queen.method.standard");
         }
 
         // Convert to timestamp
@@ -613,7 +619,7 @@ public class CalculatorsController {
     @FXML
     private void handleQueenExport() {
         if (currentQueenMilestones == null || currentQueenMilestones.isEmpty()) {
-            showError("Export", "Najprv vypočítajte míľniky.");
+            showError("error.title", "error.queen.calculate_milestones_first");
             return;
         }
 
@@ -622,7 +628,7 @@ public class CalculatorsController {
         for (QueenMilestone milestone : currentQueenMilestones) {
             CalendarEvent event = new CalendarEvent();
             event.setId(UUID.randomUUID().toString());
-            event.setTitle("Matka: " + milestone.getName());
+            event.setTitle(tm.get("calendar.queen_milestone", milestone.getName()));
             event.setDescription(milestone.getDescription() + " (" + milestone.getFormattedDayOffset() + ")");
             event.setEventDate(milestone.getDate());
             event.setEventType("REMINDER");
@@ -632,13 +638,13 @@ public class CalculatorsController {
             count++;
         }
 
-        showInfo("Export úspešný", count + " udalostí bolo vytvorených v kalendári.");
+        showInfo(tm.get("info.export_success"), tm.get("info.events_created", count));
     }
 
     @FXML
     private void handleQueenClear() {
         queenStartDate.setValue(LocalDate.now());
-        queenMethodCombo.setValue("Štandardná");
+        queenMethodCombo.setValue(tm.get("queen.method.standard"));
         queenMilestonesTable.getItems().clear();
         queenExportButton.setDisable(true);
         currentQueenMilestones = null;
@@ -698,7 +704,7 @@ public class CalculatorsController {
 
         String feedType = feedTypeCombo.getValue();
         if (feedType == null) {
-            showError("Feed kalkulačka", "Vyberte typ krmiva.");
+            showError("error.title", "error.feed.select_type");
             feedResultsBox.setVisible(false);
             return;
         }
@@ -707,7 +713,7 @@ public class CalculatorsController {
         double targetStores = Double.parseDouble(targetText);
 
         if (currentStores < 0 || targetStores < 0) {
-            showError("Feed kalkulačka", "Hodnoty nesmú byť záporné.");
+            showError("error.title", "error.feed.no_negative");
             feedResultsBox.setVisible(false);
             return;
         }
@@ -747,11 +753,11 @@ public class CalculatorsController {
 
     // ==================== UTILITY METHODS ====================
 
-    private void showError(String title, String message) {
+    private void showError(String titleKey, String messageKey) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
+        alert.setTitle(tm.get(titleKey));
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setContentText(tm.get(messageKey));
         alert.showAndWait();
     }
 
