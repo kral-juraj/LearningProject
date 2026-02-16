@@ -35,12 +35,16 @@ public class MainController {
     @FXML
     private Tab calendarTab;
 
+    @FXML
+    private Tab calculatorsTab;
+
     private ApiaryListController apiaryListController;
     private HiveListController hiveListController;
     private InspectionListController inspectionListController;
     private FeedingListController feedingListController;
     private TaxationListController taxationListController;
     private CalendarEventListController calendarEventListController;
+    private CalculatorsController calculatorsController;
 
     @FXML
     public void initialize() {
@@ -75,6 +79,11 @@ public class MainController {
             Parent calendarView = calendarLoader.load();
             calendarEventListController = calendarLoader.getController();
 
+            // Load Calculators view
+            FXMLLoader calculatorsLoader = new FXMLLoader(getClass().getResource("/view/calculators.fxml"));
+            Parent calculatorsView = calculatorsLoader.load();
+            calculatorsController = calculatorsLoader.getController();
+
             // Set content in next JavaFX pulse to avoid macOS NSTrackingRectTag issues
             javafx.application.Platform.runLater(() -> {
                 apiariesTab.setContent(apiaryView);
@@ -83,6 +92,7 @@ public class MainController {
                 feedingTab.setContent(feedingView);
                 taxationTab.setContent(taxationView);
                 calendarTab.setContent(calendarView);
+                calculatorsTab.setContent(calculatorsView);
 
                 // Set up communication between controllers
                 setupControllerCommunication();

@@ -468,6 +468,46 @@ void setUp() {
 
 ## Important Conventions
 
+### Code Documentation (MANDATORY)
+**EVERY method you create MUST have a JavaDoc comment explaining:**
+- What the method does
+- When/why it's used (use case)
+- Parameters (if not obvious)
+- Return value (if not obvious)
+
+**Example:**
+```java
+/**
+ * Calculates Varroa mite population projection over specified days.
+ *
+ * Use case: Beekeeper wants to predict mite growth and plan treatments.
+ *
+ * @param initialCount Starting number of phoretic mites
+ * @param days Number of days to project forward
+ * @param treatments List of planned treatments to apply
+ * @return VarroaProjection with daily counts and recommendations
+ */
+public static VarroaProjection project(int initialCount, int days, List<VarroaTreatment> treatments) {
+    // ...
+}
+```
+
+**Test methods should have block comments explaining the use case:**
+```java
+/**
+ * Test: Exponential growth with brood present
+ *
+ * Use case: Spring/summer projection when queen is laying.
+ * Mites reproduce in brood cells, population grows exponentially.
+ *
+ * Expected result: Mite count increases significantly (2x+ per month).
+ */
+@Test
+void testBasicGrowthWithBrood() {
+    // ...
+}
+```
+
 ### Naming (Slovak UI Language)
 - **Apiaries** = Včelnice
 - **Hives** = Úle

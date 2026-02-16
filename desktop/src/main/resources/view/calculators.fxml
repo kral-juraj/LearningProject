@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.beekeeper.desktop.controller.CalculatorsController">
+
+    <VBox spacing="15" style="-fx-padding: 20;">
+
+        <!-- ========== VARROA CALCULATOR ========== -->
+        <TitledPane text="🐝 Varroa Kalkulačka" expanded="true" collapsible="true">
+            <VBox spacing="10" style="-fx-padding: 10;">
+
+                <!-- Top Section: Inputs (left) and Treatments Table (right) -->
+                <HBox spacing="15">
+                    <!-- Left: Input Section -->
+                    <VBox spacing="10" prefWidth="400">
+                        <GridPane hgap="10" vgap="8">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="120" prefWidth="120"/>
+                                <ColumnConstraints minWidth="180" prefWidth="180" hgrow="ALWAYS"/>
+                            </columnConstraints>
+
+                            <Label text="Počet kliešťov *" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <TextField fx:id="varroaCountField" promptText="Napr. 50"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                            <Label text="Dátum merania *" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <DatePicker fx:id="varroaMeasurementDate"
+                                        GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <Label text="Plod prítomný" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                            <CheckBox fx:id="varroaBroodPresent" selected="true"
+                                      GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                            <Label text="Projekcia" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                            <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                <ComboBox fx:id="varroaProjectionDays" prefWidth="80"/>
+                                <Label text="dní"/>
+                            </HBox>
+
+                            <Label text="Trúdí plod (%)" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                            <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                <TextField fx:id="varroaDroneBroodField" promptText="10" prefWidth="60"/>
+                                <Label text="%%"/>
+                            </HBox>
+                        </GridPane>
+
+                        <!-- Buttons -->
+                        <VBox spacing="8" style="-fx-padding: 10 0 0 0;">
+                            <Button text="Vypočítať" onAction="#handleVarroaCalculate" maxWidth="Infinity"
+                                    style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                            <Button text="Vymazať" onAction="#handleVarroaClear" maxWidth="Infinity"/>
+                            <Button text="Nastavenia..." onAction="#handleVarroaSettings" maxWidth="Infinity"
+                                    style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                            <Button fx:id="varroaExportButton" text="Export do kalendára" maxWidth="Infinity"
+                                    onAction="#handleVarroaExport" disable="true"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Right: Treatments Section -->
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Plán liečenia:" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+
+                        <!-- Treatments Table -->
+                        <TableView fx:id="varroaTreatmentsTable" prefHeight="200">
+                            <columns>
+                                <TableColumn fx:id="treatmentDateColumn" text="Dátum" prefWidth="100"/>
+                                <TableColumn fx:id="treatmentTypeColumn" text="Typ liečenia" prefWidth="150"/>
+                                <TableColumn fx:id="treatmentEffectivenessColumn" text="Efekt. (%)" prefWidth="80"/>
+                                <TableColumn fx:id="treatmentDescColumn" text="Poznámka" prefWidth="180"/>
+                            </columns>
+                        </TableView>
+
+                        <!-- Treatment Buttons -->
+                        <HBox spacing="8">
+                            <Button text="Pridať" onAction="#handleAddTreatment"
+                                    style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+                            <Button fx:id="editTreatmentButton" text="Upraviť" onAction="#handleEditTreatment" disable="true"/>
+                            <Button fx:id="deleteTreatmentButton" text="Zmazať" onAction="#handleDeleteTreatment" disable="true"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+
+                <!-- Chart -->
+                <LineChart fx:id="varroaChart" prefHeight="300" createSymbols="true"
+                           legendVisible="false">
+                    <xAxis>
+                        <NumberAxis label="Dátum" side="BOTTOM" fx:id="varroaChartXAxis" tickUnit="1"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Počet kliešťov" side="LEFT"/>
+                    </yAxis>
+                </LineChart>
+
+                <!-- Results -->
+                <VBox spacing="5" fx:id="varroaResultsBox" visible="false">
+                    <Label fx:id="varroaStatusLabel" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Separator/>
+                    <TextArea fx:id="varroaRecommendationArea" wrapText="true" editable="false"
+                              prefRowCount="6" style="-fx-font-size: 12px;"/>
+                </VBox>
+
+            </VBox>
+        </TitledPane>
+
+        <!-- ========== QUEEN REARING CALCULATOR ========== -->
+        <TitledPane text="👑 Matka - Timeline Kalkulačka" expanded="false" collapsible="true">
+            <VBox spacing="10" style="-fx-padding: 10;">
+
+                <!-- Input Section -->
+                <GridPane hgap="10" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="150" prefWidth="150"/>
+                        <ColumnConstraints minWidth="200" prefWidth="200" hgrow="ALWAYS"/>
+                    </columnConstraints>
+
+                    <Label text="Začiatok (D+0) *" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <DatePicker fx:id="queenStartDate"
+                                GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                    <Label text="Metóda" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <ComboBox fx:id="queenMethodCombo" prefWidth="200"
+                              GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                </GridPane>
+
+                <!-- Buttons -->
+                <HBox spacing="10" style="-fx-padding: 10 0 0 0;">
+                    <Button text="Vypočítať" onAction="#handleQueenCalculate"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                    <Button text="Vymazať" onAction="#handleQueenClear"/>
+                    <Button fx:id="queenExportButton" text="Export všetkých míľnikov"
+                            onAction="#handleQueenExport" disable="true"/>
+                </HBox>
+
+                <!-- Milestones Table -->
+                <TableView fx:id="queenMilestonesTable" prefHeight="250">
+                    <columns>
+                        <TableColumn fx:id="queenDayColumn" text="Deň" prefWidth="60"/>
+                        <TableColumn fx:id="queenDateColumn" text="Dátum" prefWidth="100"/>
+                        <TableColumn fx:id="queenNameColumn" text="Míľnik" prefWidth="180"/>
+                        <TableColumn fx:id="queenDescColumn" text="Popis" prefWidth="350"/>
+                    </columns>
+                </TableView>
+
+            </VBox>
+        </TitledPane>
+
+        <!-- ========== FEED CALCULATOR ========== -->
+        <TitledPane text="🍯 Kalkulátor Krmiva" expanded="false" collapsible="true">
+            <VBox spacing="10" style="-fx-padding: 10;">
+
+                <!-- Input Section -->
+                <GridPane hgap="10" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="150" prefWidth="150"/>
+                        <ColumnConstraints minWidth="200" prefWidth="200" hgrow="ALWAYS"/>
+                    </columnConstraints>
+
+                    <Label text="Aktuálne zásoby *" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <TextField fx:id="feedCurrentStoresField" promptText="Napr. 5.0" prefWidth="150"/>
+                        <Label text="kg"/>
+                    </HBox>
+
+                    <Label text="Cieľové zásoby *" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <TextField fx:id="feedTargetStoresField" promptText="Napr. 20.0" prefWidth="150"/>
+                        <Label text="kg"/>
+                    </HBox>
+
+                    <Label text="Typ krmiva *" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <ComboBox fx:id="feedTypeCombo" prefWidth="200"
+                              GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                </GridPane>
+
+                <!-- Buttons -->
+                <HBox spacing="10" style="-fx-padding: 10 0 0 0;">
+                    <Button text="Vypočítať" onAction="#handleFeedCalculate"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                    <Button text="Vymazať" onAction="#handleFeedClear"/>
+                </HBox>
+
+                <!-- Results -->
+                <VBox spacing="10" fx:id="feedResultsBox" visible="false" style="-fx-padding: 10; -fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 5;">
+
+                    <Label text="Výsledky výpočtu:" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+
+                    <GridPane hgap="10" vgap="5">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="150" prefWidth="150"/>
+                            <ColumnConstraints minWidth="100" prefWidth="100"/>
+                        </columnConstraints>
+
+                        <Label text="Potrebné množstvo:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label fx:id="feedNeededKgLabel" style="-fx-font-weight: bold;"
+                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                        <Label text="V litroch:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <Label fx:id="feedNeededLitersLabel" style="-fx-font-weight: bold;"
+                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    </GridPane>
+
+                    <Separator/>
+
+                    <GridPane hgap="10" vgap="5" fx:id="feedIngredientsGrid">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="150" prefWidth="150"/>
+                            <ColumnConstraints minWidth="100" prefWidth="100"/>
+                        </columnConstraints>
+
+                        <Label text="Cukor:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label fx:id="feedSugarLabel" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                        <Label text="Voda:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <Label fx:id="feedWaterLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    </GridPane>
+
+                    <Separator/>
+
+                    <Label text="Inštrukcie:" style="-fx-font-weight: bold;"/>
+                    <TextArea fx:id="feedInstructionsArea" wrapText="true" editable="false"
+                              prefRowCount="8" style="-fx-font-size: 11px;"/>
+
+                </VBox>
+
+            </VBox>
+        </TitledPane>
+
+    </VBox>
+
+</ScrollPane>

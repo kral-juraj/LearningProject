@@ -42,6 +42,9 @@
             <Tab fx:id="calendarTab" text="Kalendár">
                 <Label text="Načítavam..."/>
             </Tab>
+            <Tab fx:id="calculatorsTab" text="Kalkulačky">
+                <Label text="Načítavam..."/>
+            </Tab>
         </TabPane>
     </center>
 
