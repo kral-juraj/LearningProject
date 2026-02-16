@@ -1,0 +1,2 @@
+- sortovanie v kalendari podla datumu funguje zvlastne.
+- po prepnuti dokoncenie sa zoradenie porusi

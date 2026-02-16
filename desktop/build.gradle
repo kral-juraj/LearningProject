@@ -45,6 +45,14 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:5.3.1'
 }
 
+// Custom task to read Excel
+task readExcel(type: JavaExec) {
+    mainClass = 'com.beekeeper.desktop.util.ExcelReader'
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    args = project.hasProperty('excelFile') ? [project.property('excelFile')] : []
+}
+
 // Configure test task to use JUnit Platform
 test {
     useJUnitPlatform()

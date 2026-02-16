@@ -8,6 +8,7 @@ import com.beekeeper.desktop.dialog.VarroaTreatmentDialog;
 import com.beekeeper.desktop.scheduler.DesktopSchedulerProvider;
 import com.beekeeper.desktop.util.DateTimeConverter;
 import com.beekeeper.desktop.util.ValidationHelper;
+import com.beekeeper.desktop.util.DateFormatter;
 import com.beekeeper.shared.entity.CalendarEvent;
 import com.beekeeper.shared.repository.CalendarEventRepository;
 import com.beekeeper.shared.scheduler.SchedulerProvider;
@@ -123,8 +124,8 @@ public class CalculatorsController {
         // Setup treatments table
         treatmentDateColumn.setCellValueFactory(cellData -> {
             long timestamp = cellData.getValue().getTreatmentDate();
-            LocalDate date = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate();
-            return new javafx.beans.property.SimpleStringProperty(date.toString());
+            String formattedDate = DateFormatter.format(timestamp);
+            return new javafx.beans.property.SimpleStringProperty(formattedDate);
         });
 
         treatmentTypeColumn.setCellValueFactory(new PropertyValueFactory<>("treatmentType"));
@@ -540,7 +541,11 @@ public class CalculatorsController {
     private void setupQueenCalculator() {
         // Set default values
         queenStartDate.setValue(LocalDate.now());
-        queenMethodCombo.setItems(FXCollections.observableArrayList("Štandardná", "Doolittle", "Jenter"));
+        queenMethodCombo.setItems(FXCollections.observableArrayList(
+                "Štandardná",
+                "Vytvorenie opačnenca",
+                "Klietkovanie matky + Norské zimovanie"
+        ));
         queenMethodCombo.setValue("Štandardná");
 
         // Setup table columns
@@ -549,22 +554,31 @@ public class CalculatorsController {
 
         queenDateColumn.setCellValueFactory(cellData -> {
             long timestamp = cellData.getValue().getDate();
-            LocalDate date = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate();
-            return new javafx.beans.property.SimpleStringProperty(date.toString());
+            String formattedDate = DateFormatter.format(timestamp);
+            return new javafx.beans.property.SimpleStringProperty(formattedDate);
         });
 
         queenNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         queenDescColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-        // Apply row coloring
+        // Apply row coloring using CSS classes
         queenMilestonesTable.setRowFactory(tv -> new TableRow<QueenMilestone>() {
             @Override
             protected void updateItem(QueenMilestone item, boolean empty) {
                 super.updateItem(item, empty);
+
+                // Remove all custom style classes
+                getStyleClass().removeAll("action-row", "info-row");
+
                 if (item == null || empty) {
-                    setStyle("");
+                    // Empty row - no styling
                 } else {
-                    setStyle("-fx-background-color: " + item.getColor() + ";");
+                    // Add CSS class based on color
+                    if ("#FFFFCC".equals(item.getColor())) {
+                        getStyleClass().add("action-row"); // Yellow = AKCIA
+                    } else {
+                        getStyleClass().add("info-row"); // White = INFO
+                    }
                 }
             }
         });

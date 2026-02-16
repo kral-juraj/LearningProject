@@ -68,6 +68,23 @@ public enum TreatmentType {
             "Výhody: BEZ chémie, ekologické, znižuje rojivosť\n" +
             "Nevýhody: Pracné, vyžaduje pravidelnosť"),
 
+    VARROA_TRAP("Varroa pasca", 0.65, "Mechanická metóda - rámik s plodom",
+            "Varroa pasca je biotechnická metóda využívajúca biologické správanie kliešťov.\n\n" +
+            "Efektivita: 60-70% pri správnom načasovaní\n" +
+            "Časovanie: Bezplodové obdobie (po zaklietkovaní matky alebo vytvorení opačnenca)\n" +
+            "Trvanie: 9-11 dní (vajíčka → zavíčkovanie)\n\n" +
+            "Princíp:\n" +
+            "1. Počas bezplodového obdobia (keď nie je plod v úli)\n" +
+            "2. Vložiť rámik s vajíčkami alebo otvoreným plodom z iného úľa\n" +
+            "3. Foretické kliešte (ktoré sú na včelách) zlezú na tento rámik\n" +
+            "4. Kliešte invadujú bunky a začnú sa rozmnožovať\n" +
+            "5. Po zavíčkovaní rámik ODSTRÁNIŤ a ZLIKVIDOVAŤ\n\n" +
+            "Časovanie:\n" +
+            "- Vajíčka (D+0): Rámik vložiť keď nie je plod, odstrániť D+9\n" +
+            "- Larvy (D+3-4): Viac lariev zachytí viac kliešťov, odstrániť D+11\n\n" +
+            "Výhody: BEZ chémie, mechanické odstránenie, efektívne počas bezplodového obdobia\n" +
+            "Nevýhody: Vyžaduje presné načasovanie, potrebný zdrojový úľ s plodom"),
+
     QUEEN_CAGING("Zaklietkovanie matky", 0.50, "Príprava na následné ošetrenie",
             "Zaklietkovanie matky je prípravná biotechnická metóda pred chemickým ošetrením.\n\n" +
             "Efektivita: 50% (príprava, nie liečba!)\n" +

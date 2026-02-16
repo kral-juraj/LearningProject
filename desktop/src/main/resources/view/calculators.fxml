@@ -10,7 +10,8 @@
 
 <ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.beekeeper.desktop.controller.CalculatorsController">
+            fx:controller="com.beekeeper.desktop.controller.CalculatorsController"
+            stylesheets="@../styles/calculators.css">
 
     <VBox spacing="15" style="-fx-padding: 20;">
 

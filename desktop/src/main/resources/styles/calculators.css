@@ -1,0 +1,87 @@
+/* Štýly pre Kalkulačky tab - Queen Timeline Table */
+
+/* ========== AKCIA riadky (žlté) - Včelár musí niečo urobiť ========== */
+.table-row-cell.action-row {
+    -fx-background-color: #FFFFCC; /* svetlo žltá */
+    -fx-text-fill: #000000; /* čierny text */
+}
+
+.table-row-cell.action-row .table-cell {
+    -fx-text-fill: #000000;
+}
+
+/* AKCIA riadok - hover */
+.table-row-cell.action-row:hover {
+    -fx-background-color: #FFF9C4; /* trochu tmavšia žltá */
+}
+
+/* AKCIA riadok - označený (selected) */
+.table-row-cell.action-row:selected {
+    -fx-background-color: #FFE082; /* tmavšia žltá keď je označený */
+    -fx-text-fill: #000000; /* čierny text */
+}
+
+.table-row-cell.action-row:selected .table-cell {
+    -fx-text-fill: #000000;
+}
+
+/* AKCIA riadok - focused + selected */
+.table-view:focused .table-row-cell.action-row:selected {
+    -fx-background-color: #FFD54F; /* ešte výraznejšia žltá keď má focus */
+    -fx-text-fill: #000000;
+}
+
+.table-view:focused .table-row-cell.action-row:selected .table-cell {
+    -fx-text-fill: #000000;
+}
+
+/* ========== INFO riadky (biele) - Len sledovanie ========== */
+.table-row-cell.info-row {
+    -fx-background-color: #FFFFFF; /* biela */
+    -fx-text-fill: #000000; /* čierny text */
+}
+
+.table-row-cell.info-row .table-cell {
+    -fx-text-fill: #000000;
+}
+
+/* INFO riadok - hover */
+.table-row-cell.info-row:hover {
+    -fx-background-color: #E3F2FD; /* svetlo modrá na hover */
+}
+
+/* INFO riadok - označený (selected) */
+.table-row-cell.info-row:selected {
+    -fx-background-color: #B3E5FC; /* svetlo modrá keď je označený */
+    -fx-text-fill: #000000; /* čierny text */
+}
+
+.table-row-cell.info-row:selected .table-cell {
+    -fx-text-fill: #000000;
+}
+
+/* INFO riadok - focused + selected */
+.table-view:focused .table-row-cell.info-row:selected {
+    -fx-background-color: #81D4FA; /* tmavšia modrá keď má focus */
+    -fx-text-fill: #000000;
+}
+
+.table-view:focused .table-row-cell.info-row:selected .table-cell {
+    -fx-text-fill: #000000;
+}
+
+/* ========== Všeobecné TableView štýly ========== */
+
+/* Všetky bunky - čierny text vždy */
+.table-view .table-cell {
+    -fx-text-fill: #000000;
+}
+
+/* Odstránenie predvoleného modrého selection efektu */
+.table-view .table-row-cell:filled:selected {
+    -fx-text-fill: #000000;
+}
+
+.table-view .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: #000000;
+}
