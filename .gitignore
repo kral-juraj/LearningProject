@@ -34,5 +34,19 @@ bin/
 build/
 **/build/
 
-### Test Databases ###
+### User Databases (contain real data - NEVER commit) ###
+*.db
+*.sqlite
+*.sqlite3
+*.db.backup
+*.sql.backup
+*_dump.sql
+*_backup.sql
+beekeeper-desktop.db
 test-db/
+
+### Configuration with secrets ###
+.env
+config.properties
+secrets.yml
+**/application-production.properties

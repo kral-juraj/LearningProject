@@ -240,6 +240,73 @@ sqlite3 ~/beekeeper-desktop.db "SELECT ... FROM translations" > desktop/src/main
 4. **Incremental files (02-06):** Historical files showing how translations were built, useful for understanding but not required
 5. **Random IDs:** Translation IDs are generated with `lower(hex(randomblob(16)))` - they'll be different each time but that's OK (key+language is the unique constraint)
 
+## 🔒 Security: What's Safe in Git?
+
+### ✅ SAFE to commit (what we have):
+
+- **Schema files (01_schema.sql)** - Only `CREATE TABLE` statements, no data
+- **Translation files (02-07)** - Only UI text translations (public strings)
+- **Init/export scripts** - Automation scripts without credentials
+- **README.md** - Documentation
+
+These files contain:
+- Database structure (table definitions)
+- UI translations ("Add Apiary", "Pridať včelnicu")
+- No personal data, no credentials, no API keys
+
+### ❌ NEVER commit to git:
+
+- **User data dumps:** Real apiary names, locations, GPS coordinates
+- **Personal information:** Email addresses, phone numbers, notes
+- **Credentials:** Passwords, API keys, tokens, connection strings
+- **Production database backups:** Any file with real user data
+- **Settings with secrets:** API keys, authentication tokens
+
+### 🚨 Example of what NOT to commit:
+
+```sql
+-- ❌ DANGER - Contains user data
+INSERT INTO apiaries VALUES ('Jan Novak''s Apiary', 48.123456, 17.654321);
+INSERT INTO hives VALUES (..., 'Queen from Peter, tel: +421...', ...);
+INSERT INTO settings VALUES ('google_maps_api_key', 'AIza...');
+
+-- ✅ SAFE - Only structure
+CREATE TABLE apiaries (id TEXT, name TEXT, ...);
+
+-- ✅ SAFE - Only UI translations
+INSERT INTO translations VALUES ('button.add', 'sk', 'Pridať', ...);
+```
+
+### 📝 .gitignore Configuration
+
+Make sure your `.gitignore` includes:
+
+```gitignore
+# User databases (contain real data)
+*.db
+*.sqlite
+*.sqlite3
+
+# Database backups
+*.db.backup
+*.sql.backup
+
+# Production data dumps
+*_dump.sql
+*_backup.sql
+production_*.sql
+
+# Configuration with secrets
+.env
+config.properties
+secrets.yml
+```
+
+**Our SQL scripts are safe because they only contain:**
+1. Empty table structures (schema)
+2. Public UI translations visible in the app
+3. No user data, no secrets, no credentials
+
 ## 🛠️ Troubleshooting
 
 **Problem:** Translation count is wrong after import
