@@ -1,6 +1,9 @@
 package com.beekeeper.desktop.controller;
 
+import com.beekeeper.desktop.component.HiveCard;
 import com.beekeeper.desktop.dao.jdbc.JdbcHiveDao;
+import com.beekeeper.desktop.dialog.HiveActivityHistoryDialog;
+import com.beekeeper.desktop.dialog.HiveDialog;
 import com.beekeeper.desktop.scheduler.DesktopSchedulerProvider;
 import com.beekeeper.shared.entity.Hive;
 import com.beekeeper.shared.i18n.TranslationManager;
@@ -13,27 +16,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.FlowPane;
 
 import java.util.function.Consumer;
 
 /**
  * Controller for Hive list view.
- * Displays hives for a selected apiary.
+ * Displays hives for a selected apiary in a compact grid layout with cards.
  */
 public class HiveListController {
 
     @FXML
-    private TableView<Hive> hiveTable;
-
-    @FXML
-    private TableColumn<Hive, String> nameColumn;
-
-    @FXML
-    private TableColumn<Hive, String> typeColumn;
-
-    @FXML
-    private TableColumn<Hive, Boolean> activeColumn;
+    private FlowPane hiveGridPane;
 
     @FXML
     private Button addButton;
@@ -55,10 +49,10 @@ public class HiveListController {
 
     private HiveViewModel viewModel;
     private CompositeDisposable disposables = new CompositeDisposable();
-    private ObservableList<Hive> hiveList = FXCollections.observableArrayList();
     private String currentApiaryId;
     private Consumer<Hive> onHiveSelected;
     private TranslationManager tm;
+    private Hive selectedHive = null;
 
     @FXML
     public void initialize() {
@@ -71,15 +65,7 @@ public class HiveListController {
         DesktopSchedulerProvider schedulerProvider = new DesktopSchedulerProvider();
         viewModel = new HiveViewModel(repository, schedulerProvider);
 
-        // Configure table columns
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-        activeColumn.setCellValueFactory(new PropertyValueFactory<>("active"));
-
-        // Bind table to observable list
-        hiveTable.setItems(hiveList);
-
-        // Enable/disable buttons based on selection
+        // Disable toolbar buttons until a hive is selected
         editButton.setDisable(true);
         deleteButton.setDisable(true);
         toggleActiveButton.setDisable(true);
@@ -87,16 +73,6 @@ public class HiveListController {
 
         // Defer setup to avoid macOS NSTrackingRectTag bug
         Platform.runLater(() -> {
-            hiveTable.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldSelection, newSelection) -> {
-                    boolean hasSelection = newSelection != null;
-                    editButton.setDisable(!hasSelection);
-                    deleteButton.setDisable(!hasSelection);
-                    toggleActiveButton.setDisable(!hasSelection);
-                    showInspectionsButton.setDisable(!hasSelection);
-                }
-            );
-
             // Subscribe to ViewModel state
             subscribeToViewModel();
         });
@@ -115,8 +91,7 @@ public class HiveListController {
                 .observeOn(JavaFxScheduler.platform())
                 .subscribe(
                     hives -> {
-                        hiveList.clear();
-                        hiveList.addAll(hives);
+                        updateHiveGrid(hives);
                         statusLabel.setText(tm.get("status.hives_count", hives.size()));
                     },
                     error -> showError(tm.get("error.loading_hives", error.getMessage()))
@@ -128,7 +103,7 @@ public class HiveListController {
                 .observeOn(JavaFxScheduler.platform())
                 .subscribe(loading -> {
                     addButton.setDisable(loading);
-                    hiveTable.setDisable(loading);
+                    hiveGridPane.setDisable(loading);
                 })
         );
 
@@ -145,6 +120,142 @@ public class HiveListController {
         );
     }
 
+    /**
+     * Update the hive grid with HiveCard components.
+     *
+     * @param hives List of hives to display
+     */
+    private void updateHiveGrid(java.util.List<Hive> hives) {
+        hiveGridPane.getChildren().clear();
+
+        for (int i = 0; i < hives.size(); i++) {
+            Hive hive = hives.get(i);
+            HiveCard card = new HiveCard();
+            card.setHive(hive);
+
+            // Set action callbacks
+            card.setOnEdit(this::handleEditHiveFromCard);
+            card.setOnHistory(this::handleViewHistory);
+            card.setOnInspect(this::handleShowInspectionsFromCard);
+
+            // Click on card selects it
+            card.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 1) {
+                    selectHive(hive);
+                }
+            });
+
+            // Enable drag-and-drop for reordering
+            setupDragAndDrop(card, hive, hives);
+
+            hiveGridPane.getChildren().add(card);
+        }
+    }
+
+    /**
+     * Setup drag-and-drop handlers for a hive card.
+     *
+     * @param card HiveCard component
+     * @param hive Hive entity
+     * @param allHives List of all hives (for reordering)
+     */
+    private void setupDragAndDrop(HiveCard card, Hive hive, java.util.List<Hive> allHives) {
+        // Drag detected - start drag operation
+        card.setOnDragDetected(event -> {
+            javafx.scene.input.Dragboard db = card.startDragAndDrop(javafx.scene.input.TransferMode.MOVE);
+            javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
+            content.putString(hive.getId());
+            db.setContent(content);
+            card.setOpacity(0.5);
+            event.consume();
+        });
+
+        // Drag over - accept if dragging another hive card
+        card.setOnDragOver(event -> {
+            if (event.getGestureSource() != card && event.getDragboard().hasString()) {
+                event.acceptTransferModes(javafx.scene.input.TransferMode.MOVE);
+            }
+            event.consume();
+        });
+
+        // Drag entered - visual feedback
+        card.setOnDragEntered(event -> {
+            if (event.getGestureSource() != card && event.getDragboard().hasString()) {
+                card.setStyle("-fx-border-color: #2196F3; -fx-border-width: 2px;");
+            }
+            event.consume();
+        });
+
+        // Drag exited - remove visual feedback
+        card.setOnDragExited(event -> {
+            card.setStyle("");
+            event.consume();
+        });
+
+        // Drag dropped - reorder hives
+        card.setOnDragDropped(event -> {
+            javafx.scene.input.Dragboard db = event.getDragboard();
+            boolean success = false;
+
+            if (db.hasString()) {
+                String draggedHiveId = db.getString();
+                Hive draggedHive = null;
+                int draggedIndex = -1;
+                int targetIndex = -1;
+
+                // Find dragged hive and target hive indices
+                for (int i = 0; i < allHives.size(); i++) {
+                    if (allHives.get(i).getId().equals(draggedHiveId)) {
+                        draggedHive = allHives.get(i);
+                        draggedIndex = i;
+                    }
+                    if (allHives.get(i).getId().equals(hive.getId())) {
+                        targetIndex = i;
+                    }
+                }
+
+                if (draggedHive != null && draggedIndex != -1 && targetIndex != -1 && draggedIndex != targetIndex) {
+                    // Reorder the list
+                    allHives.remove(draggedIndex);
+                    allHives.add(targetIndex, draggedHive);
+
+                    // Update displayOrder for all hives
+                    for (int i = 0; i < allHives.size(); i++) {
+                        allHives.get(i).setDisplayOrder(i);
+                    }
+
+                    // Save new order to database
+                    viewModel.updateHiveOrder(new java.util.ArrayList<>(allHives));
+
+                    // Refresh UI
+                    updateHiveGrid(allHives);
+                    success = true;
+                }
+            }
+
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
+        // Drag done - reset opacity
+        card.setOnDragDone(event -> {
+            card.setOpacity(1.0);
+            card.setStyle("");
+            event.consume();
+        });
+    }
+
+    /**
+     * Select a hive and enable toolbar buttons.
+     */
+    private void selectHive(Hive hive) {
+        this.selectedHive = hive;
+        editButton.setDisable(false);
+        deleteButton.setDisable(false);
+        toggleActiveButton.setDisable(false);
+        showInspectionsButton.setDisable(false);
+    }
+
     @FXML
     private void handleAddHive() {
         if (currentApiaryId == null) {
@@ -152,59 +263,62 @@ public class HiveListController {
             return;
         }
 
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle(tm.get("dialog.add_hive.title"));
-        dialog.setHeaderText(tm.get("dialog.add_hive.header"));
-        dialog.setContentText(tm.get("dialog.add_hive.content"));
-
-        dialog.showAndWait().ifPresent(name -> {
-            if (!name.trim().isEmpty()) {
-                viewModel.createHive(currentApiaryId, name, "VERTICAL", "", 0);
-            }
+        HiveDialog dialog = new HiveDialog(null);
+        dialog.showAndWait().ifPresent(hive -> {
+            hive.setApiaryId(currentApiaryId);
+            viewModel.createHive(hive);
         });
     }
 
     @FXML
     private void handleEditHive() {
-        Hive selected = hiveTable.getSelectionModel().getSelectedItem();
-        if (selected == null) return;
+        if (selectedHive == null) return;
 
-        TextInputDialog dialog = new TextInputDialog(selected.getName());
-        dialog.setTitle(tm.get("dialog.edit_hive.title"));
-        dialog.setHeaderText(tm.get("dialog.edit_hive.header"));
-        dialog.setContentText(tm.get("dialog.edit_hive.content"));
-
-        dialog.showAndWait().ifPresent(name -> {
-            if (!name.trim().isEmpty()) {
-                selected.setName(name);
-                viewModel.updateHive(selected);
-            }
+        HiveDialog dialog = new HiveDialog(selectedHive);
+        dialog.showAndWait().ifPresent(hive -> {
+            viewModel.updateHive(hive);
         });
+    }
+
+    /**
+     * Handle edit from card button.
+     */
+    private void handleEditHiveFromCard(Hive hive) {
+        selectHive(hive);
+        handleEditHive();
     }
 
     @FXML
     private void handleDeleteHive() {
-        Hive selected = hiveTable.getSelectionModel().getSelectedItem();
-        if (selected == null) return;
+        if (selectedHive == null) return;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(tm.get("dialog.delete_hive.title"));
-        alert.setHeaderText(tm.get("dialog.delete_hive.header", selected.getName()));
+        alert.setHeaderText(tm.get("dialog.delete_hive.header", selectedHive.getName()));
         alert.setContentText(tm.get("dialog.delete_hive.content"));
 
+        // Use translated button labels
+        ButtonType deleteButtonType = new ButtonType(tm.get("button.delete"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(tm.get("button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(deleteButtonType, cancelButtonType);
+
         alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                viewModel.deleteHive(selected);
+            if (response == deleteButtonType) {
+                viewModel.deleteHive(selectedHive);
+                selectedHive = null;
+                editButton.setDisable(true);
+                deleteButton.setDisable(true);
+                toggleActiveButton.setDisable(true);
+                showInspectionsButton.setDisable(true);
             }
         });
     }
 
     @FXML
     private void handleToggleActive() {
-        Hive selected = hiveTable.getSelectionModel().getSelectedItem();
-        if (selected == null) return;
+        if (selectedHive == null) return;
 
-        viewModel.toggleHiveActive(selected);
+        viewModel.toggleHiveActive(selectedHive);
     }
 
     @FXML
@@ -216,10 +330,26 @@ public class HiveListController {
 
     @FXML
     private void handleShowInspections() {
-        Hive selected = hiveTable.getSelectionModel().getSelectedItem();
-        if (selected != null && onHiveSelected != null) {
-            onHiveSelected.accept(selected);
+        if (selectedHive != null && onHiveSelected != null) {
+            onHiveSelected.accept(selectedHive);
         }
+    }
+
+    /**
+     * Handle show inspections from card button.
+     */
+    private void handleShowInspectionsFromCard(Hive hive) {
+        selectHive(hive);
+        handleShowInspections();
+    }
+
+    /**
+     * Handle view history from card button.
+     */
+    private void handleViewHistory(Hive hive) {
+        selectHive(hive);
+        HiveActivityHistoryDialog dialog = new HiveActivityHistoryDialog(hive);
+        dialog.showAndWait();
     }
 
     private void showError(String message) {

@@ -63,4 +63,18 @@ public class HiveRepository {
     public Single<Integer> getHiveCountByApiaryId(String apiaryId) {
         return hiveDao.getCountByApiaryId(apiaryId);
     }
+
+    /**
+     * Update display order for multiple hives.
+     * Used for drag-and-drop reordering.
+     *
+     * @param hives List of hives with updated displayOrder values
+     * @return Completable
+     */
+    public Completable updateHiveOrder(List<Hive> hives) {
+        for (Hive hive : hives) {
+            hive.setUpdatedAt(DateUtils.getCurrentTimestamp());
+        }
+        return hiveDao.insertAll(hives);  // Uses INSERT OR REPLACE
+    }
 }

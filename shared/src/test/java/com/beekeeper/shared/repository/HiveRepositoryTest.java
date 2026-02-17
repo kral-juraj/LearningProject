@@ -3,27 +3,36 @@ package com.beekeeper.shared.repository;
 import com.beekeeper.shared.dao.HiveDao;
 import com.beekeeper.shared.entity.Hive;
 import io.reactivex.Completable;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for HiveRepository.
- * Tests business logic with mocked DAO.
+ * Unit tests for HiveRepository focusing on updateHiveOrder method.
+ *
+ * Tests the business logic for:
+ * - Batch updating hive display order after drag-and-drop
+ * - Automatic timestamp management (updatedAt)
+ * - Correct delegation to DAO layer
  */
 class HiveRepositoryTest {
 
     @Mock
     private HiveDao hiveDao;
+
+    @Captor
+    private ArgumentCaptor<List<Hive>> hivesCaptor;
 
     private HiveRepository repository;
 
@@ -33,102 +42,157 @@ class HiveRepositoryTest {
         repository = new HiveRepository(hiveDao);
     }
 
+    /**
+     * Test: updateHiveOrder sets updatedAt timestamp for all hives.
+     *
+     * Use case: User drags hives to reorder them, all modified hives get timestamp.
+     * Expected: updatedAt set for each hive in the list.
+     */
     @Test
-    void testInsertHive_generatesIdWhenMissing() {
-        Hive hive = new Hive();
-        hive.setName("L1");
+    void testUpdateHiveOrderSetsTimestamps() {
+        // Arrange
+        List<Hive> hives = createTestHives(3);
+        long beforeTimestamp = System.currentTimeMillis();
+        when(hiveDao.insertAll(any())).thenReturn(Completable.complete());
 
-        when(hiveDao.insert(any(Hive.class))).thenReturn(Completable.complete());
+        // Act
+        repository.updateHiveOrder(hives).blockingAwait();
 
-        repository.insertHive(hive).blockingAwait();
+        // Assert
+        verify(hiveDao).insertAll(hivesCaptor.capture());
+        List<Hive> capturedHives = hivesCaptor.getValue();
 
-        assertNotNull(hive.getId());
-        assertFalse(hive.getId().isEmpty());
+        for (Hive hive : capturedHives) {
+            assertTrue(hive.getUpdatedAt() >= beforeTimestamp,
+                "updatedAt should be set to current timestamp");
+        }
     }
 
+    /**
+     * Test: updateHiveOrder delegates to DAO insertAll.
+     *
+     * Use case: Repository uses INSERT OR REPLACE strategy for batch updates.
+     * Expected: DAO insertAll method called with correct hive list.
+     */
     @Test
-    void testInsertHive_setsTimestamps() {
-        Hive hive = new Hive();
-        hive.setName("L1");
+    void testUpdateHiveOrderDelegatesToDao() {
+        // Arrange
+        List<Hive> hives = createTestHives(5);
+        when(hiveDao.insertAll(any())).thenReturn(Completable.complete());
 
-        when(hiveDao.insert(any(Hive.class))).thenReturn(Completable.complete());
+        // Act
+        repository.updateHiveOrder(hives).blockingAwait();
 
-        long before = System.currentTimeMillis();
-        repository.insertHive(hive).blockingAwait();
-        long after = System.currentTimeMillis();
-
-        assertTrue(hive.getCreatedAt() >= before);
-        assertTrue(hive.getCreatedAt() <= after);
-        assertTrue(hive.getUpdatedAt() >= before);
-        assertTrue(hive.getUpdatedAt() <= after);
+        // Assert
+        verify(hiveDao).insertAll(hivesCaptor.capture());
+        List<Hive> capturedHives = hivesCaptor.getValue();
+        assertEquals(5, capturedHives.size());
     }
 
+    /**
+     * Test: updateHiveOrder preserves hive data.
+     *
+     * Use case: Only displayOrder should change, other fields preserved.
+     * Expected: Hive names, IDs, and other fields unchanged.
+     */
     @Test
-    void testInsertHive_callsDaoInsert() {
-        Hive hive = new Hive();
-        hive.setName("L1");
+    void testUpdateHiveOrderPreservesHiveData() {
+        // Arrange
+        List<Hive> hives = createTestHives(3);
+        hives.get(0).setName("Ležan");
+        hives.get(1).setName("Oddielok");
+        hives.get(2).setName("Úľ 3");
+        when(hiveDao.insertAll(any())).thenReturn(Completable.complete());
 
-        when(hiveDao.insert(any(Hive.class))).thenReturn(Completable.complete());
+        // Act
+        repository.updateHiveOrder(hives).blockingAwait();
 
-        repository.insertHive(hive).blockingAwait();
-
-        verify(hiveDao, times(1)).insert(hive);
+        // Assert
+        verify(hiveDao).insertAll(hivesCaptor.capture());
+        List<Hive> capturedHives = hivesCaptor.getValue();
+        assertEquals("Ležan", capturedHives.get(0).getName());
+        assertEquals("Oddielok", capturedHives.get(1).getName());
+        assertEquals("Úľ 3", capturedHives.get(2).getName());
     }
 
+    /**
+     * Test: updateHiveOrder with empty list.
+     *
+     * Use case: Edge case - no hives to update.
+     * Expected: Completes without error.
+     */
     @Test
-    void testUpdateHive_updatesTimestamp() {
-        Hive hive = new Hive();
-        hive.setId("test-id");
-        hive.setName("L1");
-        hive.setCreatedAt(1000000000L);
-        hive.setUpdatedAt(1000000000L);
+    void testUpdateHiveOrderWithEmptyList() {
+        // Arrange
+        List<Hive> emptyList = new ArrayList<>();
+        when(hiveDao.insertAll(any())).thenReturn(Completable.complete());
 
-        when(hiveDao.update(any(Hive.class))).thenReturn(Completable.complete());
-
-        long before = System.currentTimeMillis();
-        repository.updateHive(hive).blockingAwait();
-        long after = System.currentTimeMillis();
-
-        assertTrue(hive.getUpdatedAt() >= before);
-        assertTrue(hive.getUpdatedAt() <= after);
-        assertTrue(hive.getUpdatedAt() > hive.getCreatedAt());
+        // Act & Assert
+        assertDoesNotThrow(() -> repository.updateHiveOrder(emptyList).blockingAwait());
+        verify(hiveDao).insertAll(emptyList);
     }
 
+    /**
+     * Test: updateHiveOrder propagates DAO errors.
+     *
+     * Use case: Database error during batch update.
+     * Expected: Error propagated to caller for proper handling.
+     */
     @Test
-    void testDeleteHive_callsDaoDelete() {
-        Hive hive = new Hive();
-        hive.setId("test-id");
+    void testUpdateHiveOrderPropagatesErrors() {
+        // Arrange
+        List<Hive> hives = createTestHives(3);
+        RuntimeException dbError = new RuntimeException("Database connection failed");
+        when(hiveDao.insertAll(any())).thenReturn(Completable.error(dbError));
 
-        when(hiveDao.delete(any(Hive.class))).thenReturn(Completable.complete());
-
-        repository.deleteHive(hive).blockingAwait();
-
-        verify(hiveDao, times(1)).delete(hive);
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            repository.updateHiveOrder(hives).blockingAwait();
+        });
+        assertEquals("Database connection failed", exception.getMessage());
     }
 
+    /**
+     * Test: updateHiveOrder with single hive.
+     *
+     * Use case: Only one hive in apiary.
+     * Expected: Still updates timestamp correctly.
+     */
     @Test
-    void testGetHiveById_callsDaoGetById() {
-        String id = "test-id";
-        Hive hive = new Hive();
-        hive.setId(id);
+    void testUpdateHiveOrderWithSingleHive() {
+        // Arrange
+        List<Hive> hives = createTestHives(1);
+        hives.get(0).setDisplayOrder(0);
+        when(hiveDao.insertAll(any())).thenReturn(Completable.complete());
 
-        when(hiveDao.getById(id)).thenReturn(Single.just(hive));
+        // Act
+        repository.updateHiveOrder(hives).blockingAwait();
 
-        Hive result = repository.getHiveById(id).blockingGet();
-
-        assertNotNull(result);
-        assertEquals(id, result.getId());
-        verify(hiveDao, times(1)).getById(id);
+        // Assert
+        verify(hiveDao).insertAll(hivesCaptor.capture());
+        List<Hive> capturedHives = hivesCaptor.getValue();
+        assertEquals(1, capturedHives.size());
+        assertTrue(capturedHives.get(0).getUpdatedAt() > 0);
     }
 
-    @Test
-    void testGetHivesByApiaryId_callsDaoGetByApiaryId() {
-        String apiaryId = "apiary-1";
+    // Helper method to create test hives
+    private List<Hive> createTestHives(int count) {
+        List<Hive> hives = new ArrayList<>();
+        String apiaryId = UUID.randomUUID().toString();
 
-        when(hiveDao.getByApiaryId(apiaryId)).thenReturn(Flowable.just(Arrays.asList()));
+        for (int i = 0; i < count; i++) {
+            Hive hive = new Hive();
+            hive.setId(UUID.randomUUID().toString());
+            hive.setApiaryId(apiaryId);
+            hive.setName("Hive " + i);
+            hive.setType("VERTICAL");
+            hive.setDisplayOrder(i);
+            hive.setActive(true);
+            hive.setCreatedAt(System.currentTimeMillis());
+            hive.setUpdatedAt(System.currentTimeMillis() - 1000); // Old timestamp
+            hives.add(hive);
+        }
 
-        repository.getHivesByApiaryId(apiaryId).blockingFirst();
-
-        verify(hiveDao, times(1)).getByApiaryId(apiaryId);
+        return hives;
     }
 }

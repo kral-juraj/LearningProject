@@ -64,10 +64,10 @@ public class TranslationManager {
     }
 
     /**
-     * Get formatted string with parameters (e.g., "Error: %s").
-     * Uses String.format() for parameter substitution.
+     * Get formatted string with parameters (e.g., "História úľa: {0}").
+     * Replaces {0}, {1}, {2}, etc. with provided parameters.
      *
-     * Use case: Dynamic messages with variables, like "Deleted: %s".
+     * Use case: Dynamic messages with variables, like "Deleted: {0}".
      *
      * @param key Translation key
      * @param params Parameters to substitute in the format string
@@ -75,7 +75,15 @@ public class TranslationManager {
      */
     public String get(String key, Object... params) {
         String template = get(key);
-        return String.format(template, params);
+
+        // Replace {0}, {1}, {2}, etc. with actual parameter values
+        for (int i = 0; i < params.length; i++) {
+            String placeholder = "{" + i + "}";
+            String value = params[i] != null ? params[i].toString() : "";
+            template = template.replace(placeholder, value);
+        }
+
+        return template;
     }
 
     /**

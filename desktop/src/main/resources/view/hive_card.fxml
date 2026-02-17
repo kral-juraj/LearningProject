@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<!--
+  HiveCard: Compact card component for displaying a single hive.
+  Used in grid layout on hive list view.
+-->
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      styleClass="hive-card"
+      spacing="5"
+      alignment="TOP_CENTER"
+      maxWidth="180"
+      minWidth="180"
+      prefWidth="180"
+      minHeight="250">
+
+    <padding>
+        <Insets top="12" right="12" bottom="12" left="12"/>
+    </padding>
+
+    <!-- Spacer to push icon down (flexible space) -->
+    <Region VBox.vgrow="ALWAYS" minHeight="5"/>
+
+    <!-- Hive icon (realistic ASCII art) -->
+    <Label fx:id="hiveIcon" styleClass="hive-icon"
+           style="-fx-font-size: 9px; -fx-font-family: 'Courier New', monospace; -fx-text-fill: #8B4513; -fx-min-height: 60px; -fx-line-spacing: -3px;"
+           alignment="CENTER"/>
+
+    <!-- Hive name -->
+    <Label fx:id="hiveName" styleClass="hive-name" wrapText="true" textAlignment="CENTER"
+           style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+
+    <!-- Type badge -->
+    <Label fx:id="hiveTypeBadge" styleClass="hive-type-badge"
+           style="-fx-background-color: #e3f2fd; -fx-padding: 3 8; -fx-background-radius: 10; -fx-font-size: 11px;"/>
+
+    <!-- Info grid (compact) -->
+    <GridPane hgap="5" vgap="3" alignment="CENTER">
+        <!-- Frame count -->
+        <Label text="🔲" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-size: 12px;"/>
+        <Label fx:id="frameCountLabel" GridPane.columnIndex="1" GridPane.rowIndex="0"
+               style="-fx-font-size: 12px; -fx-text-fill: #555;"/>
+
+        <!-- Queen year -->
+        <Label text="👑" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-size: 12px;"/>
+        <Label fx:id="queenYearLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"
+               style="-fx-font-size: 12px; -fx-text-fill: #555;"/>
+
+        <!-- Active status -->
+        <Label fx:id="activeIcon" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-size: 12px;"/>
+        <Label fx:id="activeLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"
+               style="-fx-font-size: 12px;"/>
+    </GridPane>
+
+    <!-- Equipment indicators (small badges) -->
+    <HBox fx:id="equipmentBox" spacing="4" alignment="CENTER" minHeight="20"/>
+
+    <!-- Action buttons (compact) - pinned to bottom -->
+    <HBox spacing="5" alignment="CENTER">
+        <Button fx:id="editButton" text="✏️" styleClass="icon-button"
+                onAction="#handleEdit"
+                style="-fx-font-size: 14px; -fx-padding: 4 8; -fx-background-radius: 5;"/>
+        <Button fx:id="historyButton" text="📜" styleClass="icon-button"
+                onAction="#handleHistory"
+                style="-fx-font-size: 14px; -fx-padding: 4 8; -fx-background-radius: 5;"/>
+        <Button fx:id="inspectButton" text="🔍" styleClass="icon-button"
+                onAction="#handleInspect"
+                style="-fx-font-size: 14px; -fx-padding: 4 8; -fx-background-radius: 5;"/>
+    </HBox>
+</VBox>

@@ -24,8 +24,14 @@ public class JdbcHiveDao implements HiveDao {
     @Override
     public Completable insert(Hive hive) {
         return Completable.fromAction(() -> {
-            String sql = "INSERT OR REPLACE INTO hives (id, apiaryId, name, type, queenId, queenYear, queenColor, active, notes, createdAt, updatedAt) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT OR REPLACE INTO hives " +
+                "(id, apiaryId, name, type, queenId, queenYear, queenColor, active, notes, " +
+                "frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, hasPropolisTrap, " +
+                "darkFrames, lightFrames, newFrames, foundationFrames, emptyFrames, foundationSheets, " +
+                "hasEntranceReducer, hasPollenTrap, hasTopInsulation, hasFoil, " +
+                "aggression, chalkBrood, droneCells, droneLaying, displayOrder, " +
+                "createdAt, updatedAt) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, hive.getId());
@@ -37,8 +43,29 @@ public class JdbcHiveDao implements HiveDao {
                 stmt.setString(7, hive.getQueenColor());
                 stmt.setInt(8, hive.isActive() ? 1 : 0);
                 stmt.setString(9, hive.getNotes());
-                stmt.setLong(10, hive.getCreatedAt());
-                stmt.setLong(11, hive.getUpdatedAt());
+                stmt.setString(10, hive.getFrameType());
+                stmt.setInt(11, hive.getFrameCount());
+                stmt.setInt(12, hive.isInsulated() ? 1 : 0);
+                stmt.setInt(13, hive.isHighBottomBoard() ? 1 : 0);
+                stmt.setInt(14, hive.isHasQueenExcluder() ? 1 : 0);
+                stmt.setInt(15, hive.isHasPropolisTrap() ? 1 : 0);
+                stmt.setInt(16, hive.getDarkFrames());
+                stmt.setInt(17, hive.getLightFrames());
+                stmt.setInt(18, hive.getNewFrames());
+                stmt.setInt(19, hive.getFoundationFrames());
+                stmt.setInt(20, hive.getEmptyFrames());
+                stmt.setInt(21, hive.getFoundationSheets());
+                stmt.setInt(22, hive.isHasEntranceReducer() ? 1 : 0);
+                stmt.setInt(23, hive.isHasPollenTrap() ? 1 : 0);
+                stmt.setInt(24, hive.isHasTopInsulation() ? 1 : 0);
+                stmt.setInt(25, hive.isHasFoil() ? 1 : 0);
+                stmt.setString(26, hive.getAggression());
+                stmt.setInt(27, hive.isChalkBrood() ? 1 : 0);
+                stmt.setInt(28, hive.isDroneCells() ? 1 : 0);
+                stmt.setInt(29, hive.isDroneLaying() ? 1 : 0);
+                stmt.setInt(30, hive.getDisplayOrder());
+                stmt.setLong(31, hive.getCreatedAt());
+                stmt.setLong(32, hive.getUpdatedAt());
                 stmt.executeUpdate();
             }
         });
@@ -47,8 +74,14 @@ public class JdbcHiveDao implements HiveDao {
     @Override
     public Completable insertAll(List<Hive> hives) {
         return Completable.fromAction(() -> {
-            String sql = "INSERT OR REPLACE INTO hives (id, apiaryId, name, type, queenId, queenYear, queenColor, active, notes, createdAt, updatedAt) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT OR REPLACE INTO hives " +
+                "(id, apiaryId, name, type, queenId, queenYear, queenColor, active, notes, " +
+                "frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, hasPropolisTrap, " +
+                "darkFrames, lightFrames, newFrames, foundationFrames, emptyFrames, foundationSheets, " +
+                "hasEntranceReducer, hasPollenTrap, hasTopInsulation, hasFoil, " +
+                "aggression, chalkBrood, droneCells, droneLaying, displayOrder, " +
+                "createdAt, updatedAt) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 for (Hive hive : hives) {
@@ -61,8 +94,29 @@ public class JdbcHiveDao implements HiveDao {
                     stmt.setString(7, hive.getQueenColor());
                     stmt.setInt(8, hive.isActive() ? 1 : 0);
                     stmt.setString(9, hive.getNotes());
-                    stmt.setLong(10, hive.getCreatedAt());
-                    stmt.setLong(11, hive.getUpdatedAt());
+                    stmt.setString(10, hive.getFrameType());
+                    stmt.setInt(11, hive.getFrameCount());
+                    stmt.setInt(12, hive.isInsulated() ? 1 : 0);
+                    stmt.setInt(13, hive.isHighBottomBoard() ? 1 : 0);
+                    stmt.setInt(14, hive.isHasQueenExcluder() ? 1 : 0);
+                    stmt.setInt(15, hive.isHasPropolisTrap() ? 1 : 0);
+                    stmt.setInt(16, hive.getDarkFrames());
+                    stmt.setInt(17, hive.getLightFrames());
+                    stmt.setInt(18, hive.getNewFrames());
+                    stmt.setInt(19, hive.getFoundationFrames());
+                    stmt.setInt(20, hive.getEmptyFrames());
+                    stmt.setInt(21, hive.getFoundationSheets());
+                    stmt.setInt(22, hive.isHasEntranceReducer() ? 1 : 0);
+                    stmt.setInt(23, hive.isHasPollenTrap() ? 1 : 0);
+                    stmt.setInt(24, hive.isHasTopInsulation() ? 1 : 0);
+                    stmt.setInt(25, hive.isHasFoil() ? 1 : 0);
+                    stmt.setString(26, hive.getAggression());
+                    stmt.setInt(27, hive.isChalkBrood() ? 1 : 0);
+                    stmt.setInt(28, hive.isDroneCells() ? 1 : 0);
+                    stmt.setInt(29, hive.isDroneLaying() ? 1 : 0);
+                    stmt.setInt(30, hive.getDisplayOrder());
+                    stmt.setLong(31, hive.getCreatedAt());
+                    stmt.setLong(32, hive.getUpdatedAt());
                     stmt.addBatch();
                 }
                 stmt.executeBatch();
@@ -73,7 +127,12 @@ public class JdbcHiveDao implements HiveDao {
     @Override
     public Completable update(Hive hive) {
         return Completable.fromAction(() -> {
-            String sql = "UPDATE hives SET apiaryId=?, name=?, type=?, queenId=?, queenYear=?, queenColor=?, active=?, notes=?, updatedAt=? WHERE id=?";
+            String sql = "UPDATE hives SET apiaryId=?, name=?, type=?, queenId=?, queenYear=?, queenColor=?, " +
+                "active=?, notes=?, frameType=?, frameCount=?, insulated=?, highBottomBoard=?, " +
+                "hasQueenExcluder=?, hasPropolisTrap=?, darkFrames=?, lightFrames=?, newFrames=?, " +
+                "foundationFrames=?, emptyFrames=?, foundationSheets=?, hasEntranceReducer=?, hasPollenTrap=?, " +
+                "hasTopInsulation=?, hasFoil=?, aggression=?, chalkBrood=?, droneCells=?, droneLaying=?, " +
+                "displayOrder=?, updatedAt=? WHERE id=?";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, hive.getApiaryId());
@@ -84,8 +143,29 @@ public class JdbcHiveDao implements HiveDao {
                 stmt.setString(6, hive.getQueenColor());
                 stmt.setInt(7, hive.isActive() ? 1 : 0);
                 stmt.setString(8, hive.getNotes());
-                stmt.setLong(9, hive.getUpdatedAt());
-                stmt.setString(10, hive.getId());
+                stmt.setString(9, hive.getFrameType());
+                stmt.setInt(10, hive.getFrameCount());
+                stmt.setInt(11, hive.isInsulated() ? 1 : 0);
+                stmt.setInt(12, hive.isHighBottomBoard() ? 1 : 0);
+                stmt.setInt(13, hive.isHasQueenExcluder() ? 1 : 0);
+                stmt.setInt(14, hive.isHasPropolisTrap() ? 1 : 0);
+                stmt.setInt(15, hive.getDarkFrames());
+                stmt.setInt(16, hive.getLightFrames());
+                stmt.setInt(17, hive.getNewFrames());
+                stmt.setInt(18, hive.getFoundationFrames());
+                stmt.setInt(19, hive.getEmptyFrames());
+                stmt.setInt(20, hive.getFoundationSheets());
+                stmt.setInt(21, hive.isHasEntranceReducer() ? 1 : 0);
+                stmt.setInt(22, hive.isHasPollenTrap() ? 1 : 0);
+                stmt.setInt(23, hive.isHasTopInsulation() ? 1 : 0);
+                stmt.setInt(24, hive.isHasFoil() ? 1 : 0);
+                stmt.setString(25, hive.getAggression());
+                stmt.setInt(26, hive.isChalkBrood() ? 1 : 0);
+                stmt.setInt(27, hive.isDroneCells() ? 1 : 0);
+                stmt.setInt(28, hive.isDroneLaying() ? 1 : 0);
+                stmt.setInt(29, hive.getDisplayOrder());
+                stmt.setLong(30, hive.getUpdatedAt());
+                stmt.setString(31, hive.getId());
                 stmt.executeUpdate();
             }
         });
@@ -117,7 +197,7 @@ public class JdbcHiveDao implements HiveDao {
     public Flowable<List<Hive>> getByApiaryId(String apiaryId) {
         return Flowable.fromCallable(() -> {
             List<Hive> list = new ArrayList<>();
-            String sql = "SELECT * FROM hives WHERE apiaryId = ? ORDER BY name ASC";
+            String sql = "SELECT * FROM hives WHERE apiaryId = ? ORDER BY displayOrder ASC, name ASC";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, apiaryId);
@@ -135,7 +215,7 @@ public class JdbcHiveDao implements HiveDao {
     public Flowable<List<Hive>> getActiveByApiaryId(String apiaryId) {
         return Flowable.fromCallable(() -> {
             List<Hive> list = new ArrayList<>();
-            String sql = "SELECT * FROM hives WHERE apiaryId = ? AND active = 1 ORDER BY name ASC";
+            String sql = "SELECT * FROM hives WHERE apiaryId = ? AND active = 1 ORDER BY displayOrder ASC, name ASC";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, apiaryId);
@@ -153,7 +233,7 @@ public class JdbcHiveDao implements HiveDao {
     public Flowable<List<Hive>> getAll() {
         return Flowable.fromCallable(() -> {
             List<Hive> list = new ArrayList<>();
-            String sql = "SELECT * FROM hives ORDER BY name ASC";
+            String sql = "SELECT * FROM hives ORDER BY apiaryId ASC, displayOrder ASC, name ASC";
             try (Connection conn = DatabaseManager.getConnection();
                  Statement stmt = conn.createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
@@ -207,6 +287,38 @@ public class JdbcHiveDao implements HiveDao {
         hive.setNotes(rs.getString("notes"));
         hive.setCreatedAt(rs.getLong("createdAt"));
         hive.setUpdatedAt(rs.getLong("updatedAt"));
+
+        // Extended hive details
+        hive.setFrameType(rs.getString("frameType"));
+        hive.setFrameCount(rs.getInt("frameCount"));
+        hive.setInsulated(rs.getInt("insulated") == 1);
+        hive.setHighBottomBoard(rs.getInt("highBottomBoard") == 1);
+        hive.setHasQueenExcluder(rs.getInt("hasQueenExcluder") == 1);
+        hive.setHasPropolisTrap(rs.getInt("hasPropolisTrap") == 1);
+
+        // Frame condition tracking
+        hive.setDarkFrames(rs.getInt("darkFrames"));
+        hive.setLightFrames(rs.getInt("lightFrames"));
+        hive.setNewFrames(rs.getInt("newFrames"));
+        hive.setFoundationFrames(rs.getInt("foundationFrames"));
+        hive.setEmptyFrames(rs.getInt("emptyFrames"));
+        hive.setFoundationSheets(rs.getInt("foundationSheets"));
+
+        // Additional equipment
+        hive.setHasEntranceReducer(rs.getInt("hasEntranceReducer") == 1);
+        hive.setHasPollenTrap(rs.getInt("hasPollenTrap") == 1);
+        hive.setHasTopInsulation(rs.getInt("hasTopInsulation") == 1);
+        hive.setHasFoil(rs.getInt("hasFoil") == 1);
+
+        // Queen behavior and colony health
+        hive.setAggression(rs.getString("aggression"));
+        hive.setChalkBrood(rs.getInt("chalkBrood") == 1);
+        hive.setDroneCells(rs.getInt("droneCells") == 1);
+        hive.setDroneLaying(rs.getInt("droneLaying") == 1);
+
+        // Display order
+        hive.setDisplayOrder(rs.getInt("displayOrder"));
+
         return hive;
     }
 }

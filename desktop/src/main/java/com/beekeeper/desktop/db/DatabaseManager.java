@@ -34,6 +34,7 @@ public class DatabaseManager {
             createTables(conn);
             migrateTaxationFrames(conn);
             migrateTaxations(conn);
+            migrateHives(conn);
             migrateSettings(conn);
             initialized = true;
         }
@@ -242,6 +243,23 @@ public class DatabaseManager {
             );
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_translations_key_language ON translations(key, language)");
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_translations_category ON translations(category)");
+
+            // 11. HiveActivities table (depends on hives)
+            stmt.execute(
+                "CREATE TABLE IF NOT EXISTS hive_activities (" +
+                "id TEXT PRIMARY KEY NOT NULL, " +
+                "hiveId TEXT, " +
+                "activityType TEXT, " +
+                "activityDate INTEGER, " +
+                "description TEXT, " +
+                "oldValue TEXT, " +
+                "newValue TEXT, " +
+                "createdAt INTEGER, " +
+                "updatedAt INTEGER, " +
+                "FOREIGN KEY (hiveId) REFERENCES hives(id) ON DELETE CASCADE)"
+            );
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_hive_activities_hiveId ON hive_activities(hiveId)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_hive_activities_activityDate ON hive_activities(activityDate)");
         }
     }
 
@@ -293,6 +311,51 @@ public class DatabaseManager {
                 try {
                     stmt.execute("ALTER TABLE taxations ADD COLUMN " + column + " INTEGER DEFAULT 0");
                     System.out.println("[DatabaseManager] Added " + column + " column to taxations");
+                } catch (SQLException e) {
+                    // Column already exists, ignore
+                    if (!e.getMessage().contains("duplicate column name")) {
+                        throw e;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Migrate hives table to add extended hive details.
+     * Adds columns for frame type, frame count, insulation, bottom board type, and grids.
+     */
+    private static void migrateHives(Connection connection) throws SQLException {
+        try (Statement stmt = connection.createStatement()) {
+            String[] columns = {
+                "frameType TEXT DEFAULT NULL",
+                "frameCount INTEGER DEFAULT 0",
+                "insulated INTEGER DEFAULT 0",
+                "highBottomBoard INTEGER DEFAULT 0",
+                "hasQueenExcluder INTEGER DEFAULT 0",
+                "hasPropolisTrap INTEGER DEFAULT 0",
+                "darkFrames INTEGER DEFAULT 0",
+                "lightFrames INTEGER DEFAULT 0",
+                "newFrames INTEGER DEFAULT 0",
+                "foundationFrames INTEGER DEFAULT 0",
+                "emptyFrames INTEGER DEFAULT 0",
+                "hasEntranceReducer INTEGER DEFAULT 0",
+                "hasPollenTrap INTEGER DEFAULT 0",
+                "hasTopInsulation INTEGER DEFAULT 0",
+                "hasFoil INTEGER DEFAULT 0",
+                "foundationSheets INTEGER DEFAULT 0",
+                "aggression TEXT DEFAULT NULL",
+                "chalkBrood INTEGER DEFAULT 0",
+                "droneCells INTEGER DEFAULT 0",
+                "droneLaying INTEGER DEFAULT 0",
+                "displayOrder INTEGER DEFAULT 0"
+            };
+
+            for (String column : columns) {
+                String columnName = column.split(" ")[0];
+                try {
+                    stmt.execute("ALTER TABLE hives ADD COLUMN " + column);
+                    System.out.println("[DatabaseManager] Added " + columnName + " column to hives");
                 } catch (SQLException e) {
                     // Column already exists, ignore
                     if (!e.getMessage().contains("duplicate column name")) {
