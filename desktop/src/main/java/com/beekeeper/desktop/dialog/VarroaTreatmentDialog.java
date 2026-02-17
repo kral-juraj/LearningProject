@@ -2,6 +2,7 @@ package com.beekeeper.desktop.dialog;
 
 import com.beekeeper.desktop.calculator.TreatmentType;
 import com.beekeeper.desktop.calculator.VarroaTreatment;
+import com.beekeeper.desktop.util.DatePickerFormatter;
 import com.beekeeper.shared.i18n.TranslationManager;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -42,6 +43,9 @@ public class VarroaTreatmentDialog extends Dialog<VarroaTreatment> {
         Label dateLabel = new Label(tm.get("label.treatment_date"));
         treatmentDatePicker = new DatePicker();
         treatmentDatePicker.setPromptText(tm.get("prompt.select_date"));
+
+        // Format DatePicker with user's preferred date format
+        DatePickerFormatter.format(treatmentDatePicker);
 
         // Set min/max dates based on projection period
         LocalDate minDate = measurementDate;

@@ -1,9 +1,11 @@
 package com.beekeeper.desktop;
 
+import com.beekeeper.desktop.dao.jdbc.JdbcSettingsDao;
 import com.beekeeper.desktop.dao.jdbc.JdbcTranslationDao;
 import com.beekeeper.desktop.db.DatabaseManager;
 import com.beekeeper.desktop.i18n.I18nResourceBundle;
 import com.beekeeper.shared.i18n.TranslationManager;
+import com.beekeeper.shared.util.DateFormatManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -32,6 +34,18 @@ public class Main extends Application {
         String language = translationDao.getSavedLanguage();
         tm.loadTranslations(translationDao, language);
         System.out.println("Loaded translations for language: " + language);
+
+        // Initialize date format system
+        DateFormatManager dfm = DateFormatManager.getInstance();
+        JdbcSettingsDao settingsDao = new JdbcSettingsDao();
+
+        // Load user's preferred date formats (or defaults)
+        String dateFormat = settingsDao.getDateFormat();
+        String timeFormat = settingsDao.getTimeFormat();
+        String dateTimeFormat = settingsDao.getDateTimeFormat();
+        dfm.loadFormats(dateFormat, timeFormat, dateTimeFormat);
+        System.out.println("Loaded date formats - Date: " + dateFormat +
+                         ", Time: " + timeFormat + ", DateTime: " + dateTimeFormat);
 
         // Load main view with translations
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/main.fxml"));

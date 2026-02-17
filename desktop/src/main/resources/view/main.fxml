@@ -11,9 +11,9 @@
     <top>
         <MenuBar>
             <Menu text="%menu.file">
-                <MenuItem text="%menu.settings"/>
+                <MenuItem text="%menu.settings" onAction="#handleSettings"/>
                 <SeparatorMenuItem/>
-                <MenuItem text="%menu.exit"/>
+                <MenuItem text="%menu.exit" onAction="#handleExit"/>
             </Menu>
 
             <Menu text="%menu.language">

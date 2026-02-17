@@ -306,6 +306,7 @@ public class DatabaseManager {
     /**
      * Migrate settings table to add language column for i18n support.
      * Adds language column with default value 'sk' (Slovak).
+     * Also ensures default date format settings exist.
      */
     private static void migrateSettings(Connection connection) throws SQLException {
         try (Statement stmt = connection.createStatement()) {
@@ -318,6 +319,20 @@ public class DatabaseManager {
                     throw e;
                 }
             }
+
+            // Insert default date format settings if they don't exist
+            stmt.execute(
+                "INSERT OR IGNORE INTO settings (key, value, updatedAt) " +
+                "VALUES ('dateFormat', 'dd.MM.yyyy', " + System.currentTimeMillis() + ")"
+            );
+            stmt.execute(
+                "INSERT OR IGNORE INTO settings (key, value, updatedAt) " +
+                "VALUES ('timeFormat', 'HH:mm', " + System.currentTimeMillis() + ")"
+            );
+            stmt.execute(
+                "INSERT OR IGNORE INTO settings (key, value, updatedAt) " +
+                "VALUES ('dateTimeFormat', 'dd.MM.yyyy HH:mm', " + System.currentTimeMillis() + ")"
+            );
         }
     }
 

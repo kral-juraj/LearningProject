@@ -84,9 +84,16 @@ public class CalendarEventListController {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(DateUtils.formatDate(item));
+                    setText(DateUtils.formatDateTime(item));
                 }
             }
+        });
+        // Set custom comparator to fix sorting (timestamp comparison)
+        dateColumn.setComparator((t1, t2) -> {
+            if (t1 == null && t2 == null) return 0;
+            if (t1 == null) return -1;
+            if (t2 == null) return 1;
+            return Long.compare(t1, t2);
         });
 
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -122,6 +129,10 @@ public class CalendarEventListController {
         // Bind table to observable list
         eventTable.setItems(eventList);
 
+        // Set default sorting: dateColumn descending (newest first)
+        dateColumn.setSortType(TableColumn.SortType.DESCENDING);
+        eventTable.getSortOrder().add(dateColumn);
+
         // Enable/disable buttons based on selection
         editButton.setDisable(true);
         deleteButton.setDisable(true);
@@ -156,6 +167,8 @@ public class CalendarEventListController {
                         eventList.addAll(events);
                         statusLabel.setText(tm.get("status.events_count", events.size()));
                         statusLabel.setStyle("-fx-text-fill: black;");
+                        // Reapply sorting after data reload
+                        eventTable.sort();
                     },
                     error -> showError(tm.get("error.loading_events", error.getMessage()))
                 )

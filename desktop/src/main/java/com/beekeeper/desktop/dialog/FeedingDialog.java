@@ -2,6 +2,7 @@ package com.beekeeper.desktop.dialog;
 
 import com.beekeeper.desktop.i18n.I18nResourceBundle;
 import com.beekeeper.desktop.util.DateTimeConverter;
+import com.beekeeper.desktop.util.DatePickerFormatter;
 import com.beekeeper.desktop.util.EnumHelper;
 import com.beekeeper.desktop.util.ValidationHelper;
 import com.beekeeper.shared.entity.Feeding;
@@ -69,6 +70,9 @@ public class FeedingDialog extends Dialog<Feeding> {
             weightAfterField = (TextField) gridPane.lookup("#weightAfterField");
             amountField = (TextField) gridPane.lookup("#amountField");
             notesArea = (TextArea) gridPane.lookup("#notesArea");
+
+            // Format DatePicker with user's preferred date format
+            DatePickerFormatter.format(datePicker);
 
             // Populate feed types
             feedTypeCombo.setItems(EnumHelper.getFeedTypes());

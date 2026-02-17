@@ -4,6 +4,7 @@ import com.beekeeper.desktop.dao.jdbc.JdbcApiaryDao;
 import com.beekeeper.desktop.dao.jdbc.JdbcHiveDao;
 import com.beekeeper.desktop.i18n.I18nResourceBundle;
 import com.beekeeper.desktop.util.DateTimeConverter;
+import com.beekeeper.desktop.util.DatePickerFormatter;
 import com.beekeeper.desktop.util.EnumHelper;
 import com.beekeeper.desktop.util.ValidationHelper;
 import com.beekeeper.shared.entity.Apiary;
@@ -80,6 +81,9 @@ public class CalendarEventDialog extends Dialog<CalendarEvent> {
             descriptionField = (TextField) gridPane.lookup("#descriptionField");
             completedCheckBox = (CheckBox) gridPane.lookup("#completedCheckBox");
             notesArea = (TextArea) gridPane.lookup("#notesArea");
+
+            // Format DatePicker with user's preferred date format
+            DatePickerFormatter.format(datePicker);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -9,6 +9,7 @@ import com.beekeeper.desktop.scheduler.DesktopSchedulerProvider;
 import com.beekeeper.desktop.util.DateTimeConverter;
 import com.beekeeper.desktop.util.ValidationHelper;
 import com.beekeeper.desktop.util.DateFormatter;
+import com.beekeeper.desktop.util.DatePickerFormatter;
 import com.beekeeper.shared.entity.CalendarEvent;
 import com.beekeeper.shared.i18n.TranslationManager;
 import com.beekeeper.shared.repository.CalendarEventRepository;
@@ -119,6 +120,9 @@ public class CalculatorsController {
     // ==================== VARROA CALCULATOR ====================
 
     private void setupVarroaCalculator() {
+        // Format DatePicker with user's preferred date format
+        DatePickerFormatter.format(varroaMeasurementDate);
+
         // Set default values
         varroaMeasurementDate.setValue(LocalDate.now());
         varroaProjectionDays.setItems(FXCollections.observableArrayList("30", "60", "90", "120", "150", "180"));
@@ -545,6 +549,9 @@ public class CalculatorsController {
     // ==================== QUEEN REARING CALCULATOR ====================
 
     private void setupQueenCalculator() {
+        // Format DatePicker with user's preferred date format
+        DatePickerFormatter.format(queenStartDate);
+
         // Set default values
         queenStartDate.setValue(LocalDate.now());
         queenMethodCombo.setItems(FXCollections.observableArrayList(

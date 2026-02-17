@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" spacing="10" prefWidth="600" prefHeight="500">
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <!-- General Settings Tab -->
+        <Tab text="%settings.tab.general">
+            <ScrollPane fitToWidth="true">
+                <VBox spacing="15">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+
+                    <!-- Date Formats Section -->
+                    <Label text="%settings.section.date_formats" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Separator/>
+
+                    <!-- Date Format -->
+                    <VBox spacing="5">
+                        <Label text="%settings.label.date_format"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <TextField fx:id="dateFormatField" prefWidth="200" promptText="dd.MM.yyyy"/>
+                            <Label text="%settings.label.preview" style="-fx-text-fill: gray;"/>
+                            <Label fx:id="datePreviewLabel" style="-fx-font-weight: bold;"/>
+                        </HBox>
+                        <Label text="%settings.hint.date_format" style="-fx-text-fill: gray; -fx-font-size: 11px;"/>
+                    </VBox>
+
+                    <!-- Time Format -->
+                    <VBox spacing="5">
+                        <Label text="%settings.label.time_format"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <TextField fx:id="timeFormatField" prefWidth="200" promptText="HH:mm"/>
+                            <Label text="%settings.label.preview" style="-fx-text-fill: gray;"/>
+                            <Label fx:id="timePreviewLabel" style="-fx-font-weight: bold;"/>
+                        </HBox>
+                        <Label text="%settings.hint.time_format" style="-fx-text-fill: gray; -fx-font-size: 11px;"/>
+                    </VBox>
+
+                    <!-- DateTime Format -->
+                    <VBox spacing="5">
+                        <Label text="%settings.label.datetime_format"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <TextField fx:id="dateTimeFormatField" prefWidth="300" promptText="dd.MM.yyyy HH:mm"/>
+                            <Label text="%settings.label.preview" style="-fx-text-fill: gray;"/>
+                            <Label fx:id="dateTimePreviewLabel" style="-fx-font-weight: bold;"/>
+                        </HBox>
+                        <Label text="%settings.hint.datetime_format" style="-fx-text-fill: gray; -fx-font-size: 11px;"/>
+                    </VBox>
+
+                    <Separator/>
+
+                    <!-- Common Format Examples -->
+                    <VBox spacing="5">
+                        <Label text="%settings.label.format_examples" style="-fx-font-weight: bold;"/>
+                        <Label text="%settings.example.dd_MM_yyyy" style="-fx-font-size: 11px; -fx-text-fill: gray;"/>
+                        <Label text="%settings.example.MM_dd_yyyy" style="-fx-font-size: 11px; -fx-text-fill: gray;"/>
+                        <Label text="%settings.example.yyyy_MM_dd" style="-fx-font-size: 11px; -fx-text-fill: gray;"/>
+                        <Label text="%settings.example.d_M_yy" style="-fx-font-size: 11px; -fx-text-fill: gray;"/>
+                    </VBox>
+
+                    <Region VBox.vgrow="ALWAYS"/>
+
+                    <!-- Reset to Defaults Button -->
+                    <HBox spacing="10">
+                        <Button fx:id="resetButton" text="%settings.button.reset_defaults"/>
+                    </HBox>
+                </VBox>
+            </ScrollPane>
+        </Tab>
+
+        <!-- Future tabs can be added here -->
+        <!-- <Tab text="%settings.tab.backup">...</Tab> -->
+        <!-- <Tab text="%settings.tab.advanced">...</Tab> -->
+    </TabPane>
+</VBox>

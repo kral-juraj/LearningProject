@@ -170,6 +170,31 @@ public class MainController {
     }
 
     /**
+     * Handle Settings menu item.
+     * Opens Settings dialog for date format configuration.
+     *
+     * Use case: User wants to change date format from dd.MM.yyyy to MM/dd/yyyy.
+     */
+    @FXML
+    private void handleSettings() {
+        com.beekeeper.desktop.dialog.SettingsDialog dialog =
+            new com.beekeeper.desktop.dialog.SettingsDialog();
+        dialog.showAndWait();
+        // If dialog returns true, settings were changed and app will restart
+    }
+
+    /**
+     * Handle Exit menu item.
+     * Closes the application.
+     *
+     * Use case: User wants to exit application from menu.
+     */
+    @FXML
+    private void handleExit() {
+        Platform.exit();
+    }
+
+    /**
      * Handle language change from menu.
      * Saves user's preference and shows restart prompt.
      *
