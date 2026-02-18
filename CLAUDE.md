@@ -57,6 +57,36 @@ sqlite3 ~/beekeeper-desktop.db "SELECT * FROM apiaries;"
 
 # Backup database
 cp ~/beekeeper-desktop.db ~/beekeeper-backup.db
+
+# Run SQL script from project
+sqlite3 ~/beekeeper-desktop.db < desktop/src/main/resources/sql/18_test_data.sql
+```
+
+### SQL Scripts Location - MANDATORY RULE
+
+**CRITICAL:** All SQL scripts MUST be stored in the project repository, NOT in /tmp or other temporary locations.
+
+**SQL scripts directory:** `desktop/src/main/resources/sql/`
+
+**Naming convention:**
+- Use numbered prefixes: `01_schema.sql`, `02_translations_*.sql`, `18_test_data.sql`
+- Descriptive names: schema, migrations, translations, test data, seed data
+
+**Why this matters:**
+- ✅ Version control - SQL scripts are tracked in Git
+- ✅ Reproducibility - other developers can run the same scripts
+- ✅ Documentation - scripts serve as database schema/data documentation
+- ✅ CI/CD - automated builds can initialize database correctly
+- ✅ Collaboration - team members see what SQL was executed
+
+**Example SQL scripts in project:**
+```
+desktop/src/main/resources/sql/
+├── 01_schema.sql                      # Database schema
+├── 07_translations_all.sql            # All translations (1468 records)
+├── 18_test_data.sql                   # Test data (apiary, hives, inspections, taxations)
+├── init_database.sh                   # Helper script to run all SQL
+└── README.md                          # SQL directory documentation
 ```
 
 ## Multi-Module Architecture
