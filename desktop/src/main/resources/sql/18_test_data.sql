@@ -19,83 +19,83 @@ INSERT INTO apiaries (id, name, location, latitude, longitude, registrationNumbe
 
 -- Úľ 1: Silné včelstvo, mladá matka 2024, Langstroth
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-001', 'test-apiary-001', 'Úľ 1 - Silné', 'LANGSTROTH', 2024, 'Zelená', 1, 'LANGSTROTH', 10, 1, 0, 1, 6, 3, 1, 0, 'CALM', 1, strftime('%s', '2024-01-15') * 1000, strftime('%s', 'now') * 1000, 'Veľmi dobré včelstvo, matka z vlastnej výchovy');
+('test-hive-001', 'test-apiary-001', 'Úľ 1 - Silné', 'VERTICAL', 2024, 'Zelená', 1, 'LANGSTROTH', 10, 1, 0, 1, 6, 3, 1, 0, 'CALM', 1, strftime('%s', '2024-01-15') * 1000, strftime('%s', 'now') * 1000, 'Veľmi dobré včelstvo, matka z vlastnej výchovy');
 
 -- Úľ 2: Stredné včelstvo, matka 2023, Dadant
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-002', 'test-apiary-001', 'Úľ 2 - Dadant', 'DADANT', 2023, 'Červená', 1, 'DADANT', 12, 1, 1, 1, 8, 3, 1, 0, 'CALM', 2, strftime('%s', '2024-02-01') * 1000, strftime('%s', 'now') * 1000, 'Dadant úľ, dobré zásoby');
+('test-hive-002', 'test-apiary-001', 'Úľ 2 - Dadant', 'VERTICAL', 2023, 'Červená', 1, 'DADANT', 12, 1, 1, 1, 8, 3, 1, 0, 'CALM', 2, strftime('%s', '2024-02-01') * 1000, strftime('%s', 'now') * 1000, 'Dadant úľ, dobré zásoby');
 
 -- Úľ 3: Slabé včelstvo, stará matka 2021, potrebuje výmenu
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-003', 'test-apiary-001', 'Úľ 3 - Slabé', 'LANGSTROTH', 2021, 'Biela', 1, 'LANGSTROTH', 8, 0, 0, 0, 5, 2, 1, 0, 'MODERATE', 3, strftime('%s', '2024-01-20') * 1000, strftime('%s', 'now') * 1000, 'Stará matka, treba vymeniť. Sila klesá.');
+('test-hive-003', 'test-apiary-001', 'Úľ 3 - Slabé', 'VERTICAL', 2021, 'Biela', 1, 'LANGSTROTH', 8, 0, 0, 0, 5, 2, 1, 0, 'MODERATE', 3, strftime('%s', '2024-01-20') * 1000, strftime('%s', 'now') * 1000, 'Stará matka, treba vymeniť. Sila klesá.');
 
 -- Úľ 4: Agresívne včelstvo
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-004', 'test-apiary-001', 'Úľ 4 - Agresívne', 'LANGSTROTH', 2023, 'Červená', 1, 'LANGSTROTH', 10, 1, 0, 1, 7, 2, 1, 0, 'AGGRESSIVE', 4, strftime('%s', '2024-02-10') * 1000, strftime('%s', 'now') * 1000, 'Pozor! Veľmi agresívne. Plánujem výmenu matky.');
+('test-hive-004', 'test-apiary-001', 'Úľ 4 - Agresívne', 'VERTICAL', 2023, 'Červená', 1, 'LANGSTROTH', 10, 1, 0, 1, 7, 2, 1, 0, 'AGGRESSIVE', 4, strftime('%s', '2024-02-10') * 1000, strftime('%s', 'now') * 1000, 'Pozor! Veľmi agresívne. Plánujem výmenu matky.');
 
 -- Úľ 5: Rojivé včelstvo
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-005', 'test-apiary-001', 'Úľ 5 - Rojivé', 'LANGSTROTH', 2024, 'Zelená', 1, 'LANGSTROTH', 10, 1, 1, 1, 6, 3, 1, 0, 'CALM', 5, strftime('%s', '2024-03-01') * 1000, strftime('%s', 'now') * 1000, 'Začalo staviať matečníky. Potrebuje stokovanie.');
+('test-hive-005', 'test-apiary-001', 'Úľ 5 - Rojivé', 'VERTICAL', 2024, 'Zelená', 1, 'LANGSTROTH', 10, 1, 1, 1, 6, 3, 1, 0, 'CALM', 5, strftime('%s', '2024-03-01') * 1000, strftime('%s', 'now') * 1000, 'Začalo staviať matečníky. Potrebuje stokovanie.');
 
 -- Úľ 6: Nový roj z tohto roku
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-006', 'test-apiary-001', 'Úľ 6 - Roj 2025', 'LANGSTROTH', 2025, 'Modrá', 1, 'LANGSTROTH', 6, 0, 0, 0, 2, 2, 2, 0, 'CALM', 6, strftime('%s', '2025-05-20') * 1000, strftime('%s', 'now') * 1000, 'Chytený roj z 20.5.2025');
+('test-hive-006', 'test-apiary-001', 'Úľ 6 - Roj 2025', 'VERTICAL', 2025, 'Modrá', 1, 'LANGSTROTH', 6, 0, 0, 0, 2, 2, 2, 0, 'CALM', 6, strftime('%s', '2025-05-20') * 1000, strftime('%s', 'now') * 1000, 'Chytený roj z 20.5.2025');
 
 -- Úľ 7: Zander typ
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-007', 'test-apiary-001', 'Úľ 7 - Zander', 'ZANDER', 2023, 'Červená', 1, 'ZANDER', 10, 1, 1, 1, 7, 2, 1, 0, 'CALM', 7, strftime('%s', '2024-01-25') * 1000, strftime('%s', 'now') * 1000, 'Zander úľ, stredná sila');
+('test-hive-007', 'test-apiary-001', 'Úľ 7 - Zander', 'VERTICAL', 2023, 'Červená', 1, 'ZANDER', 10, 1, 1, 1, 7, 2, 1, 0, 'CALM', 7, strftime('%s', '2024-01-25') * 1000, strftime('%s', 'now') * 1000, 'Zander úľ, stredná sila');
 
 -- Úľ 8: Úľ s vysokou varrózou
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes, hasVarroaScreen) VALUES
-('test-hive-008', 'test-apiary-001', 'Úľ 8 - Varroa', 'LANGSTROTH', 2022, 'Žltá', 1, 'LANGSTROTH', 10, 1, 0, 1, 6, 3, 1, 0, 'CALM', 8, strftime('%s', '2024-02-15') * 1000, strftime('%s', 'now') * 1000, 'Varroa problém! Ošetrené 3x tento rok.', 1);
+('test-hive-008', 'test-apiary-001', 'Úľ 8 - Varroa', 'VERTICAL', 2022, 'Žltá', 1, 'LANGSTROTH', 10, 1, 0, 1, 6, 3, 1, 0, 'CALM', 8, strftime('%s', '2024-02-15') * 1000, strftime('%s', 'now') * 1000, 'Varroa problém! Ošetrené 3x tento rok.', 1);
 
 -- Úľ 9: Včelstvo s varroa sitkom, dobré
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes, hasVarroaScreen) VALUES
-('test-hive-009', 'test-apiary-001', 'Úľ 9 - Zdravé', 'LANGSTROTH', 2024, 'Zelená', 1, 'LANGSTROTH', 10, 1, 1, 1, 6, 3, 1, 0, 'CALM', 9, strftime('%s', '2024-03-10') * 1000, strftime('%s', 'now') * 1000, 'Varroa sitko funguje dobre', 1);
+('test-hive-009', 'test-apiary-001', 'Úľ 9 - Zdravé', 'VERTICAL', 2024, 'Zelená', 1, 'LANGSTROTH', 10, 1, 1, 1, 6, 3, 1, 0, 'CALM', 9, strftime('%s', '2024-03-10') * 1000, strftime('%s', 'now') * 1000, 'Varroa sitko funguje dobre', 1);
 
 -- Úľ 10: Neaktívny úľ (uhynuté včelstvo)
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-010', 'test-apiary-001', 'Úľ 10 - Uhynuté', 'LANGSTROTH', 2020, 'Modrá', 0, 'LANGSTROTH', 10, 1, 0, 0, 8, 2, 0, 0, 'UNKNOWN', 10, strftime('%s', '2024-01-10') * 1000, strftime('%s', 'now') * 1000, 'Uhynuté v zime 2024/2025. Dôvod neznámy.');
+('test-hive-010', 'test-apiary-001', 'Úľ 10 - Uhynuté', 'VERTICAL', 2020, 'Modrá', 0, 'LANGSTROTH', 10, 1, 0, 0, 8, 2, 0, 0, 'UNKNOWN', 10, strftime('%s', '2024-01-10') * 1000, strftime('%s', 'now') * 1000, 'Uhynuté v zime 2024/2025. Dôvod neznámy.');
 
 -- Úľ 11: Dobré produkčné včelstvo
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-011', 'test-apiary-001', 'Úľ 11 - Produkčné', 'LANGSTROTH', 2024, 'Zelená', 1, 'LANGSTROTH', 12, 1, 1, 1, 8, 3, 1, 0, 'CALM', 11, strftime('%s', '2024-01-30') * 1000, strftime('%s', 'now') * 1000, 'Najlepší producent v včelnici. 40kg medu v 2024.');
+('test-hive-011', 'test-apiary-001', 'Úľ 11 - Produkčné', 'VERTICAL', 2024, 'Zelená', 1, 'LANGSTROTH', 12, 1, 1, 1, 8, 3, 1, 0, 'CALM', 11, strftime('%s', '2024-01-30') * 1000, strftime('%s', 'now') * 1000, 'Najlepší producent v včelnici. 40kg medu v 2024.');
 
 -- Úľ 12: Dadant s veľkou rodinou
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-012', 'test-apiary-001', 'Úľ 12 - Veľká rodina', 'DADANT', 2023, 'Červená', 1, 'DADANT', 12, 1, 1, 1, 10, 2, 0, 0, 'CALM', 12, strftime('%s', '2024-02-20') * 1000, strftime('%s', 'now') * 1000, 'Dadant plný rámikov, 3 stoky nad ním');
+('test-hive-012', 'test-apiary-001', 'Úľ 12 - Veľká rodina', 'VERTICAL', 2023, 'Červená', 1, 'DADANT', 12, 1, 1, 1, 10, 2, 0, 0, 'CALM', 12, strftime('%s', '2024-02-20') * 1000, strftime('%s', 'now') * 1000, 'Dadant plný rámikov, 3 stoky nad ním');
 
 -- Úľ 13: Stredné včelstvo, pomaly sa rozvíja
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-013', 'test-apiary-001', 'Úľ 13 - Pomalé', 'LANGSTROTH', 2022, 'Žltá', 1, 'LANGSTROTH', 8, 0, 0, 0, 5, 2, 1, 0, 'CALM', 13, strftime('%s', '2024-02-25') * 1000, strftime('%s', 'now') * 1000, 'Pomaly sa rozvíja, možno výmeniť matku');
+('test-hive-013', 'test-apiary-001', 'Úľ 13 - Pomalé', 'VERTICAL', 2022, 'Žltá', 1, 'LANGSTROTH', 8, 0, 0, 0, 5, 2, 1, 0, 'CALM', 13, strftime('%s', '2024-02-25') * 1000, strftime('%s', 'now') * 1000, 'Pomaly sa rozvíja, možno výmeniť matku');
 
 -- Úľ 14: Úľ s propolisovou mriežkou
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes, hasPropolisTrap) VALUES
-('test-hive-014', 'test-apiary-001', 'Úľ 14 - Propolis', 'LANGSTROTH', 2024, 'Zelená', 1, 'LANGSTROTH', 10, 1, 0, 1, 6, 3, 1, 0, 'CALM', 14, strftime('%s', '2024-03-05') * 1000, strftime('%s', 'now') * 1000, 'Propolisová mriežka, dobrý zber', 1);
+('test-hive-014', 'test-apiary-001', 'Úľ 14 - Propolis', 'VERTICAL', 2024, 'Zelená', 1, 'LANGSTROTH', 10, 1, 0, 1, 6, 3, 1, 0, 'CALM', 14, strftime('%s', '2024-03-05') * 1000, strftime('%s', 'now') * 1000, 'Propolisová mriežka, dobrý zber', 1);
 
--- Úľ 15: Včelstvo s peľovou pascou
+-- Úľ 15: Včelstvo s peľovou pascou (ODDIELKA - Nucleus)
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes, hasPollenTrap) VALUES
-('test-hive-015', 'test-apiary-001', 'Úľ 15 - Peľ', 'LANGSTROTH', 2023, 'Červená', 1, 'LANGSTROTH', 10, 1, 1, 1, 6, 3, 1, 0, 'CALM', 15, strftime('%s', '2024-02-28') * 1000, strftime('%s', 'now') * 1000, 'Peľová pasca, dobrý zber peľu', 1);
+('test-hive-015', 'test-apiary-001', 'Úľ 15 - Peľ (Oddielka)', 'NUKE', 2023, 'Červená', 1, 'LANGSTROTH', 5, 1, 1, 0, 3, 2, 0, 0, 'CALM', 15, strftime('%s', '2024-02-28') * 1000, strftime('%s', 'now') * 1000, 'Oddielka s peľovou pascou', 1);
 
--- Úľ 16: Úľ s redukciou
+-- Úľ 16: LEŽIAK (Horizontal hive)
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes, hasEntranceReducer) VALUES
-('test-hive-016', 'test-apiary-001', 'Úľ 16 - Redukcia', 'LANGSTROTH', 2024, 'Zelená', 1, 'LANGSTROTH', 8, 1, 0, 0, 4, 3, 1, 0, 'CALM', 16, strftime('%s', '2024-03-15') * 1000, strftime('%s', 'now') * 1000, 'Slabšie včelstvo, redukcia v lete', 1);
+('test-hive-016', 'test-apiary-001', 'Úľ 16 - Ležiak', 'HORIZONTAL', 2024, 'Zelená', 1, 'LANGSTROTH', 14, 1, 0, 0, 8, 4, 2, 0, 'CALM', 16, strftime('%s', '2024-03-15') * 1000, strftime('%s', 'now') * 1000, 'Ležiak s redukciou', 1);
 
--- Úľ 17: Úľ s vysokým dnom
+-- Úľ 17: LEŽIAK s vysokým dnom
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-017', 'test-apiary-001', 'Úľ 17 - Vysoké dno', 'LANGSTROTH', 2023, 'Červená', 1, 'LANGSTROTH', 10, 1, 1, 1, 6, 3, 1, 0, 'CALM', 17, strftime('%s', '2024-01-28') * 1000, strftime('%s', 'now') * 1000, 'Vysoké dno pre lepšiu ventiláciu');
+('test-hive-017', 'test-apiary-001', 'Úľ 17 - Ležiak VD', 'HORIZONTAL', 2023, 'Červená', 1, 'LANGSTROTH', 16, 1, 1, 1, 10, 4, 2, 0, 'CALM', 17, strftime('%s', '2024-01-28') * 1000, strftime('%s', 'now') * 1000, 'Ležiak s vysokým dnom pre lepšiu ventiláciu');
 
--- Úľ 18: Úľ so všetkými novými rámikmi
+-- Úľ 18: ODDIELKA (Nucleus) so všetkými novými rámikmi
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-018', 'test-apiary-001', 'Úľ 18 - Nové rámiky', 'LANGSTROTH', 2024, 'Zelená', 1, 'LANGSTROTH', 10, 1, 0, 1, 0, 0, 10, 0, 'CALM', 18, strftime('%s', '2024-03-20') * 1000, strftime('%s', 'now') * 1000, 'Všetky nové rámiky v 2025');
+('test-hive-018', 'test-apiary-001', 'Úľ 18 - Oddielka', 'NUKE', 2024, 'Zelená', 1, 'LANGSTROTH', 5, 1, 0, 0, 0, 0, 5, 0, 'CALM', 18, strftime('%s', '2024-03-20') * 1000, strftime('%s', 'now') * 1000, 'Oddielka so všetkými novými rámikmi');
 
 -- Úľ 19: Úľ s trutovými buňkami
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes, droneCells) VALUES
-('test-hive-019', 'test-apiary-001', 'Úľ 19 - Trutové', 'LANGSTROTH', 2023, 'Červená', 1, 'LANGSTROTH', 10, 1, 1, 0, 6, 3, 1, 0, 'CALM', 19, strftime('%s', '2024-02-05') * 1000, strftime('%s', 'now') * 1000, '2 trutové plásty pre kontrolu varroa', 1);
+('test-hive-019', 'test-apiary-001', 'Úľ 19 - Trutové', 'VERTICAL', 2023, 'Červená', 1, 'LANGSTROTH', 10, 1, 1, 0, 6, 3, 1, 0, 'CALM', 19, strftime('%s', '2024-02-05') * 1000, strftime('%s', 'now') * 1000, '2 trutové plásty pre kontrolu varroa', 1);
 
 -- Úľ 20: Silné včelstvo, plánované delenie
 INSERT INTO hives (id, apiaryId, name, type, queenYear, queenColor, active, frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, darkFrames, lightFrames, newFrames, foundationFrames, aggression, displayOrder, createdAt, updatedAt, notes) VALUES
-('test-hive-020', 'test-apiary-001', 'Úľ 20 - Na delenie', 'LANGSTROTH', 2024, 'Zelená', 1, 'LANGSTROTH', 12, 1, 1, 1, 8, 3, 1, 0, 'CALM', 20, strftime('%s', '2024-01-18') * 1000, strftime('%s', 'now') * 1000, 'Veľmi silné, plánujem delenie v máji');
+('test-hive-020', 'test-apiary-001', 'Úľ 20 - Na delenie', 'VERTICAL', 2024, 'Zelená', 1, 'LANGSTROTH', 12, 1, 1, 1, 8, 3, 1, 0, 'CALM', 20, strftime('%s', '2024-01-18') * 1000, strftime('%s', 'now') * 1000, 'Veľmi silné, plánujem delenie v máji');
 
 -- ========================================
 -- 3. PREHLIADKY (400 kusov, 20 na úľ)
