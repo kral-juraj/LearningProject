@@ -7,18 +7,18 @@
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.beekeeper.desktop.controller.CalendarEventListController">
 
-    <!-- Top Toolbar -->
-    <top>
-        <ToolBar>
-            <Button fx:id="addButton" text="%button.add_event" onAction="#handleAddEvent"/>
-            <Button fx:id="editButton" text="%button.edit" onAction="#handleEditEvent"/>
-            <Button fx:id="deleteButton" text="%button.delete" onAction="#handleDeleteEvent"/>
-            <Separator orientation="VERTICAL"/>
-            <Button fx:id="toggleButton" text="%button.toggle_completed" onAction="#handleToggleCompleted"/>
-            <Separator orientation="VERTICAL"/>
-            <Button text="%button.refresh" onAction="#handleRefresh"/>
-        </ToolBar>
-    </top>
+    <!-- Left Sidebar with Buttons -->
+    <left>
+        <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-color: #ddd; -fx-border-width: 0 1 0 0;">
+            <Button fx:id="addButton" text="%button.add_event" onAction="#handleAddEvent" maxWidth="Infinity" style="-fx-padding: 8;"/>
+            <Button fx:id="editButton" text="%button.edit" onAction="#handleEditEvent" maxWidth="Infinity" style="-fx-padding: 8;"/>
+            <Button fx:id="deleteButton" text="%button.delete" onAction="#handleDeleteEvent" maxWidth="Infinity" style="-fx-padding: 8;"/>
+            <Separator/>
+            <Button fx:id="toggleButton" text="%button.toggle_completed" onAction="#handleToggleCompleted" maxWidth="Infinity" style="-fx-padding: 8;"/>
+            <Separator/>
+            <Button text="%button.refresh" onAction="#handleRefresh" maxWidth="Infinity" style="-fx-padding: 8;"/>
+        </VBox>
+    </left>
 
     <!-- Center - Table View -->
     <center>

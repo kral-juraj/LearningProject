@@ -7,24 +7,34 @@
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.beekeeper.desktop.controller.InspectionListController">
 
-    <!-- Top Toolbar -->
-    <top>
-        <ToolBar>
-            <Button fx:id="addButton" text="%button.add_inspection" onAction="#handleAddInspection"/>
-            <Button fx:id="viewButton" text="%button.view" onAction="#handleViewInspection"/>
-            <Button fx:id="deleteButton" text="%button.delete" onAction="#handleDeleteInspection"/>
-            <Separator orientation="VERTICAL"/>
-            <Button text="%button.refresh" onAction="#handleRefresh"/>
-        </ToolBar>
-    </top>
+    <!-- Left Sidebar with Buttons -->
+    <left>
+        <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-color: #ddd; -fx-border-width: 0 1 0 0;">
+            <!-- Hive Selector -->
+            <VBox spacing="5">
+                <Label text="%label.select_hive" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                <ComboBox fx:id="hiveComboBox" maxWidth="Infinity" promptText="%label.select_hive_prompt"/>
+            </VBox>
+            <Separator/>
+
+            <Button fx:id="addButton" text="%button.add_inspection" onAction="#handleAddInspection" maxWidth="Infinity" style="-fx-padding: 8;"/>
+            <Button fx:id="viewButton" text="%button.view" onAction="#handleViewInspection" maxWidth="Infinity" style="-fx-padding: 8;"/>
+            <Button fx:id="deleteButton" text="%button.delete" onAction="#handleDeleteInspection" maxWidth="Infinity" style="-fx-padding: 8;"/>
+            <Separator/>
+            <Button text="%button.refresh" onAction="#handleRefresh" maxWidth="Infinity" style="-fx-padding: 8;"/>
+        </VBox>
+    </left>
 
     <!-- Center - Table View -->
     <center>
         <TableView fx:id="inspectionTable" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="dateColumn" text="%table.date" prefWidth="200"/>
-                <TableColumn fx:id="temperatureColumn" text="%table.temperature" prefWidth="150"/>
-                <TableColumn fx:id="strengthColumn" text="%table.strength" prefWidth="150"/>
+                <TableColumn fx:id="dateColumn" text="%table.date" prefWidth="180"/>
+                <TableColumn fx:id="temperatureColumn" text="%table.temperature" prefWidth="100"/>
+                <TableColumn fx:id="strengthColumn" text="%table.strength" prefWidth="80"/>
+                <TableColumn fx:id="broodFramesColumn" text="%table.brood_frames" prefWidth="120"/>
+                <TableColumn fx:id="queenSeenColumn" text="%table.queen_seen" prefWidth="100"/>
+                <TableColumn fx:id="aggressionColumn" text="%table.aggression" prefWidth="100"/>
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

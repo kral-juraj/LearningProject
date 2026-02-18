@@ -143,9 +143,11 @@ public class MainController {
         apiaryListController.setOnApiarySelected(apiary -> {
             if (apiary != null) {
                 hivesTab.setDisable(false);
+                inspectionsTab.setDisable(false);  // Enable inspections tab (hive selection via ComboBox)
                 taxationTab.setDisable(false);  // Enable taxation tab for selected apiary
 
                 hiveListController.setApiaryId(apiary.getId());
+                inspectionListController.setApiaryId(apiary.getId());  // Load hives into ComboBox
                 taxationListController.setApiaryId(apiary.getId());  // Load all taxations for apiary
 
                 // Switch to Hives tab
@@ -156,10 +158,10 @@ public class MainController {
         // When "Zobraziť prehliadky" button is clicked
         hiveListController.setOnHiveSelected(hive -> {
             if (hive != null) {
-                inspectionsTab.setDisable(false);
                 feedingTab.setDisable(false);
-                // Note: taxationTab is already enabled (based on apiary selection)
+                // Note: inspectionsTab and taxationTab are already enabled (based on apiary selection)
 
+                // Select the hive in the ComboBox and load its inspections
                 inspectionListController.setHiveId(hive.getId());
                 feedingListController.setHiveId(hive.getId());
 

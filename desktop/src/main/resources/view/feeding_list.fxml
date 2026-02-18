@@ -7,16 +7,16 @@
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.beekeeper.desktop.controller.FeedingListController">
 
-    <!-- Top Toolbar -->
-    <top>
-        <ToolBar>
-            <Button fx:id="addButton" text="%button.add_feeding" onAction="#handleAddFeeding"/>
-            <Button fx:id="editButton" text="%button.edit" onAction="#handleEditFeeding"/>
-            <Button fx:id="deleteButton" text="%button.delete" onAction="#handleDeleteFeeding"/>
-            <Separator orientation="VERTICAL"/>
-            <Button text="%button.refresh" onAction="#handleRefresh"/>
-        </ToolBar>
-    </top>
+    <!-- Left Sidebar with Buttons -->
+    <left>
+        <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-color: #ddd; -fx-border-width: 0 1 0 0;">
+            <Button fx:id="addButton" text="%button.add_feeding" onAction="#handleAddFeeding" maxWidth="Infinity" style="-fx-padding: 8;"/>
+            <Button fx:id="editButton" text="%button.edit" onAction="#handleEditFeeding" maxWidth="Infinity" style="-fx-padding: 8;"/>
+            <Button fx:id="deleteButton" text="%button.delete" onAction="#handleDeleteFeeding" maxWidth="Infinity" style="-fx-padding: 8;"/>
+            <Separator/>
+            <Button text="%button.refresh" onAction="#handleRefresh" maxWidth="Infinity" style="-fx-padding: 8;"/>
+        </VBox>
+    </left>
 
     <!-- Center - Table View -->
     <center>
