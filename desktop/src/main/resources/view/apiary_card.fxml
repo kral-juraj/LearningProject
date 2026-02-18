@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="8" style="-fx-padding: 12;">
+
+    <!-- Header with icon and name -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <!-- Apiary Icon (ASCII art beehive) -->
+        <Label fx:id="apiaryIcon" style="-fx-font-size: 32px;">🏡</Label>
+
+        <VBox spacing="2" HBox.hgrow="ALWAYS">
+            <!-- Apiary Name -->
+            <Label fx:id="apiaryName" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+
+            <!-- Location -->
+            <Label fx:id="apiaryLocation" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Statistics -->
+    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0;">
+        <!-- Hive Count -->
+        <HBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="🐝" style="-fx-font-size: 14px;"/>
+            <Label fx:id="hiveCountLabel" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2196F3;"/>
+        </HBox>
+
+        <!-- Active/Inactive -->
+        <HBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="✓" style="-fx-font-size: 14px; -fx-text-fill: green;"/>
+            <Label fx:id="activeCountLabel" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+        </HBox>
+    </HBox>
+
+    <!-- Registration Number (if exists) -->
+    <Label fx:id="regNumberLabel" style="-fx-font-size: 11px; -fx-text-fill: #999; -fx-padding: 4 0 0 0;" visible="false"/>
+
+</VBox>

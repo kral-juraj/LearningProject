@@ -24,8 +24,8 @@ public class JdbcApiaryDao implements ApiaryDao {
     @Override
     public Completable insert(Apiary apiary) {
         return Completable.fromAction(() -> {
-            String sql = "INSERT OR REPLACE INTO apiaries (id, name, location, latitude, longitude, createdAt, updatedAt) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT OR REPLACE INTO apiaries (id, name, location, latitude, longitude, displayOrder, registrationNumber, address, description, createdAt, updatedAt) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, apiary.getId());
@@ -33,8 +33,12 @@ public class JdbcApiaryDao implements ApiaryDao {
                 stmt.setString(3, apiary.getLocation());
                 stmt.setDouble(4, apiary.getLatitude());
                 stmt.setDouble(5, apiary.getLongitude());
-                stmt.setLong(6, apiary.getCreatedAt());
-                stmt.setLong(7, apiary.getUpdatedAt());
+                stmt.setInt(6, apiary.getDisplayOrder());
+                stmt.setString(7, apiary.getRegistrationNumber());
+                stmt.setString(8, apiary.getAddress());
+                stmt.setString(9, apiary.getDescription());
+                stmt.setLong(10, apiary.getCreatedAt());
+                stmt.setLong(11, apiary.getUpdatedAt());
                 stmt.executeUpdate();
             }
         });
@@ -43,18 +47,22 @@ public class JdbcApiaryDao implements ApiaryDao {
     @Override
     public Completable insertAll(List<Apiary> apiaries) {
         return Completable.fromAction(() -> {
-            String sql = "INSERT OR REPLACE INTO apiaries (id, name, location, latitude, longitude, createdAt, updatedAt) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            // CRITICAL: Use UPDATE instead of INSERT OR REPLACE to avoid triggering CASCADE DELETE on hives!
+            // INSERT OR REPLACE internally does DELETE + INSERT, which cascades to child hives.
+            String sql = "UPDATE apiaries SET name=?, location=?, latitude=?, longitude=?, displayOrder=?, registrationNumber=?, address=?, description=?, updatedAt=? WHERE id=?";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 for (Apiary apiary : apiaries) {
-                    stmt.setString(1, apiary.getId());
-                    stmt.setString(2, apiary.getName());
-                    stmt.setString(3, apiary.getLocation());
-                    stmt.setDouble(4, apiary.getLatitude());
-                    stmt.setDouble(5, apiary.getLongitude());
-                    stmt.setLong(6, apiary.getCreatedAt());
-                    stmt.setLong(7, apiary.getUpdatedAt());
+                    stmt.setString(1, apiary.getName());
+                    stmt.setString(2, apiary.getLocation());
+                    stmt.setDouble(3, apiary.getLatitude());
+                    stmt.setDouble(4, apiary.getLongitude());
+                    stmt.setInt(5, apiary.getDisplayOrder());
+                    stmt.setString(6, apiary.getRegistrationNumber());
+                    stmt.setString(7, apiary.getAddress());
+                    stmt.setString(8, apiary.getDescription());
+                    stmt.setLong(9, apiary.getUpdatedAt());
+                    stmt.setString(10, apiary.getId());
                     stmt.addBatch();
                 }
                 stmt.executeBatch();
@@ -65,15 +73,19 @@ public class JdbcApiaryDao implements ApiaryDao {
     @Override
     public Completable update(Apiary apiary) {
         return Completable.fromAction(() -> {
-            String sql = "UPDATE apiaries SET name=?, location=?, latitude=?, longitude=?, updatedAt=? WHERE id=?";
+            String sql = "UPDATE apiaries SET name=?, location=?, latitude=?, longitude=?, displayOrder=?, registrationNumber=?, address=?, description=?, updatedAt=? WHERE id=?";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, apiary.getName());
                 stmt.setString(2, apiary.getLocation());
                 stmt.setDouble(3, apiary.getLatitude());
                 stmt.setDouble(4, apiary.getLongitude());
-                stmt.setLong(5, apiary.getUpdatedAt());
-                stmt.setString(6, apiary.getId());
+                stmt.setInt(5, apiary.getDisplayOrder());
+                stmt.setString(6, apiary.getRegistrationNumber());
+                stmt.setString(7, apiary.getAddress());
+                stmt.setString(8, apiary.getDescription());
+                stmt.setLong(9, apiary.getUpdatedAt());
+                stmt.setString(10, apiary.getId());
                 stmt.executeUpdate();
             }
         });
@@ -105,7 +117,7 @@ public class JdbcApiaryDao implements ApiaryDao {
     public Flowable<List<Apiary>> getAll() {
         return Flowable.fromCallable(() -> {
             List<Apiary> list = new ArrayList<>();
-            String sql = "SELECT * FROM apiaries ORDER BY name ASC";
+            String sql = "SELECT * FROM apiaries ORDER BY displayOrder ASC, name ASC";
             try (Connection conn = DatabaseManager.getConnection();
                  Statement stmt = conn.createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
@@ -121,7 +133,7 @@ public class JdbcApiaryDao implements ApiaryDao {
     public Single<List<Apiary>> getAllOnce() {
         return Single.fromCallable(() -> {
             List<Apiary> list = new ArrayList<>();
-            String sql = "SELECT * FROM apiaries ORDER BY name ASC";
+            String sql = "SELECT * FROM apiaries ORDER BY displayOrder ASC, name ASC";
             try (Connection conn = DatabaseManager.getConnection();
                  Statement stmt = conn.createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
@@ -167,6 +179,10 @@ public class JdbcApiaryDao implements ApiaryDao {
         apiary.setLocation(rs.getString("location"));
         apiary.setLatitude(rs.getDouble("latitude"));
         apiary.setLongitude(rs.getDouble("longitude"));
+        apiary.setDisplayOrder(rs.getInt("displayOrder"));
+        apiary.setRegistrationNumber(rs.getString("registrationNumber"));
+        apiary.setAddress(rs.getString("address"));
+        apiary.setDescription(rs.getString("description"));
         apiary.setCreatedAt(rs.getLong("createdAt"));
         apiary.setUpdatedAt(rs.getLong("updatedAt"));
         return apiary;

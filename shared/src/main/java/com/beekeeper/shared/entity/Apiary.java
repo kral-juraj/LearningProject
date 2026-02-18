@@ -13,6 +13,10 @@ public class Apiary implements Serializable {
     private String location;
     private double latitude;
     private double longitude;
+    private int displayOrder;
+    private String registrationNumber;
+    private String address;
+    private String description;
     private long createdAt;
     private long updatedAt;
 
@@ -73,5 +77,37 @@ public class Apiary implements Serializable {
 
     public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
+
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

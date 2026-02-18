@@ -221,4 +221,91 @@ class HiveIntegrationTest extends IntegrationTestBase {
         assertEquals(0, hivesAfterDelete.size());
     }
 
+    /**
+     * Test: Create and read hive with hasVarroaScreen field.
+     *
+     * Use case: Beekeeper adds Varroa screen to hive for mite monitoring.
+     * Expected: hasVarroaScreen persisted correctly through full stack.
+     */
+    @Test
+    void testCreateAndReadHiveWithVarroaScreen() {
+        // Given: DAO and repository
+        JdbcApiaryDao apiaryDao = new JdbcApiaryDao();
+        ApiaryRepository apiaryRepository = new ApiaryRepository(apiaryDao);
+        JdbcHiveDao hiveDao = new JdbcHiveDao();
+        HiveRepository hiveRepository = new HiveRepository(hiveDao);
+
+        // Create test apiary
+        Apiary apiary = new Apiary();
+        apiary.setId(UUID.randomUUID().toString());
+        apiary.setName("Test Včelnica");
+        apiary.setCreatedAt(System.currentTimeMillis());
+        apiary.setUpdatedAt(System.currentTimeMillis());
+        apiaryRepository.insertApiary(apiary).blockingAwait();
+
+        // When: Create hive with hasVarroaScreen = true
+        Hive hive = new Hive();
+        hive.setId(UUID.randomUUID().toString());
+        hive.setApiaryId(apiary.getId());
+        hive.setName("Test Hive");
+        hive.setType("VERTICAL");
+        hive.setActive(true);
+        hive.setHasVarroaScreen(true);
+        hive.setCreatedAt(System.currentTimeMillis());
+        hive.setUpdatedAt(System.currentTimeMillis());
+        hiveRepository.insertHive(hive).blockingAwait();
+
+        // Then: Should be able to read it back with hasVarroaScreen = true
+        Hive retrieved = hiveRepository.getHiveById(hive.getId()).blockingGet();
+
+        assertNotNull(retrieved);
+        assertEquals(hive.getId(), retrieved.getId());
+        assertTrue(retrieved.isHasVarroaScreen());
+    }
+
+    /**
+     * Test: Update hive hasVarroaScreen field.
+     *
+     * Use case: Beekeeper adds or removes Varroa screen from hive.
+     * Expected: hasVarroaScreen updated correctly through full stack.
+     */
+    @Test
+    void testUpdateHiveVarroaScreen() {
+        // Given: DAO and repository
+        JdbcApiaryDao apiaryDao = new JdbcApiaryDao();
+        ApiaryRepository apiaryRepository = new ApiaryRepository(apiaryDao);
+        JdbcHiveDao hiveDao = new JdbcHiveDao();
+        HiveRepository hiveRepository = new HiveRepository(hiveDao);
+
+        // Create test apiary
+        Apiary apiary = new Apiary();
+        apiary.setId(UUID.randomUUID().toString());
+        apiary.setName("Test Včelnica");
+        apiary.setCreatedAt(System.currentTimeMillis());
+        apiary.setUpdatedAt(System.currentTimeMillis());
+        apiaryRepository.insertApiary(apiary).blockingAwait();
+
+        // Create hive without Varroa screen
+        Hive hive = new Hive();
+        hive.setId(UUID.randomUUID().toString());
+        hive.setApiaryId(apiary.getId());
+        hive.setName("Test Hive");
+        hive.setType("VERTICAL");
+        hive.setActive(true);
+        hive.setHasVarroaScreen(false);
+        hive.setCreatedAt(System.currentTimeMillis());
+        hive.setUpdatedAt(System.currentTimeMillis());
+        hiveRepository.insertHive(hive).blockingAwait();
+
+        // When: Update to add Varroa screen
+        hive.setHasVarroaScreen(true);
+        hiveRepository.updateHive(hive).blockingAwait();
+
+        // Then: Changes should be persisted
+        Hive retrieved = hiveRepository.getHiveById(hive.getId()).blockingGet();
+
+        assertNotNull(retrieved);
+        assertTrue(retrieved.isHasVarroaScreen());
+    }
+
 }

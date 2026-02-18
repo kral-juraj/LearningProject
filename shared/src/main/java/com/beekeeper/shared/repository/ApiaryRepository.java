@@ -59,4 +59,21 @@ public class ApiaryRepository {
     public Single<Integer> getApiaryCount() {
         return apiaryDao.getCount();
     }
+
+    /**
+     * Update display order for multiple apiaries (used for drag-and-drop reordering).
+     * Sets updatedAt timestamp for all apiaries and delegates to DAO insertAll().
+     *
+     * Use case: After user drags an apiary to a new position, update all display orders.
+     *
+     * @param apiaries List of apiaries with updated displayOrder values
+     * @return Completable that completes when all updates are done
+     */
+    public Completable updateApiaryOrder(List<Apiary> apiaries) {
+        long now = DateUtils.getCurrentTimestamp();
+        for (Apiary apiary : apiaries) {
+            apiary.setUpdatedAt(now);
+        }
+        return apiaryDao.insertAll(apiaries);
+    }
 }

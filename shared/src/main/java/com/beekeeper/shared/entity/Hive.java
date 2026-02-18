@@ -32,6 +32,7 @@ public class Hive implements Serializable {
     private boolean hasPollenTrap;      // Peľochyt
     private boolean hasTopInsulation;   // Stropná uteplivka
     private boolean hasFoil;            // Fólia
+    private boolean hasVarroaScreen;    // Kontrolná podložka / Varroa screen
 
     // Frame condition tracking (detailné sledovanie stavu rámikov)
     private int darkFrames;             // Tmavé plásty
@@ -259,6 +260,14 @@ public class Hive implements Serializable {
 
     public void setHasFoil(boolean hasFoil) {
         this.hasFoil = hasFoil;
+    }
+
+    public boolean isHasVarroaScreen() {
+        return hasVarroaScreen;
+    }
+
+    public void setHasVarroaScreen(boolean hasVarroaScreen) {
+        this.hasVarroaScreen = hasVarroaScreen;
     }
 
     public int getFoundationSheets() {

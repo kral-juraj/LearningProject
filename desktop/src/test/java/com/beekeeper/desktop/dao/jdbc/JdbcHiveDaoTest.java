@@ -254,6 +254,59 @@ class JdbcHiveDaoTest {
         assertEquals(0, retrieved.getDisplayOrder());
     }
 
+    /**
+     * Test: Insert hive with hasVarroaScreen field.
+     *
+     * Use case: Beekeeper adds Varroa screen to hive for mite monitoring.
+     * Expected: hasVarroaScreen persisted correctly.
+     */
+    @Test
+    void testInsertHiveWithVarroaScreen() {
+        Hive hive = createTestHive("Test Hive");
+        hive.setHasVarroaScreen(true);
+
+        dao.insert(hive).blockingAwait();
+
+        Hive retrieved = dao.getById(hive.getId()).blockingGet();
+        assertTrue(retrieved.isHasVarroaScreen());
+    }
+
+    /**
+     * Test: Update hasVarroaScreen field.
+     *
+     * Use case: Beekeeper adds or removes Varroa screen from hive.
+     * Expected: hasVarroaScreen updated correctly.
+     */
+    @Test
+    void testUpdateVarroaScreen() {
+        Hive hive = createTestHive("Test Hive");
+        hive.setHasVarroaScreen(false);
+        dao.insert(hive).blockingAwait();
+
+        hive.setHasVarroaScreen(true);
+        dao.update(hive).blockingAwait();
+
+        Hive retrieved = dao.getById(hive.getId()).blockingGet();
+        assertTrue(retrieved.isHasVarroaScreen());
+    }
+
+    /**
+     * Test: Default value for hasVarroaScreen.
+     *
+     * Use case: Create hive without setting hasVarroaScreen.
+     * Expected: hasVarroaScreen defaults to false.
+     */
+    @Test
+    void testDefaultValueForVarroaScreen() {
+        Hive hive = createTestHive("Test Hive");
+        // Don't set hasVarroaScreen
+
+        dao.insert(hive).blockingAwait();
+
+        Hive retrieved = dao.getById(hive.getId()).blockingGet();
+        assertFalse(retrieved.isHasVarroaScreen());
+    }
+
     // Helper method to create test hive
     private Hive createTestHive(String name) {
         Hive hive = new Hive();

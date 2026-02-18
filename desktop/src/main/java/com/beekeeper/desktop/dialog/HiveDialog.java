@@ -42,6 +42,7 @@ public class HiveDialog extends Dialog<Hive> {
     private CheckBox pollenTrapCheckBox;
     private CheckBox topInsulationCheckBox;
     private CheckBox foilCheckBox;
+    private CheckBox varroaScreenCheckBox;
 
     // Queen info
     private TextField queenIdField;
@@ -155,7 +156,8 @@ public class HiveDialog extends Dialog<Hive> {
         bottomBoardCombo = new ComboBox<>();
         bottomBoardCombo.getItems().addAll(
             new BottomBoardItem(true),
-            new BottomBoardItem(false)
+            new BottomBoardItem(false),
+            new BottomBoardItem("FIXED")
         );
         bottomBoardCombo.getSelectionModel().selectFirst();
         basicGrid.add(bottomBoardLabel, 0, 2);
@@ -198,6 +200,10 @@ public class HiveDialog extends Dialog<Hive> {
 
         foilCheckBox = new CheckBox(tm.get("label.foil"));
         equipGrid.add(foilCheckBox, 1, 3);
+
+        varroaScreenCheckBox = new CheckBox(tm.get("label.varroa_screen"));
+        varroaScreenCheckBox.setTooltip(new Tooltip(tm.get("tooltip.varroa_screen")));
+        equipGrid.add(varroaScreenCheckBox, 1, 4);
 
         panel.getChildren().add(equipGrid);
         return panel;
@@ -416,6 +422,7 @@ public class HiveDialog extends Dialog<Hive> {
         pollenTrapCheckBox.setSelected(existingHive.isHasPollenTrap());
         topInsulationCheckBox.setSelected(existingHive.isHasTopInsulation());
         foilCheckBox.setSelected(existingHive.isHasFoil());
+        varroaScreenCheckBox.setSelected(existingHive.isHasVarroaScreen());
 
         // Frame details
         darkFramesSpinner.getValueFactory().setValue(existingHive.getDarkFrames());
@@ -491,6 +498,7 @@ public class HiveDialog extends Dialog<Hive> {
         hive.setHasPollenTrap(pollenTrapCheckBox.isSelected());
         hive.setHasTopInsulation(topInsulationCheckBox.isSelected());
         hive.setHasFoil(foilCheckBox.isSelected());
+        hive.setHasVarroaScreen(varroaScreenCheckBox.isSelected());
 
         // Frame details
         hive.setDarkFrames(darkFramesSpinner.getValue());
@@ -557,17 +565,34 @@ public class HiveDialog extends Dialog<Hive> {
 
     /**
      * Helper class for bottom board ComboBox items.
+     * Supports HIGH (vysoké dno), LOW (nízke dno), and FIXED (pevné dno).
      */
     private class BottomBoardItem {
-        boolean isHigh;
+        String type;  // "HIGH", "LOW", or "FIXED"
+        boolean isHigh;  // Legacy support for existing code
 
         BottomBoardItem(boolean isHigh) {
             this.isHigh = isHigh;
+            this.type = isHigh ? "HIGH" : "LOW";
+        }
+
+        BottomBoardItem(String type) {
+            this.type = type;
+            this.isHigh = "HIGH".equals(type);
         }
 
         @Override
         public String toString() {
-            return isHigh ? tm.get("label.high_bottom_board") : tm.get("label.low_bottom_board");
+            switch (type) {
+                case "HIGH":
+                    return tm.get("label.high_bottom_board");
+                case "LOW":
+                    return tm.get("label.low_bottom_board");
+                case "FIXED":
+                    return tm.get("label.fixed_bottom_board");
+                default:
+                    return type;
+            }
         }
     }
 

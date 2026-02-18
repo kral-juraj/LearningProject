@@ -86,6 +86,21 @@ public class ApiaryViewModel extends BaseViewModel {
      * @param longitude GPS longitude
      */
     public void createApiary(String name, String location, double latitude, double longitude) {
+        createApiary(name, location, latitude, longitude, null, null, null);
+    }
+
+    /**
+     * Create a new apiary with all fields.
+     * @param name Apiary name (required)
+     * @param location Apiary location
+     * @param latitude GPS latitude
+     * @param longitude GPS longitude
+     * @param registrationNumber Registration number (optional)
+     * @param address Detailed address (optional)
+     * @param description Description/notes (optional)
+     */
+    public void createApiary(String name, String location, double latitude, double longitude,
+                            String registrationNumber, String address, String description) {
         if (name == null || name.trim().isEmpty()) {
             error.accept("Názov včelnice nemôže byť prázdny");
             return;
@@ -97,6 +112,9 @@ public class ApiaryViewModel extends BaseViewModel {
         apiary.setLocation(location != null ? location.trim() : "");
         apiary.setLatitude(latitude);
         apiary.setLongitude(longitude);
+        apiary.setRegistrationNumber(registrationNumber != null && !registrationNumber.trim().isEmpty() ? registrationNumber.trim() : null);
+        apiary.setAddress(address != null && !address.trim().isEmpty() ? address.trim() : null);
+        apiary.setDescription(description != null && !description.trim().isEmpty() ? description.trim() : null);
         apiary.setCreatedAt(DateUtils.getCurrentTimestamp());
         apiary.setUpdatedAt(DateUtils.getCurrentTimestamp());
 
@@ -171,6 +189,36 @@ public class ApiaryViewModel extends BaseViewModel {
                     throwable -> {
                         error.accept("Chyba pri mazaní včelnice: " + throwable.getMessage());
                         loading.accept(false);
+                    }
+                )
+        );
+    }
+
+    /**
+     * Update display order for multiple apiaries (drag-and-drop reordering).
+     * Silent update - no success message shown to avoid spam during drag operations.
+     *
+     * Use case: User drags apiary to new position in list, all display orders updated in batch.
+     *
+     * @param apiaries List of apiaries with updated displayOrder values
+     */
+    public void updateApiaryOrder(List<Apiary> apiaries) {
+        if (apiaries == null || apiaries.isEmpty()) {
+            return;
+        }
+
+        addDisposable(
+            repository.updateApiaryOrder(apiaries)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.mainThread())
+                .subscribe(
+                    () -> {
+                        // Silent update - no success message
+                        // Optionally refresh list if needed
+                        loadApiaries();
+                    },
+                    throwable -> {
+                        error.accept("Chyba pri zmene poradia včelníc: " + throwable.getMessage());
                     }
                 )
         );

@@ -20,17 +20,67 @@
         </ToolBar>
     </top>
 
-    <!-- Center - Table View -->
+    <!-- Center - Split View with Cards Grid and Dashboard -->
     <center>
-        <TableView fx:id="apiaryTable" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="nameColumn" text="%table.name" prefWidth="300"/>
-                <TableColumn fx:id="locationColumn" text="%table.location" prefWidth="400"/>
-            </columns>
-            <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-            </columnResizePolicy>
-        </TableView>
+        <SplitPane dividerPositions="0.50">
+            <!-- Left: Apiary Cards Grid -->
+            <ScrollPane fitToWidth="true" style="-fx-background-color: #f5f5f5;">
+                <FlowPane fx:id="apiaryGridPane" hgap="15" vgap="15" style="-fx-padding: 15; -fx-background-color: #f5f5f5;">
+                    <!-- ApiaryCard components will be added programmatically -->
+                </FlowPane>
+            </ScrollPane>
+
+            <!-- Right: Dashboard Panel (Scrollable) -->
+            <ScrollPane fitToWidth="true" style="-fx-background-color: #f5f5f5;">
+                <VBox fx:id="dashboardPanel" spacing="15" style="-fx-background-color: #f5f5f5; -fx-padding: 15;">
+                    <Label text="%label.apiary_dashboard" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+                    <!-- Apiary Info Card -->
+                    <VBox spacing="8" fx:id="apiaryInfoBox" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                        <Label fx:id="dashboardApiaryName" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                        <Label fx:id="dashboardApiaryLocation" style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d;"/>
+                        <Label fx:id="dashboardApiaryAddress" style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d;"/>
+                        <Label fx:id="dashboardRegNumber" style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d;"/>
+                    </VBox>
+
+                    <!-- Main Statistics Cards -->
+                    <VBox fx:id="sectionMainStats" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-cursor: hand;">
+                        <Label text="%label.hive_statistics" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                        <FlowPane fx:id="mainStatsFlowPane" hgap="8" vgap="8" prefWrapLength="500"/>
+                    </VBox>
+
+                    <!-- Hive Types Cards -->
+                    <VBox fx:id="sectionHiveTypes" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-cursor: hand;">
+                        <Label text="%label.hives_by_type" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                        <FlowPane fx:id="hiveTypesFlowPane" hgap="8" vgap="8" prefWrapLength="500"/>
+                    </VBox>
+
+                    <!-- Queen Statistics Cards -->
+                    <VBox fx:id="sectionQueens" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-cursor: hand;">
+                        <Label text="%label.queen_statistics" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                        <FlowPane fx:id="queenStatsFlowPane" hgap="8" vgap="8" prefWrapLength="500"/>
+                    </VBox>
+
+                    <!-- Frame Statistics Cards -->
+                    <VBox fx:id="sectionFrames" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-cursor: hand;">
+                        <Label text="%label.frame_statistics" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                        <FlowPane fx:id="frameStatsFlowPane" hgap="8" vgap="8" prefWrapLength="500"/>
+                    </VBox>
+
+                    <!-- Colony Types Chart -->
+                    <VBox fx:id="sectionColonyTypes" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-cursor: hand;">
+                        <Label text="%label.colony_types" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                        <javafx.scene.chart.PieChart fx:id="colonyTypesPieChart" legendVisible="true" prefHeight="250"/>
+                    </VBox>
+
+                    <!-- Description Card -->
+                    <VBox fx:id="sectionDescription" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                        <Label text="%label.description" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                        <TextArea fx:id="dashboardDescription" editable="false" wrapText="true" prefRowCount="3" style="-fx-background-color: #f8f9fa; -fx-border-color: #e0e0e0; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+        </SplitPane>
     </center>
 
     <!-- Bottom Status Bar -->

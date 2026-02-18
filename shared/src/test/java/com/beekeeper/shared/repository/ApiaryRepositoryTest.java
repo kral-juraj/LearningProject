@@ -256,4 +256,98 @@ class ApiaryRepositoryTest {
         assertEquals(5, count);
         verify(apiaryDao, times(1)).getCount();
     }
+
+    /**
+     * Test: updateApiaryOrder updates timestamps and calls DAO insertAll.
+     *
+     * Use case: User drags apiary to new position, all display orders updated.
+     * Expected: updatedAt timestamps set, DAO insertAll called with all apiaries.
+     */
+    @Test
+    void testUpdateApiaryOrder_updatesTimestampsAndCallsDao() {
+        // Given: Multiple apiaries with different display orders
+        Apiary apiary1 = new Apiary();
+        apiary1.setId("id1");
+        apiary1.setName("Včelnica 1");
+        apiary1.setDisplayOrder(0);
+        apiary1.setCreatedAt(1000000000L);
+        apiary1.setUpdatedAt(1000000000L);
+
+        Apiary apiary2 = new Apiary();
+        apiary2.setId("id2");
+        apiary2.setName("Včelnica 2");
+        apiary2.setDisplayOrder(1);
+        apiary2.setCreatedAt(1000000000L);
+        apiary2.setUpdatedAt(1000000000L);
+
+        List<Apiary> apiaries = Arrays.asList(apiary1, apiary2);
+
+        when(apiaryDao.insertAll(anyList())).thenReturn(Completable.complete());
+
+        long before = System.currentTimeMillis();
+
+        // When: Update apiary order
+        repository.updateApiaryOrder(apiaries).blockingAwait();
+
+        long after = System.currentTimeMillis();
+
+        // Then: updatedAt timestamps should be updated
+        assertTrue(apiary1.getUpdatedAt() >= before);
+        assertTrue(apiary1.getUpdatedAt() <= after);
+        assertTrue(apiary2.getUpdatedAt() >= before);
+        assertTrue(apiary2.getUpdatedAt() <= after);
+
+        // And: DAO insertAll should be called once with the apiaries
+        verify(apiaryDao, times(1)).insertAll(apiaries);
+    }
+
+    /**
+     * Test: updateApiaryOrder with empty list does nothing.
+     *
+     * Use case: Edge case - empty list passed to updateApiaryOrder.
+     * Expected: No DAO calls, operation completes successfully.
+     */
+    @Test
+    void testUpdateApiaryOrder_withEmptyList() {
+        // Given: Empty list
+        List<Apiary> apiaries = Arrays.asList();
+
+        when(apiaryDao.insertAll(anyList())).thenReturn(Completable.complete());
+
+        // When: Update apiary order with empty list
+        repository.updateApiaryOrder(apiaries).blockingAwait();
+
+        // Then: DAO insertAll should still be called (repository doesn't filter)
+        verify(apiaryDao, times(1)).insertAll(apiaries);
+    }
+
+    /**
+     * Test: updateApiaryOrder preserves createdAt timestamp.
+     *
+     * Use case: Reordering apiaries should not change createdAt.
+     * Expected: createdAt unchanged, updatedAt updated.
+     */
+    @Test
+    void testUpdateApiaryOrder_preservesCreatedAt() {
+        // Given: Apiary with existing timestamps
+        Apiary apiary = new Apiary();
+        apiary.setId("id1");
+        apiary.setName("Včelnica 1");
+        apiary.setDisplayOrder(5);
+        apiary.setCreatedAt(1000000000L);
+        apiary.setUpdatedAt(1000000000L);
+
+        List<Apiary> apiaries = Arrays.asList(apiary);
+
+        when(apiaryDao.insertAll(anyList())).thenReturn(Completable.complete());
+
+        // When: Update apiary order
+        repository.updateApiaryOrder(apiaries).blockingAwait();
+
+        // Then: createdAt should remain unchanged
+        assertEquals(1000000000L, apiary.getCreatedAt());
+
+        // But updatedAt should be updated
+        assertTrue(apiary.getUpdatedAt() > 1000000000L);
+    }
 }

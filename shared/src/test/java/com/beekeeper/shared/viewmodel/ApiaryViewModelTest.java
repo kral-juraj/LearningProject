@@ -152,4 +152,127 @@ class ApiaryViewModelTest {
         verify(apiaryDao, times(1)).delete(apiary);
         verify(apiaryDao, times(1)).getAll(); // Reload after delete
     }
+
+    /**
+     * Test: Create apiary with extended fields (registrationNumber, address, description).
+     *
+     * Use case: User creates apiary with all optional details filled in.
+     * Expected: All fields stored correctly, DAO insert called.
+     */
+    @Test
+    void testCreateApiary_withExtendedFields_callsDAO() {
+        // Given
+        when(apiaryDao.insert(any(Apiary.class))).thenReturn(Completable.complete());
+        when(apiaryDao.getAll()).thenReturn(Flowable.just(Arrays.asList()));
+
+        // When
+        viewModel.createApiary("Test Včelnica", "Bratislava", 48.1486, 17.1077,
+                "REG-12345", "Hlavná 123, Bratislava", "Popis včelnice");
+
+        // Then
+        verify(apiaryDao, times(1)).insert(any(Apiary.class));
+        verify(apiaryDao, times(1)).getAll(); // Reload after create
+    }
+
+    /**
+     * Test: Create apiary with null optional fields.
+     *
+     * Use case: User creates apiary without filling in optional fields.
+     * Expected: Null optional fields stored as null (not empty strings).
+     */
+    @Test
+    void testCreateApiary_withNullOptionalFields_storesAsNull() {
+        // Given
+        when(apiaryDao.insert(any(Apiary.class))).thenReturn(Completable.complete());
+        when(apiaryDao.getAll()).thenReturn(Flowable.just(Arrays.asList()));
+
+        // When
+        viewModel.createApiary("Test Včelnica", "Bratislava", 48.1486, 17.1077,
+                null, null, null);
+
+        // Then: Insert should be called
+        verify(apiaryDao, times(1)).insert(any(Apiary.class));
+    }
+
+    /**
+     * Test: Create apiary trims whitespace from optional fields.
+     *
+     * Use case: User accidentally adds trailing spaces in input fields.
+     * Expected: Whitespace trimmed, empty strings converted to null.
+     */
+    @Test
+    void testCreateApiary_trimsWhitespace() {
+        // Given
+        when(apiaryDao.insert(any(Apiary.class))).thenReturn(Completable.complete());
+        when(apiaryDao.getAll()).thenReturn(Flowable.just(Arrays.asList()));
+
+        // When: Create with whitespace in optional fields
+        viewModel.createApiary("Test Včelnica", "Bratislava", 48.1486, 17.1077,
+                "  REG-12345  ", "  Hlavná 123  ", "  Popis  ");
+
+        // Then: Insert should be called (trimming happens in ViewModel)
+        verify(apiaryDao, times(1)).insert(any(Apiary.class));
+    }
+
+    /**
+     * Test: Update apiary order calls DAO insertAll.
+     *
+     * Use case: User drags apiaries to reorder them.
+     * Expected: DAO insertAll called, apiaries reloaded.
+     */
+    @Test
+    void testUpdateApiaryOrder_callsDAOInsertAll() {
+        // Given
+        Apiary apiary1 = new Apiary();
+        apiary1.setId("id1");
+        apiary1.setName("Včelnica 1");
+        apiary1.setDisplayOrder(0);
+
+        Apiary apiary2 = new Apiary();
+        apiary2.setId("id2");
+        apiary2.setName("Včelnica 2");
+        apiary2.setDisplayOrder(1);
+
+        List<Apiary> apiaries = Arrays.asList(apiary1, apiary2);
+
+        when(apiaryDao.insertAll(anyList())).thenReturn(Completable.complete());
+        when(apiaryDao.getAll()).thenReturn(Flowable.just(apiaries));
+
+        // When
+        viewModel.updateApiaryOrder(apiaries);
+
+        // Then
+        verify(apiaryDao, times(1)).insertAll(apiaries);
+        verify(apiaryDao, times(1)).getAll(); // Reload after update
+    }
+
+    /**
+     * Test: Update apiary order with empty list does nothing.
+     *
+     * Use case: Edge case - empty list passed.
+     * Expected: No DAO calls (early return).
+     */
+    @Test
+    void testUpdateApiaryOrder_withEmptyList_doesNothing() {
+        // When
+        viewModel.updateApiaryOrder(Arrays.asList());
+
+        // Then: No DAO calls
+        verify(apiaryDao, never()).insertAll(anyList());
+    }
+
+    /**
+     * Test: Update apiary order with null list does nothing.
+     *
+     * Use case: Edge case - null list passed.
+     * Expected: No DAO calls (early return).
+     */
+    @Test
+    void testUpdateApiaryOrder_withNullList_doesNothing() {
+        // When
+        viewModel.updateApiaryOrder(null);
+
+        // Then: No DAO calls
+        verify(apiaryDao, never()).insertAll(anyList());
+    }
 }

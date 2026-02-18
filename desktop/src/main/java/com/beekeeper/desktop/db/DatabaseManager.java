@@ -32,6 +32,7 @@ public class DatabaseManager {
             }
 
             createTables(conn);
+            migrateApiaries(conn);
             migrateTaxationFrames(conn);
             migrateTaxations(conn);
             migrateHives(conn);
@@ -81,6 +82,10 @@ public class DatabaseManager {
                 "location TEXT, " +
                 "latitude REAL, " +
                 "longitude REAL, " +
+                "displayOrder INTEGER DEFAULT 0, " +
+                "registrationNumber TEXT, " +
+                "address TEXT, " +
+                "description TEXT, " +
                 "createdAt INTEGER, " +
                 "updatedAt INTEGER)"
             );
@@ -264,6 +269,34 @@ public class DatabaseManager {
     }
 
     /**
+     * Migrate apiaries table to add extended apiary details.
+     * Adds columns for drag-and-drop ordering, registration number, address, and description.
+     */
+    private static void migrateApiaries(Connection connection) throws SQLException {
+        try (Statement stmt = connection.createStatement()) {
+            String[] columns = {
+                "displayOrder INTEGER DEFAULT 0",
+                "registrationNumber TEXT DEFAULT NULL",
+                "address TEXT DEFAULT NULL",
+                "description TEXT DEFAULT NULL"
+            };
+
+            for (String column : columns) {
+                String columnName = column.split(" ")[0];
+                try {
+                    stmt.execute("ALTER TABLE apiaries ADD COLUMN " + column);
+                    System.out.println("[DatabaseManager] Added " + columnName + " column to apiaries");
+                } catch (SQLException e) {
+                    // Column already exists, ignore
+                    if (!e.getMessage().contains("duplicate column name")) {
+                        throw e;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Migrate taxation_frames table to add new columns for stores.
      * Adds cappedStoresDm and uncappedStoresDm columns if they don't exist.
      */
@@ -343,6 +376,7 @@ public class DatabaseManager {
                 "hasPollenTrap INTEGER DEFAULT 0",
                 "hasTopInsulation INTEGER DEFAULT 0",
                 "hasFoil INTEGER DEFAULT 0",
+                "hasVarroaScreen INTEGER DEFAULT 0",
                 "foundationSheets INTEGER DEFAULT 0",
                 "aggression TEXT DEFAULT NULL",
                 "chalkBrood INTEGER DEFAULT 0",

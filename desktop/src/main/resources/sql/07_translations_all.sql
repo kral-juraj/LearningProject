@@ -1,5 +1,5 @@
--- Complete translations export (1264 translations, 632 unique keys)
--- Generated: 2026-02-17 20:33:06
+-- Complete translations export (1462 translations, 731 unique keys)
+-- Generated: 2026-02-18 11:02:09
 -- Categories: app, button, label, table, dialog, calculator, varroa, queen, treatment, feed_type, event_type, validation, error, success, status
 
 INSERT OR REPLACE INTO translations (id, key, language, value, category, createdAt) VALUES
@@ -60,6 +60,10 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'button.clear', 'sk', 'Vymazať', 'button', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'button.close', 'en', 'Close', 'button', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'button.close', 'sk', 'Zavrieť', 'button', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'button.delete', 'en', 'Delete', 'button', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'button.delete', 'sk', 'Zmazať', 'button', datetime('now'))
@@ -83,6 +87,14 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'button.export_milestones', 'en', 'Export All Milestones', 'button', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'button.export_milestones', 'sk', 'Export všetkých míľnikov', 'button', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'button.no', 'en', 'No', 'button', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'button.no', 'sk', 'Nie', 'button', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'button.ok', 'en', 'OK', 'button', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'button.ok', 'sk', 'OK', 'button', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'button.refresh', 'en', 'Refresh', 'button', datetime('now'))
 ,
@@ -127,6 +139,10 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'button.view_history', 'en', 'View history', 'button', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'button.view_history', 'sk', 'Zobraziť históriu', 'button', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'button.yes', 'en', 'Yes', 'button', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'button.yes', 'sk', 'Áno', 'button', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'calculator.feed.title', 'en', '🍯 Feed Calculator', 'calculator', datetime('now'))
 ,
@@ -376,6 +392,14 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'dialog.add_treatment.title', 'sk', 'Pridať liečenie', 'dialog', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'dialog.apiary.header_add', 'en', 'Fill in apiary details', 'dialog', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'dialog.apiary.header_add', 'sk', 'Vyplňte údaje o včelnici', 'dialog', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'dialog.apiary.header_edit', 'en', 'Edit apiary details', 'dialog', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'dialog.apiary.header_edit', 'sk', 'Upravte údaje o včelnici', 'dialog', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'dialog.delete_activity.content', 'en', 'This operation cannot be undone.', 'dialog', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'dialog.delete_activity.content', 'sk', 'Táto operácia sa nedá vrátiť späť.', 'dialog', datetime('now'))
@@ -403,6 +427,18 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'dialog.delete_frame.header', 'en', 'Delete Frame at Position %s', 'dialog', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'dialog.delete_frame.header', 'sk', 'Zmazať rámik na pozícii %s', 'dialog', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'dialog.delete_hive.content', 'en', 'This action cannot be undone. All data associated with this hive will be permanently deleted.', 'dialog', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'dialog.delete_hive.content', 'sk', 'Táto akcia je nenávratná. Všetky dáta spojené s týmto úľom budú trvalo odstránené.', 'dialog', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'dialog.delete_hive.header', 'en', 'Do you really want to delete hive "{0}"?', 'dialog', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'dialog.delete_hive.header', 'sk', 'Naozaj chcete zmazať úľ "{0}"?', 'dialog', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'dialog.delete_hive.title', 'en', 'Delete Hive', 'dialog', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'dialog.delete_hive.title', 'sk', 'Zmazať úľ', 'dialog', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'dialog.delete_inspection.header', 'en', 'Delete inspection from %s', 'dialog', datetime('now'))
 ,
@@ -596,9 +632,17 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'frametype.honey', 'sk', 'Medový', 'enum', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'error.creating_hive', 'en', 'Error creating hive: {0}', 'error', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'error.creating_hive', 'sk', 'Chyba pri vytváraní úľa: {0}', 'error', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'error.deleting_activity', 'en', 'Error deleting activity: {0}', 'error', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'error.deleting_activity', 'sk', 'Chyba pri mazaní aktivity: {0}', 'error', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'error.deleting_hive', 'en', 'Error deleting hive: {0}', 'error', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'error.deleting_hive', 'sk', 'Chyba pri mazaní úľa: {0}', 'error', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'error.export.add_treatment', 'en', 'Add at least one treatment to the plan.', 'error', datetime('now'))
 ,
@@ -636,9 +680,9 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'error.loading_frames', 'sk', 'Chyba pri načítaní rámikov: %s', 'error', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'error.loading_hives', 'en', 'Error: %s', 'error', datetime('now'))
+(lower(hex(randomblob(16))), 'error.loading_hives', 'en', 'Error loading hives: {0}', 'error', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'error.loading_hives', 'sk', 'Chyba: %s', 'error', datetime('now'))
+(lower(hex(randomblob(16))), 'error.loading_hives', 'sk', 'Chyba pri načítaní úľov: {0}', 'error', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'error.loading_inspections', 'en', 'Error: %s', 'error', datetime('now'))
 ,
@@ -704,6 +748,14 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'error.updating_activity', 'sk', 'Chyba pri aktualizácii aktivity: {0}', 'error', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'error.updating_hive', 'en', 'Error updating hive: {0}', 'error', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'error.updating_hive', 'sk', 'Chyba pri aktualizácii úľa: {0}', 'error', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'error.updating_order', 'en', 'Error updating order: {0}', 'error', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'error.updating_order', 'sk', 'Chyba pri aktualizácii poradia: {0}', 'error', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'error.validation_title', 'en', 'Validation Error', 'error', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'error.validation_title', 'sk', 'Chyba validácie', 'error', datetime('now'))
@@ -731,6 +783,14 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'error.varroa.select_days', 'en', 'Select number of projection days.', 'error', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'error.varroa.select_days', 'sk', 'Vyberte počet dní projekcie.', 'error', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'exception.failed_to_load_hive_card_fxml', 'en', 'Failed to load HiveCard FXML', 'exception', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'exception.failed_to_load_hive_card_fxml', 'sk', 'Nepodarilo sa načítať FXML karty úľa', 'exception', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'exception.hive_activity_not_found', 'en', 'Hive activity not found: {0}', 'exception', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'exception.hive_activity_not_found', 'sk', 'Aktivita úľa nebola nájdená: {0}', 'exception', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'feed.fondant_ready', 'en', 'Fondant is ready-made product. Place directly on frames.', 'feed', datetime('now'))
 ,
@@ -866,15 +926,23 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'hive.type.horizontal', 'en', 'Horizontal', 'hive', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'hive.type.horizontal', 'sk', 'Ležiak', 'hive', datetime('now'))
+(lower(hex(randomblob(16))), 'hive.type.horizontal', 'sk', 'Ležan', 'hive', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'hive.type.mating_nuc', 'en', 'Mating nuc', 'hive', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'hive.type.mating_nuc', 'sk', 'Oplodniačik', 'hive', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'hive.type.nuke', 'en', 'Nucleus', 'hive', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'hive.type.nuke', 'sk', 'Oddielka', 'hive', datetime('now'))
+(lower(hex(randomblob(16))), 'hive.type.nuke', 'sk', 'Oddielok', 'hive', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'hive.type.vertical', 'en', 'Vertical (Langstroth)', 'hive', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'hive.type.vertical', 'sk', 'Nádstavkový', 'hive', datetime('now'))
+(lower(hex(randomblob(16))), 'hive.type.vertical', 'sk', 'Nadstavkový úľ', 'hive', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.foundation_sheets', 'en', 'Foundation sheets', 'hive', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.foundation_sheets', 'sk', 'Medzistienky', 'hive', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'info.events_created', 'en', '%d events created in calendar.', 'info', datetime('now'))
 ,
@@ -895,6 +963,34 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'info.title', 'en', 'Information', 'info', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'info.title', 'sk', 'Informácia', 'info', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'aggression.high', 'en', 'High', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'aggression.high', 'sk', 'Vysoká', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'aggression.low', 'en', 'Low', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'aggression.low', 'sk', 'Nízka', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'aggression.medium', 'en', 'Medium', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'aggression.medium', 'sk', 'Stredná', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'hive_type.horizontal', 'en', 'Horizontal', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'hive_type.horizontal', 'sk', 'Ležan', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'hive_type.mating_nuc', 'en', 'Mating nuc', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'hive_type.mating_nuc', 'sk', 'Oplodniačik', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'hive_type.nuke', 'en', 'Nucleus', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'hive_type.nuke', 'sk', 'Oddielok', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'hive_type.vertical', 'en', 'Vertical (Langstroth)', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'hive_type.vertical', 'sk', 'Nadstavkový úľ', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'inspection.section.basic', 'en', 'Basic Information', 'label', datetime('now'))
 ,
@@ -924,6 +1020,14 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'inspection.section.varroa', 'sk', 'Varroa', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.active', 'en', 'active', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.active', 'sk', 'aktívnych', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.active_hives', 'en', 'Active Hives', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.active_hives', 'sk', 'Aktívne úle', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.activity_date', 'en', 'Date', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.activity_date', 'sk', 'Dátum', 'label', datetime('now'))
@@ -936,9 +1040,13 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.activity_type', 'sk', 'Typ aktivity', 'label', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'label.aggression', 'en', 'Aggression (1-10):', 'label', datetime('now'))
+(lower(hex(randomblob(16))), 'label.address', 'en', 'Address', 'label', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'label.aggression', 'sk', 'Agresivita (1-10):', 'label', datetime('now'))
+(lower(hex(randomblob(16))), 'label.address', 'sk', 'Adresa', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.aggression', 'en', 'Bee Aggression', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.aggression', 'sk', 'Agresivita včiel', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.amount_kg', 'en', ' Amount (kg):', 'label', datetime('now'))
 ,
@@ -948,9 +1056,17 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.apiary', 'sk', 'Včelnica:', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.apiary_dashboard', 'en', 'Apiary Dashboard', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.apiary_dashboard', 'sk', 'Prehľad včelnice', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.basic_info', 'en', 'Basic information', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.basic_info', 'sk', 'Základné informácie', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.basic_info_equipment', 'en', 'Basic & Equipment', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.basic_info_equipment', 'sk', 'Základné & Vybavenie', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.behavior', 'en', 'Behavior:', 'label', datetime('now'))
 ,
@@ -984,6 +1100,18 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.capped_stores_dm', 'sk', 'Zavíčkované zásoby (dm):', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.chalk_brood', 'en', 'Chalk Brood', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.chalk_brood', 'sk', 'Vápenaťenie plodu', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.colony_health', 'en', 'Colony Health', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.colony_health', 'sk', 'Zdravotný stav včelstva', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.colony_types', 'en', 'Colony Types', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.colony_types', 'sk', 'Typy kolónií', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.completed', 'en', 'Completed:', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.completed', 'sk', 'Dokončené:', 'label', datetime('now'))
@@ -991,6 +1119,14 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'label.current_stores', 'en', 'Current Stores *', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.current_stores', 'sk', 'Aktuálne zásoby *', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.dark_frames', 'en', 'Dark combs', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.dark_frames', 'sk', 'Tmavé plásty', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.dark_frames_total', 'en', 'Dark Frames', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.dark_frames_total', 'sk', 'Tmavé plásty', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.date', 'en', 'Date', 'label', datetime('now'))
 ,
@@ -1008,9 +1144,29 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.drone_brood_percent', 'sk', 'Trúdí plod (%)', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.drone_cells', 'en', 'Drone Cells', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.drone_cells', 'sk', 'Trudica', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.drone_laying_queen', 'en', 'Drone-Laying Queen', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.drone_laying_queen', 'sk', 'Trudokľadná matka', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.effectiveness', 'en', 'Effectiveness (%) *', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.effectiveness', 'sk', 'Efektivita (%) *', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.empty_frames', 'en', 'Empty frames', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.empty_frames', 'sk', 'Voľná stavba', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.empty_frames_total', 'en', 'Empty Frames', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.empty_frames_total', 'sk', 'Voľná stavba', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.entrance_reducer', 'en', 'Entrance reducer', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.entrance_reducer', 'sk', 'Výklz', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.equipment', 'en', 'Equipment', 'label', datetime('now'))
 ,
@@ -1020,17 +1176,45 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.feed_type', 'sk', ' Typ krmiva:', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.fixed_bottom_board', 'en', 'Fixed Bottom', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.fixed_bottom_board', 'sk', 'Pevné dno', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.foil', 'en', 'Foil cover', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.foil', 'sk', 'Fólia', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.food_stores', 'en', 'Food Stores (kg):', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.food_stores', 'sk', 'Zásoby (kg):', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.foundation_frames', 'en', 'Foundation frames', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.foundation_frames', 'sk', 'Stavebné (s medzistienkou)', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.foundation_frames_total', 'en', 'Foundation Frames', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.foundation_frames_total', 'sk', 'Stavebné rámiky', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.frame_count', 'en', 'Frame count', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.frame_count', 'sk', 'Počet rámikov', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.frame_count_total', 'en', 'Total frame count', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.frame_count_total', 'sk', 'Celkový počet rámikov', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.frame_details', 'en', 'Frame details', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.frame_details', 'sk', 'Detaily rámikov', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.frame_info', 'en', 'Frame information', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.frame_info', 'sk', 'Informácie o rámikoch', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.frame_statistics', 'en', 'Frame Statistics', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.frame_statistics', 'sk', 'Štatistiky rámikov', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.frame_type', 'en', 'Frame type', 'label', datetime('now'))
 ,
@@ -1040,9 +1224,13 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.frame_year', 'sk', 'Rok rámika:', 'label', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'label.frames', 'en', 'frames', 'label', datetime('now'))
+(lower(hex(randomblob(16))), 'label.frames', 'en', 'Frames', 'label', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'label.frames', 'sk', 'rámiky', 'label', datetime('now'))
+(lower(hex(randomblob(16))), 'label.frames', 'sk', 'Rámiky', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.frames_equipment', 'en', 'Frames & Equipment', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.frames_equipment', 'sk', 'Rámiky & Vybavenie', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.has_cage', 'en', 'Has Cage:', 'label', datetime('now'))
 ,
@@ -1064,9 +1252,29 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.hive', 'sk', 'Úľ:', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.hive_statistics', 'en', 'Hive Statistics', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.hive_statistics', 'sk', 'Štatistiky úľov', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.hive_type', 'en', 'Hive Type', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.hive_type', 'sk', 'Typ úľa', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.hives', 'en', 'hives', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.hives', 'sk', 'úľov', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.hives_by_type', 'en', 'Hives by Type', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.hives_by_type', 'sk', 'Úle podľa typu', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.inactive', 'en', 'Inactive', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.inactive', 'sk', 'Neaktívny', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.inactive_hives', 'en', 'Inactive Hives', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.inactive_hives', 'sk', 'Neaktívne úle', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.insulated', 'en', 'Insulated', 'label', datetime('now'))
 ,
@@ -1080,9 +1288,25 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.kg', 'sk', 'kg', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.light_frames', 'en', 'Light combs', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.light_frames', 'sk', 'Svetlé plásty', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.light_frames_total', 'en', 'Light Frames', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.light_frames_total', 'sk', 'Svetlé plásty', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.location', 'en', 'Location', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.location', 'sk', 'Lokalita', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.low_bottom_board', 'en', 'Low bottom board', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.low_bottom_board', 'sk', 'Nízke dno', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.mating_nucs', 'en', 'Mating Nucs', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.mating_nucs', 'sk', 'Oploďovačiky', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.measurement_date', 'en', 'Measurement Date', 'label', datetime('now'))
 ,
@@ -1092,9 +1316,33 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.method', 'sk', 'Metóda', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.name', 'en', 'Name', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.name', 'sk', 'Názov', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.new_frames', 'en', 'New combs', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.new_frames', 'sk', 'Nové plásty', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.new_frames_total', 'en', 'New Frames', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.new_frames_total', 'sk', 'Nové plásty', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.new_value', 'en', 'New value', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.new_value', 'sk', 'Nová hodnota', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.no_hives', 'en', 'No hives', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.no_hives', 'sk', 'Žiadne úle', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.no_queens', 'en', 'No queens', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.no_queens', 'sk', 'Žiadne matky', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.not_specified', 'en', 'Not specified', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.not_specified', 'sk', 'Neuvedené', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.note', 'en', 'Note', 'label', datetime('now'))
 ,
@@ -1103,6 +1351,10 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'label.notes', 'en', 'Notes:', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.notes', 'sk', 'Poznámky:', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.nucs', 'en', 'Nucs', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.nucs', 'sk', 'Oddielky', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.old_value', 'en', 'Old value', 'label', datetime('now'))
 ,
@@ -1116,9 +1368,17 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.pollen_frames', 'sk', 'Peľové rámiky:', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.pollen_trap', 'en', 'Pollen trap', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.pollen_trap', 'sk', 'Peľochyt', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.position', 'en', ' Position:', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.position', 'sk', ' Pozícia:', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.production_colonies', 'en', 'Production Colonies', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.production_colonies', 'sk', 'Produkčné rodiny', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.projection', 'en', 'Projection', 'label', datetime('now'))
 ,
@@ -1127,6 +1387,10 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'label.propolis_trap', 'en', 'Propolis trap', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.propolis_trap', 'sk', 'Propolisová mriežka', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.queen', 'en', 'Queen', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.queen', 'sk', 'Matka', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.queen_color', 'en', 'Queen color', 'label', datetime('now'))
 ,
@@ -1140,7 +1404,7 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.queen_id', 'sk', 'ID matky', 'label', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'label.queen_info', 'en', 'Queen information', 'label', datetime('now'))
+(lower(hex(randomblob(16))), 'label.queen_info', 'en', 'Queen Information', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.queen_info', 'sk', 'Informácie o matke', 'label', datetime('now'))
 ,
@@ -1148,13 +1412,41 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.queen_note', 'sk', 'Poznámka o matke:', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.queen_notes', 'en', 'Queen & Notes', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.queen_notes', 'sk', 'Matka & Poznámky', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.queen_seen', 'en', 'Queen Seen', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.queen_seen', 'sk', 'Matka videná', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.queen_single', 'en', 'queen', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.queen_single', 'sk', 'matka', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.queen_statistics', 'en', 'Queen Statistics', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.queen_statistics', 'sk', 'Štatistiky matiek', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.queen_year', 'en', 'Queen year', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.queen_year', 'sk', 'Rok narodenia matky', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.queens_by_year', 'en', 'Queens by Year', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.queens_by_year', 'sk', 'Matky podľa roku', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.queens_plural', 'en', 'queens', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.queens_plural', 'sk', 'matiek', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.reg_short', 'en', 'Reg. No.', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.reg_short', 'sk', 'Reg. č.', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.registration_number', 'en', 'Registration Number', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.registration_number', 'sk', 'Registračné číslo', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.start_date', 'en', 'Start Date (D+0) *', 'label', datetime('now'))
 ,
@@ -1180,9 +1472,17 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'label.title', 'sk', ' Názov:', 'label', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'label.top_insulation', 'en', 'Top insulation', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.top_insulation', 'sk', 'Stropná uteplivka', 'label', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'label.total_frames', 'en', 'Total Frames:', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.total_frames', 'sk', 'Celkový počet rámikov:', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.total_hives', 'en', 'Total Hives', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.total_hives', 'sk', 'Celkový počet úľov', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.treatment_date', 'en', 'Treatment Date *', 'label', datetime('now'))
 ,
@@ -1219,6 +1519,10 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'label.varroa_count', 'en', 'Mite Count', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.varroa_count', 'sk', 'Počet kliešťov', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.varroa_screen', 'en', 'Varroa Screen', 'label', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'label.varroa_screen', 'sk', 'Kontrolná podložka', 'label', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'label.weight_after', 'en', 'Weight After (kg):', 'label', datetime('now'))
 ,
@@ -1268,9 +1572,21 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'option.no_hive', 'sk', '(Žiadny úľ)', 'option', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'prompt.bottom_board_high', 'en', 'e.g. high bottom board', 'prompt', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'prompt.bottom_board_high', 'sk', 'napr. vysoké dno', 'prompt', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'prompt.bottom_board_low', 'en', 'e.g. low bottom board', 'prompt', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'prompt.bottom_board_low', 'sk', 'napr. nízke dno', 'prompt', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'prompt.honey_harvest_kg', 'en', 'e.g. 15 kg', 'prompt', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'prompt.honey_harvest_kg', 'sk', 'napr. 15 kg', 'prompt', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'prompt.optional', 'en', 'Optional', 'prompt', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'prompt.optional', 'sk', 'Voliteľné', 'prompt', datetime('now'))
+(lower(hex(randomblob(16))), 'prompt.optional', 'sk', 'Nepovinné', 'prompt', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'prompt.optional_description', 'en', 'Optional activity description', 'prompt', datetime('now'))
 ,
@@ -1279,6 +1595,10 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'prompt.optional_note', 'en', 'Optional application note', 'prompt', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'prompt.optional_note', 'sk', 'Voliteľná poznámka o aplikácii', 'prompt', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'prompt.required', 'en', 'Required', 'prompt', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'prompt.required', 'sk', 'Povinné', 'prompt', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'prompt.select_activity_type', 'en', 'Select activity type', 'prompt', datetime('now'))
 ,
@@ -1295,6 +1615,14 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'prompt.select_type', 'en', 'Select treatment type', 'prompt', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'prompt.select_type', 'sk', 'Vyberte typ ošetrenia', 'prompt', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'prompt.supers_example_2', 'en', 'e.g. 2 supers', 'prompt', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'prompt.supers_example_2', 'sk', 'napr. 2 medeníky', 'prompt', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'prompt.supers_example_3', 'en', 'e.g. 3 supers', 'prompt', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'prompt.supers_example_3', 'sk', 'napr. 3 medeníky', 'prompt', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'queen.caging.broodless_start', 'en', 'Broodless Period Start', 'queen', datetime('now'))
 ,
@@ -1896,9 +2224,9 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'status.activities_count', 'sk', 'Počet aktivít: {0}', 'status', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'status.apiaries_count', 'en', '%d apiaries', 'status', datetime('now'))
+(lower(hex(randomblob(16))), 'status.apiaries_count', 'en', '{0} apiaries', 'status', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'status.apiaries_count', 'sk', '%d včelníc', 'status', datetime('now'))
+(lower(hex(randomblob(16))), 'status.apiaries_count', 'sk', '{0} včelníc', 'status', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'status.events_count', 'en', '%d events', 'status', datetime('now'))
 ,
@@ -1908,9 +2236,9 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'status.feedings_count', 'sk', '%d kŕmení', 'status', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'status.hives_count', 'en', '%d hives', 'status', datetime('now'))
+(lower(hex(randomblob(16))), 'status.hives_count', 'en', '{0} hives', 'status', datetime('now'))
 ,
-(lower(hex(randomblob(16))), 'status.hives_count', 'sk', '%d úľov', 'status', datetime('now'))
+(lower(hex(randomblob(16))), 'status.hives_count', 'sk', '{0} úľov', 'status', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'status.inspections_count', 'en', '%d inspections', 'status', datetime('now'))
 ,
@@ -1951,6 +2279,18 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'success.activity_updated', 'en', 'Activity updated successfully', 'success', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'success.activity_updated', 'sk', 'Aktivita úspešne aktualizovaná', 'success', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'success.hive_created', 'en', 'Hive created successfully', 'success', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'success.hive_created', 'sk', 'Úľ úspešne vytvorený', 'success', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'success.hive_deleted', 'en', 'Hive deleted successfully', 'success', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'success.hive_deleted', 'sk', 'Úľ úspešne zmazaný', 'success', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'success.hive_updated', 'en', 'Hive updated successfully', 'success', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'success.hive_updated', 'sk', 'Úľ úspešne aktualizovaný', 'success', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'tab.apiaries', 'en', 'Apiaries', 'tab', datetime('now'))
 ,
@@ -2112,6 +2452,42 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'table.weight_before', 'sk', 'Hmotnosť pred (kg)', 'table', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'tooltip.apiary_address', 'en', 'Detailed apiary address', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.apiary_address', 'sk', 'Detailná adresa včelnice', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.apiary_description', 'en', 'Description or notes about the apiary', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.apiary_description', 'sk', 'Popis alebo poznámky k včelnici', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.apiary_location', 'en', 'Location or municipality', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.apiary_location', 'sk', 'Lokalita alebo obec', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.apiary_name', 'en', 'Apiary name', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.apiary_name', 'sk', 'Názov včelnice', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.dark_frames', 'en', 'Number of old dark combs', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.dark_frames', 'sk', 'Počet starých tmavých plástov', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.drag_to_reorder', 'en', 'Drag to reorder', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.drag_to_reorder', 'sk', 'Ťahajte pre zmenu poradia', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.empty_frames', 'en', 'Empty frames without foundation (natural building)', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.empty_frames', 'sk', 'Prázdne rámiky bez medzistienky (voľná stavba)', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.foundation_frames', 'en', 'Frames with foundation sheet', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.foundation_frames', 'sk', 'Stavebné rámiky s medzistienkou', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.foundation_sheets', 'en', 'Number of loose foundation sheets (not in frames)', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.foundation_sheets', 'sk', 'Počet voľných medzistienok (neprerámkovaných)', 'tooltip', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'tooltip.frame_count', 'en', 'Total number of frames in hive', 'tooltip', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'tooltip.frame_count', 'sk', 'Celkový počet rámikov v úli', 'tooltip', datetime('now'))
@@ -2124,6 +2500,14 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 ,
 (lower(hex(randomblob(16))), 'tooltip.insulated', 'sk', 'Úľ je zateplený na zimu', 'tooltip', datetime('now'))
 ,
+(lower(hex(randomblob(16))), 'tooltip.light_frames', 'en', 'Number of light combs', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.light_frames', 'sk', 'Počet svetlých plástov', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.new_frames', 'en', 'Number of new combs', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.new_frames', 'sk', 'Počet nových plástov', 'tooltip', datetime('now'))
+,
 (lower(hex(randomblob(16))), 'tooltip.new_value', 'en', 'New value after change (e.g. "3 supers")', 'tooltip', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'tooltip.new_value', 'sk', 'Nová hodnota po zmene (napr. "3 medeníky")', 'tooltip', datetime('now'))
@@ -2131,6 +2515,14 @@ INSERT OR REPLACE INTO translations (id, key, language, value, category, created
 (lower(hex(randomblob(16))), 'tooltip.old_value', 'en', 'Original value before change (e.g. "2 supers")', 'tooltip', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'tooltip.old_value', 'sk', 'Pôvodná hodnota pred zmenou (napr. "2 medeníky")', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.registration_number', 'en', 'Apiary registration ID', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.registration_number', 'sk', 'Evidenčné číslo včelnice', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.varroa_screen', 'en', 'Varroa monitoring screen/board', 'tooltip', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'tooltip.varroa_screen', 'sk', 'Kontrolná podložka na sledovanie várroi', 'tooltip', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'treatment.amitraz.desc', 'en', 'Synthetic acaricide, long-lasting effect', 'treatment', datetime('now'))
 ,
@@ -2793,6 +3185,10 @@ Nevýhody:
 (lower(hex(randomblob(16))), 'validation.frame_year_must_be_number', 'en', 'Frame year must be a number', 'validation', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'validation.frame_year_must_be_number', 'sk', 'Rok rámika musí byť číslo', 'validation', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'validation.hive_name_required', 'en', 'Hive name cannot be empty', 'validation', datetime('now'))
+,
+(lower(hex(randomblob(16))), 'validation.hive_name_required', 'sk', 'Názov úľa nemôže byť prázdny', 'validation', datetime('now'))
 ,
 (lower(hex(randomblob(16))), 'validation.hour_must_be_number', 'en', 'Hour must be a number', 'validation', datetime('now'))
 ,

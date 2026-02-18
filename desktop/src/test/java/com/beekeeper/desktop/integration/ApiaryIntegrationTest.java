@@ -184,4 +184,130 @@ class ApiaryIntegrationTest extends IntegrationTestBase {
         assertNotNull(retrieved);
         assertEquals(apiary.getId(), retrieved.getId());
     }
+
+    /**
+     * Test: Create and read apiary with extended fields.
+     *
+     * Use case: User creates apiary with all optional details filled in.
+     * Expected: All extended fields (displayOrder, registrationNumber, address, description) persisted correctly.
+     */
+    @Test
+    void testCreateAndReadApiaryWithExtendedFields() {
+        // Given: DAO and repository
+        JdbcApiaryDao dao = new JdbcApiaryDao();
+        ApiaryRepository repository = new ApiaryRepository(dao);
+
+        // When: Create apiary with extended fields
+        Apiary apiary = new Apiary();
+        apiary.setId(UUID.randomUUID().toString());
+        apiary.setName("Test Včelnica");
+        apiary.setLocation("Bratislava");
+        apiary.setLatitude(48.1486);
+        apiary.setLongitude(17.1077);
+        apiary.setDisplayOrder(5);
+        apiary.setRegistrationNumber("REG-12345");
+        apiary.setAddress("Hlavná 123, Bratislava");
+        apiary.setDescription("Testovacia včelnica s poznámkami");
+        apiary.setCreatedAt(System.currentTimeMillis());
+        apiary.setUpdatedAt(System.currentTimeMillis());
+
+        repository.insertApiary(apiary).blockingAwait();
+
+        // Then: Should be able to read it back with all extended fields
+        Apiary retrieved = repository.getApiaryById(apiary.getId()).blockingGet();
+
+        assertNotNull(retrieved);
+        assertEquals(apiary.getId(), retrieved.getId());
+        assertEquals("Test Včelnica", retrieved.getName());
+        assertEquals(5, retrieved.getDisplayOrder());
+        assertEquals("REG-12345", retrieved.getRegistrationNumber());
+        assertEquals("Hlavná 123, Bratislava", retrieved.getAddress());
+        assertEquals("Testovacia včelnica s poznámkami", retrieved.getDescription());
+    }
+
+    /**
+     * Test: Update apiary order via repository.
+     *
+     * Use case: User drags apiaries to reorder them.
+     * Expected: All apiaries updated with new displayOrder values, retrievable in new order.
+     */
+    @Test
+    void testUpdateApiaryOrder() {
+        // Given: DAO and repository
+        JdbcApiaryDao dao = new JdbcApiaryDao();
+        ApiaryRepository repository = new ApiaryRepository(dao);
+
+        // Create 3 apiaries with initial order
+        Apiary apiary1 = new Apiary();
+        apiary1.setId(UUID.randomUUID().toString());
+        apiary1.setName("Včelnica 1");
+        apiary1.setDisplayOrder(0);
+        apiary1.setCreatedAt(System.currentTimeMillis());
+        apiary1.setUpdatedAt(System.currentTimeMillis());
+        repository.insertApiary(apiary1).blockingAwait();
+
+        Apiary apiary2 = new Apiary();
+        apiary2.setId(UUID.randomUUID().toString());
+        apiary2.setName("Včelnica 2");
+        apiary2.setDisplayOrder(1);
+        apiary2.setCreatedAt(System.currentTimeMillis());
+        apiary2.setUpdatedAt(System.currentTimeMillis());
+        repository.insertApiary(apiary2).blockingAwait();
+
+        Apiary apiary3 = new Apiary();
+        apiary3.setId(UUID.randomUUID().toString());
+        apiary3.setName("Včelnica 3");
+        apiary3.setDisplayOrder(2);
+        apiary3.setCreatedAt(System.currentTimeMillis());
+        apiary3.setUpdatedAt(System.currentTimeMillis());
+        repository.insertApiary(apiary3).blockingAwait();
+
+        // When: Reorder apiaries (swap first and last)
+        apiary1.setDisplayOrder(2);
+        apiary3.setDisplayOrder(0);
+
+        List<Apiary> apiaries = java.util.Arrays.asList(apiary1, apiary2, apiary3);
+        repository.updateApiaryOrder(apiaries).blockingAwait();
+
+        // Then: Should be retrievable in new order
+        List<Apiary> retrieved = repository.getAllApiaries().blockingFirst();
+
+        assertEquals(3, retrieved.size());
+        assertEquals("Včelnica 3", retrieved.get(0).getName()); // Now first (displayOrder = 0)
+        assertEquals("Včelnica 2", retrieved.get(1).getName()); // Still middle (displayOrder = 1)
+        assertEquals("Včelnica 1", retrieved.get(2).getName()); // Now last (displayOrder = 2)
+    }
+
+    /**
+     * Test: Apiary ordering in getAll.
+     *
+     * Use case: Display apiaries in user-defined order.
+     * Expected: Apiaries sorted by displayOrder ascending, then by name.
+     */
+    @Test
+    void testApiaryOrderingInGetAll() {
+        // Given: DAO and repository
+        JdbcApiaryDao dao = new JdbcApiaryDao();
+        ApiaryRepository repository = new ApiaryRepository(dao);
+
+        // Create apiaries with different display orders
+        for (int i = 3; i >= 1; i--) { // Insert in reverse order
+            Apiary apiary = new Apiary();
+            apiary.setId(UUID.randomUUID().toString());
+            apiary.setName("Včelnica " + i);
+            apiary.setDisplayOrder(i);
+            apiary.setCreatedAt(System.currentTimeMillis());
+            apiary.setUpdatedAt(System.currentTimeMillis());
+            repository.insertApiary(apiary).blockingAwait();
+        }
+
+        // When: Get all apiaries
+        List<Apiary> apiaries = repository.getAllApiaries().blockingFirst();
+
+        // Then: Should be sorted by displayOrder
+        assertEquals(3, apiaries.size());
+        assertEquals("Včelnica 1", apiaries.get(0).getName());
+        assertEquals("Včelnica 2", apiaries.get(1).getName());
+        assertEquals("Včelnica 3", apiaries.get(2).getName());
+    }
 }

@@ -28,10 +28,10 @@ public class JdbcHiveDao implements HiveDao {
                 "(id, apiaryId, name, type, queenId, queenYear, queenColor, active, notes, " +
                 "frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, hasPropolisTrap, " +
                 "darkFrames, lightFrames, newFrames, foundationFrames, emptyFrames, foundationSheets, " +
-                "hasEntranceReducer, hasPollenTrap, hasTopInsulation, hasFoil, hasVarroaScreen, " +
+                "hasEntranceReducer, hasPollenTrap, hasTopInsulation, hasFoil, " +
                 "aggression, chalkBrood, droneCells, droneLaying, displayOrder, " +
                 "createdAt, updatedAt) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, hive.getId());
@@ -59,14 +59,13 @@ public class JdbcHiveDao implements HiveDao {
                 stmt.setInt(23, hive.isHasPollenTrap() ? 1 : 0);
                 stmt.setInt(24, hive.isHasTopInsulation() ? 1 : 0);
                 stmt.setInt(25, hive.isHasFoil() ? 1 : 0);
-                stmt.setInt(26, hive.isHasVarroaScreen() ? 1 : 0);
-                stmt.setString(27, hive.getAggression());
-                stmt.setInt(28, hive.isChalkBrood() ? 1 : 0);
-                stmt.setInt(29, hive.isDroneCells() ? 1 : 0);
-                stmt.setInt(30, hive.isDroneLaying() ? 1 : 0);
-                stmt.setInt(31, hive.getDisplayOrder());
-                stmt.setLong(32, hive.getCreatedAt());
-                stmt.setLong(33, hive.getUpdatedAt());
+                stmt.setString(26, hive.getAggression());
+                stmt.setInt(27, hive.isChalkBrood() ? 1 : 0);
+                stmt.setInt(28, hive.isDroneCells() ? 1 : 0);
+                stmt.setInt(29, hive.isDroneLaying() ? 1 : 0);
+                stmt.setInt(30, hive.getDisplayOrder());
+                stmt.setLong(31, hive.getCreatedAt());
+                stmt.setLong(32, hive.getUpdatedAt());
                 stmt.executeUpdate();
             }
         });
@@ -79,10 +78,10 @@ public class JdbcHiveDao implements HiveDao {
                 "(id, apiaryId, name, type, queenId, queenYear, queenColor, active, notes, " +
                 "frameType, frameCount, insulated, highBottomBoard, hasQueenExcluder, hasPropolisTrap, " +
                 "darkFrames, lightFrames, newFrames, foundationFrames, emptyFrames, foundationSheets, " +
-                "hasEntranceReducer, hasPollenTrap, hasTopInsulation, hasFoil, hasVarroaScreen, " +
+                "hasEntranceReducer, hasPollenTrap, hasTopInsulation, hasFoil, " +
                 "aggression, chalkBrood, droneCells, droneLaying, displayOrder, " +
                 "createdAt, updatedAt) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 for (Hive hive : hives) {
@@ -111,14 +110,13 @@ public class JdbcHiveDao implements HiveDao {
                     stmt.setInt(23, hive.isHasPollenTrap() ? 1 : 0);
                     stmt.setInt(24, hive.isHasTopInsulation() ? 1 : 0);
                     stmt.setInt(25, hive.isHasFoil() ? 1 : 0);
-                    stmt.setInt(26, hive.isHasVarroaScreen() ? 1 : 0);
-                    stmt.setString(27, hive.getAggression());
-                    stmt.setInt(28, hive.isChalkBrood() ? 1 : 0);
-                    stmt.setInt(29, hive.isDroneCells() ? 1 : 0);
-                    stmt.setInt(30, hive.isDroneLaying() ? 1 : 0);
-                    stmt.setInt(31, hive.getDisplayOrder());
-                    stmt.setLong(32, hive.getCreatedAt());
-                    stmt.setLong(33, hive.getUpdatedAt());
+                    stmt.setString(26, hive.getAggression());
+                    stmt.setInt(27, hive.isChalkBrood() ? 1 : 0);
+                    stmt.setInt(28, hive.isDroneCells() ? 1 : 0);
+                    stmt.setInt(29, hive.isDroneLaying() ? 1 : 0);
+                    stmt.setInt(30, hive.getDisplayOrder());
+                    stmt.setLong(31, hive.getCreatedAt());
+                    stmt.setLong(32, hive.getUpdatedAt());
                     stmt.addBatch();
                 }
                 stmt.executeBatch();
@@ -133,7 +131,7 @@ public class JdbcHiveDao implements HiveDao {
                 "active=?, notes=?, frameType=?, frameCount=?, insulated=?, highBottomBoard=?, " +
                 "hasQueenExcluder=?, hasPropolisTrap=?, darkFrames=?, lightFrames=?, newFrames=?, " +
                 "foundationFrames=?, emptyFrames=?, foundationSheets=?, hasEntranceReducer=?, hasPollenTrap=?, " +
-                "hasTopInsulation=?, hasFoil=?, hasVarroaScreen=?, aggression=?, chalkBrood=?, droneCells=?, droneLaying=?, " +
+                "hasTopInsulation=?, hasFoil=?, aggression=?, chalkBrood=?, droneCells=?, droneLaying=?, " +
                 "displayOrder=?, updatedAt=? WHERE id=?";
             try (Connection conn = DatabaseManager.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -161,14 +159,13 @@ public class JdbcHiveDao implements HiveDao {
                 stmt.setInt(22, hive.isHasPollenTrap() ? 1 : 0);
                 stmt.setInt(23, hive.isHasTopInsulation() ? 1 : 0);
                 stmt.setInt(24, hive.isHasFoil() ? 1 : 0);
-                stmt.setInt(25, hive.isHasVarroaScreen() ? 1 : 0);
-                stmt.setString(26, hive.getAggression());
-                stmt.setInt(27, hive.isChalkBrood() ? 1 : 0);
-                stmt.setInt(28, hive.isDroneCells() ? 1 : 0);
-                stmt.setInt(29, hive.isDroneLaying() ? 1 : 0);
-                stmt.setInt(30, hive.getDisplayOrder());
-                stmt.setLong(31, hive.getUpdatedAt());
-                stmt.setString(32, hive.getId());
+                stmt.setString(25, hive.getAggression());
+                stmt.setInt(26, hive.isChalkBrood() ? 1 : 0);
+                stmt.setInt(27, hive.isDroneCells() ? 1 : 0);
+                stmt.setInt(28, hive.isDroneLaying() ? 1 : 0);
+                stmt.setInt(29, hive.getDisplayOrder());
+                stmt.setLong(30, hive.getUpdatedAt());
+                stmt.setString(31, hive.getId());
                 stmt.executeUpdate();
             }
         });
@@ -312,7 +309,6 @@ public class JdbcHiveDao implements HiveDao {
         hive.setHasPollenTrap(rs.getInt("hasPollenTrap") == 1);
         hive.setHasTopInsulation(rs.getInt("hasTopInsulation") == 1);
         hive.setHasFoil(rs.getInt("hasFoil") == 1);
-        hive.setHasVarroaScreen(rs.getInt("hasVarroaScreen") == 1);
 
         // Queen behavior and colony health
         hive.setAggression(rs.getString("aggression"));
