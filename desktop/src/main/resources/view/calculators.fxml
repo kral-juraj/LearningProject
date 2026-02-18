@@ -16,7 +16,7 @@
     <VBox spacing="15" style="-fx-padding: 20;">
 
         <!-- ========== VARROA CALCULATOR ========== -->
-        <TitledPane text="%calculator.varroa.title" expanded="true" collapsible="true">
+        <TitledPane text="%calculator.varroa.title" expanded="false" collapsible="true">
             <VBox spacing="10" style="-fx-padding: 10;">
 
                 <!-- Top Section: Inputs (left) and Treatments Table (right) -->
