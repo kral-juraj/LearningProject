@@ -53,10 +53,7 @@ task readExcel(type: JavaExec) {
     args = project.hasProperty('excelFile') ? [project.property('excelFile')] : []
 }
 
-// Configure test task to use JUnit Platform
-test {
-    useJUnitPlatform()
-}
+// Test configuration is now in jacoco.gradle (applied from root build.gradle)
 
 // Task to run the desktop application
 task runDesktop(type: JavaExec) {

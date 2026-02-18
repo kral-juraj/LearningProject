@@ -1,0 +1,39 @@
+// JaCoCo configuration for test coverage
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.8.13"  // Latest version for Java 21+ support
+}
+
+afterEvaluate {
+    test {
+        useJUnitPlatform()
+        finalizedBy jacocoTestReport
+
+        // Exclude JDK internal classes from instrumentation
+        jacoco {
+            excludes = ['jdk.*', 'java.*', 'javax.*', 'sun.*', 'com.sun.*']
+        }
+    }
+
+    jacocoTestReport {
+        dependsOn test
+
+        reports {
+            xml.required = true
+            html.required = true
+            csv.required = false
+        }
+
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                '**/R.class',
+                '**/R$*.class',
+                '**/BuildConfig.*',
+                '**/Manifest*.*',
+                '**/*Test*.*',
+                'android/**/*.*'
+            ])
+        }))
+    }
+}

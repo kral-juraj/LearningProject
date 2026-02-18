@@ -3,6 +3,46 @@ plugins {
     id 'com.android.application' version '8.2.0' apply false
     id 'androidx.navigation.safeargs' version '2.7.6' apply false
     id 'org.openjfx.javafxplugin' version '0.1.0' apply false
+    id 'jacoco'
+}
+
+// Apply JaCoCo to all Java subprojects (shared, desktop)
+subprojects {
+    if (it.name != 'app') {  // Skip Android module
+        apply from: "${rootProject.projectDir}/jacoco.gradle"
+    }
+}
+
+// Aggregated JaCoCo report for all modules
+task jacocoRootReport(type: JacocoReport) {
+    description = 'Generates an aggregate test coverage report from all subprojects'
+    group = 'verification'
+
+    // Gather execution data from all subprojects
+    executionData.from = fileTree(dir: rootProject.projectDir, include: '**/build/jacoco/*.exec')
+
+    reports {
+        html.required = true
+        xml.required = true
+        csv.required = false
+        html.outputLocation = file("${buildDir}/reports/jacoco/jacocoRootReport/html")
+        xml.outputLocation = file("${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml")
+    }
+}
+
+// Configure jacocoRootReport after projects are evaluated
+gradle.projectsEvaluated {
+    // Add source and class directories from subprojects
+    jacocoRootReport.sourceDirectories.from(files(subprojects.findAll { it.name != 'app' }.collect {
+        it.sourceSets.main.allSource.srcDirs
+    }))
+    jacocoRootReport.classDirectories.from(files(subprojects.findAll { it.name != 'app' }.collect {
+        it.sourceSets.main.output
+    }))
+
+    // Make jacocoRootReport depend on all jacocoTestReport tasks
+    def jacocoTasks = subprojects.findAll { it.name != 'app' }.collect { it.tasks.findByName('jacocoTestReport') }.findAll { it != null }
+    jacocoRootReport.dependsOn jacocoTasks
 }
 
 task clean(type: Delete) {

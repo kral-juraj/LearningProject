@@ -26,7 +26,4 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:5.3.1'
 }
 
-// Configure test task to use JUnit Platform
-test {
-    useJUnitPlatform()
-}
+// Test configuration is now in jacoco.gradle (applied from root build.gradle)
