@@ -29,6 +29,7 @@ public class Taxation implements Serializable {
 
     // Ďalšie informácie (nie v DB, ale načítané cez JOIN)
     private String hiveName;
+    private String hiveType;  // B, LANGSTROTH, DADANT, ZANDER - needed for free space calculation
 
     public Taxation() {
     }
@@ -159,5 +160,13 @@ public class Taxation implements Serializable {
 
     public void setHiveName(String hiveName) {
         this.hiveName = hiveName;
+    }
+
+    public String getHiveType() {
+        return hiveType;
+    }
+
+    public void setHiveType(String hiveType) {
+        this.hiveType = hiveType;
     }
 }

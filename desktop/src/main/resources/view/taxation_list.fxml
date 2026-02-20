@@ -7,15 +7,133 @@
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.beekeeper.desktop.controller.TaxationListController">
 
-    <!-- Left Sidebar with Buttons -->
+    <!-- Left Sidebar with Action Buttons + Filters -->
     <left>
-        <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-color: #ddd; -fx-border-width: 0 1 0 0;">
-            <Button fx:id="addButton" text="%button.add_taxation" onAction="#handleAddTaxation" maxWidth="Infinity" style="-fx-padding: 8;"/>
-            <Button fx:id="viewButton" text="%button.view_edit" onAction="#handleViewTaxation" maxWidth="Infinity" style="-fx-padding: 8;"/>
-            <Button fx:id="deleteButton" text="%button.delete" onAction="#handleDeleteTaxation" maxWidth="Infinity" style="-fx-padding: 8;"/>
-            <Separator/>
-            <Button text="%button.refresh" onAction="#handleRefresh" maxWidth="Infinity" style="-fx-padding: 8;"/>
-        </VBox>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: #f0f0f0;">
+            <VBox spacing="8" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-color: #ddd; -fx-border-width: 0 1 0 0;" prefWidth="240">
+
+                <!-- Action Buttons -->
+                <Label text="%label.actions" style="-fx-font-weight: bold;"/>
+                <Button fx:id="addButton" text="%button.add_taxation" onAction="#handleAddTaxation" maxWidth="Infinity" style="-fx-padding: 8;"/>
+                <Button fx:id="viewButton" text="%button.view_edit" onAction="#handleViewTaxation" maxWidth="Infinity" style="-fx-padding: 8;"/>
+                <Button fx:id="deleteButton" text="%button.delete" onAction="#handleDeleteTaxation" maxWidth="Infinity" style="-fx-padding: 8;"/>
+                <Button text="%button.refresh" onAction="#handleRefresh" maxWidth="Infinity" style="-fx-padding: 8;"/>
+
+                <Separator/>
+
+                <!-- Filter Section -->
+                <Label text="%label.filters" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+
+                <!-- Date Range Filter -->
+                <Label text="%filter.date_range" style="-fx-font-size: 11px;"/>
+                <VBox spacing="3">
+                    <DatePicker fx:id="filterDateFrom" promptText="%filter.date_from" maxWidth="Infinity"/>
+                    <DatePicker fx:id="filterDateTo" promptText="%filter.date_to" maxWidth="Infinity"/>
+                </VBox>
+
+                <!-- Hive Name Filter -->
+                <Label text="%filter.hive_name" style="-fx-font-size: 11px;"/>
+                <TextField fx:id="filterHiveName" promptText="%filter.hive_name_prompt" maxWidth="Infinity"/>
+
+                <!-- Free Space Filter -->
+                <Label text="%filter.free_space" style="-fx-font-size: 11px;"/>
+                <HBox spacing="3">
+                    <TextField fx:id="filterMinFreeSpace" promptText="%filter.min" prefWidth="85" maxWidth="85"/>
+                    <TextField fx:id="filterMaxFreeSpace" promptText="%filter.max" prefWidth="85" maxWidth="85"/>
+                </HBox>
+                <Label text="(dm²)" style="-fx-font-size: 10px; -fx-text-fill: gray;"/>
+
+                <!-- Has Brood Filter -->
+                <CheckBox fx:id="filterHasBrood" text="%filter.has_brood"/>
+
+                <!-- Has Starter Frames Filter -->
+                <CheckBox fx:id="filterHasStarterFrames" text="%filter.has_starter_frames"/>
+
+                <Separator/>
+
+                <!-- Free Space Percentage Filter -->
+                <Label text="%filter.free_space_percent" style="-fx-font-size: 11px;"/>
+                <HBox spacing="5">
+                    <TextField fx:id="filterMinFreeSpacePercent" promptText="%filter.min" prefWidth="70" maxWidth="70"/>
+                    <Label text="-"/>
+                    <TextField fx:id="filterMaxFreeSpacePercent" promptText="%filter.max" prefWidth="70" maxWidth="70"/>
+                    <Label text="%symbol.percent"/>
+                </HBox>
+
+                <!-- Capped Stores Percentage Filter -->
+                <Label text="%filter.capped_stores_percent" style="-fx-font-size: 11px;"/>
+                <HBox spacing="5">
+                    <TextField fx:id="filterMinCappedStoresPercent" promptText="%filter.min" prefWidth="70" maxWidth="70"/>
+                    <Label text="-"/>
+                    <TextField fx:id="filterMaxCappedStoresPercent" promptText="%filter.max" prefWidth="70" maxWidth="70"/>
+                    <Label text="%symbol.percent"/>
+                </HBox>
+
+                <Separator/>
+
+                <!-- Temperature Range Filter -->
+                <Label text="%filter.temperature_range"/>
+                <HBox spacing="5">
+                    <TextField fx:id="filterMinTemp" promptText="%filter.min" prefWidth="60" maxWidth="60"/>
+                    <Label text="-"/>
+                    <TextField fx:id="filterMaxTemp" promptText="%filter.max" prefWidth="60" maxWidth="60"/>
+                    <Label text="°C"/>
+                </HBox>
+
+                <!-- Frame Count Range Filter -->
+                <Label text="%filter.frame_count_range"/>
+                <HBox spacing="5">
+                    <TextField fx:id="filterMinFrameCount" promptText="%filter.min" prefWidth="60" maxWidth="60"/>
+                    <Label text="-"/>
+                    <TextField fx:id="filterMaxFrameCount" promptText="%filter.max" prefWidth="60" maxWidth="60"/>
+                </HBox>
+
+                <!-- Colony Strength Range Filter -->
+                <Label text="%filter.strength_range"/>
+                <HBox spacing="5">
+                    <TextField fx:id="filterMinStrength" promptText="%filter.min" prefWidth="60" maxWidth="60"/>
+                    <Label text="-"/>
+                    <TextField fx:id="filterMaxStrength" promptText="%filter.max" prefWidth="60" maxWidth="60"/>
+                    <Label text="(1-10)"/>
+                </HBox>
+
+                <Separator/>
+
+                <!-- Brood Range Filter -->
+                <Label text="%filter.brood_range"/>
+                <HBox spacing="5">
+                    <TextField fx:id="filterMinBrood" promptText="%filter.min" prefWidth="70" maxWidth="70"/>
+                    <Label text="-"/>
+                    <TextField fx:id="filterMaxBrood" promptText="%filter.max" prefWidth="70" maxWidth="70"/>
+                    <Label text="dm²"/>
+                </HBox>
+
+                <!-- Stores Range Filter -->
+                <Label text="%filter.stores_range"/>
+                <HBox spacing="5">
+                    <TextField fx:id="filterMinStores" promptText="%filter.min" prefWidth="70" maxWidth="70"/>
+                    <Label text="-"/>
+                    <TextField fx:id="filterMaxStores" promptText="%filter.max" prefWidth="70" maxWidth="70"/>
+                    <Label text="dm²"/>
+                </HBox>
+
+                <!-- Pollen Range Filter -->
+                <Label text="%filter.pollen_range"/>
+                <HBox spacing="5">
+                    <TextField fx:id="filterMinPollen" promptText="%filter.min" prefWidth="70" maxWidth="70"/>
+                    <Label text="-"/>
+                    <TextField fx:id="filterMaxPollen" promptText="%filter.max" prefWidth="70" maxWidth="70"/>
+                    <Label text="dm²"/>
+                </HBox>
+
+                <Separator/>
+
+                <!-- Filter Action Buttons -->
+                <Button text="%button.apply_filters" onAction="#handleApplyFilters" maxWidth="Infinity" style="-fx-padding: 8; -fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                <Button text="%button.clear_filters" onAction="#handleClearFilters" maxWidth="Infinity" style="-fx-padding: 8;"/>
+
+            </VBox>
+        </ScrollPane>
     </left>
 
     <!-- Center - Table View -->
@@ -27,6 +145,8 @@
                 <TableColumn fx:id="temperatureColumn" text="%table.temperature" prefWidth="90"/>
                 <TableColumn fx:id="totalFramesColumn" text="%table.frame_count" prefWidth="100"/>
                 <TableColumn fx:id="foodStoresColumn" text="%table.food_stores" prefWidth="90"/>
+                <TableColumn fx:id="freeSpaceColumn" text="%table.free_space_dm" prefWidth="100"/>
+                <TableColumn fx:id="strengthColumn" text="%table.strength" prefWidth="80"/>
                 <TableColumn fx:id="totalPollenColumn" text="%table.pollen_dm" prefWidth="80"/>
                 <TableColumn fx:id="totalCappedStoresColumn" text="%table.capped_stores_dm" prefWidth="120"/>
                 <TableColumn fx:id="totalUncappedStoresColumn" text="%table.uncapped_stores_dm" prefWidth="130"/>

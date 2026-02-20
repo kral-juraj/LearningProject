@@ -386,6 +386,7 @@ class TaxationIntegrationTest extends IntegrationTestBase {
         hive.setId(UUID.randomUUID().toString());
         hive.setApiaryId(apiary.getId());
         hive.setName("L1-TestHive");
+        hive.setType("B");  // Set hive type for taxation filtering
         hive.setCreatedAt(System.currentTimeMillis());
         hive.setUpdatedAt(System.currentTimeMillis());
         hiveRepository.insertHive(hive).blockingAwait();

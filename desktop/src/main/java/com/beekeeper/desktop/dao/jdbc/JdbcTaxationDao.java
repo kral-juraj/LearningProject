@@ -184,7 +184,7 @@ public class JdbcTaxationDao implements TaxationDao {
     public Flowable<List<Taxation>> getByApiaryId(String apiaryId) {
         return Flowable.fromCallable(() -> {
             List<Taxation> list = new ArrayList<>();
-            String sql = "SELECT t.*, h.name as hiveName " +
+            String sql = "SELECT t.*, h.name as hiveName, h.frameType as hiveType " +
                         "FROM taxations t " +
                         "INNER JOIN hives h ON t.hiveId = h.id " +
                         "WHERE h.apiaryId = ? " +
@@ -220,10 +220,17 @@ public class JdbcTaxationDao implements TaxationDao {
         taxation.setTotalUncappedBroodDm(rs.getInt("totalUncappedBroodDm"));
         taxation.setTotalStarterFrames(rs.getInt("totalStarterFrames"));
 
-        // Load hiveName if available (from JOIN query)
+        // Load hiveName and hiveType if available (from JOIN query)
         try {
             String hiveName = rs.getString("hiveName");
             taxation.setHiveName(hiveName);
+        } catch (SQLException e) {
+            // Column doesn't exist in this query, ignore
+        }
+
+        try {
+            String hiveType = rs.getString("hiveType");
+            taxation.setHiveType(hiveType);
         } catch (SQLException e) {
             // Column doesn't exist in this query, ignore
         }

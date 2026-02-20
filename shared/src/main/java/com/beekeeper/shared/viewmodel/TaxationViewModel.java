@@ -1,14 +1,18 @@
 package com.beekeeper.shared.viewmodel;
 
+import com.beekeeper.shared.dto.TaxationFilters;
 import com.beekeeper.shared.entity.Taxation;
 import com.beekeeper.shared.entity.TaxationFrame;
 import com.beekeeper.shared.repository.TaxationRepository;
 import com.beekeeper.shared.scheduler.SchedulerProvider;
 import com.beekeeper.shared.util.DateUtils;
+import com.beekeeper.shared.util.TaxationFilterUtil;
 import com.jakewharton.rxrelay2.BehaviorRelay;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import io.reactivex.Observable;
 
@@ -30,6 +34,10 @@ public class TaxationViewModel extends BaseViewModel {
     // Track current context for reload after operations
     private String currentApiaryId;
     private String currentHiveId;
+
+    // Filtering support
+    private final BehaviorRelay<TaxationFilters> currentFilters = BehaviorRelay.createDefault(new TaxationFilters());
+    private List<Taxation> unfilteredTaxations = new ArrayList<>();  // Cache for filtering
 
     public TaxationViewModel(TaxationRepository repository, SchedulerProvider schedulerProvider) {
         this.repository = repository;
@@ -56,6 +64,10 @@ public class TaxationViewModel extends BaseViewModel {
         return success;
     }
 
+    public Observable<TaxationFilters> getCurrentFilters() {
+        return currentFilters;
+    }
+
     public void loadTaxationsByHiveId(String hiveId) {
         this.currentHiveId = hiveId;
         this.currentApiaryId = null; // Clear apiary context
@@ -67,7 +79,8 @@ public class TaxationViewModel extends BaseViewModel {
                 .observeOn(schedulerProvider.mainThread())
                 .subscribe(
                     taxationList -> {
-                        taxations.accept(taxationList);
+                        unfilteredTaxations = taxationList;
+                        applyCurrentFilters();
                         loading.accept(false);
                     },
                     throwable -> {
@@ -89,7 +102,8 @@ public class TaxationViewModel extends BaseViewModel {
                 .observeOn(schedulerProvider.mainThread())
                 .subscribe(
                     taxationList -> {
-                        taxations.accept(taxationList);
+                        unfilteredTaxations = taxationList;
+                        applyCurrentFilters();
                         loading.accept(false);
                     },
                     throwable -> {
@@ -268,5 +282,55 @@ public class TaxationViewModel extends BaseViewModel {
                     }
                 )
         );
+    }
+
+    /**
+     * Applies filters to the current list of taxations.
+     *
+     * Use case: Beekeeper wants to filter taxations by date range, free space, brood presence, etc.
+     * Filtering is done in-memory for instant results without database round-trips.
+     *
+     * @param filters Filter criteria to apply
+     */
+    public void applyFilters(TaxationFilters filters) {
+        if (filters == null) {
+            filters = new TaxationFilters();
+        }
+        currentFilters.accept(filters);
+        applyCurrentFilters();
+    }
+
+    /**
+     * Clears all filters and shows all taxations.
+     *
+     * Use case: Beekeeper wants to reset filters and see all taxations again.
+     */
+    public void clearFilters() {
+        currentFilters.accept(new TaxationFilters());
+        applyCurrentFilters();
+    }
+
+    /**
+     * Internal method to apply current filters to unfiltered taxations.
+     * Emits filtered list to taxations relay.
+     */
+    private void applyCurrentFilters() {
+        TaxationFilters filters = currentFilters.getValue();
+        if (filters == null || !filters.hasAnyFilter()) {
+            // No filters = show all
+            taxations.accept(unfilteredTaxations);
+            return;
+        }
+
+        // Apply filters using TaxationFilterUtil
+        List<Taxation> filtered = new ArrayList<>();
+        for (Taxation taxation : unfilteredTaxations) {
+            String hiveType = taxation.getHiveType();
+            if (TaxationFilterUtil.matches(taxation, hiveType, filters)) {
+                filtered.add(taxation);
+            }
+        }
+
+        taxations.accept(filtered);
     }
 }
