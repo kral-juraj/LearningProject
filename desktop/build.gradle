@@ -5,11 +5,60 @@ plugins {
 
 application {
     mainClass = 'com.beekeeper.desktop.Main'
-    // JVM arguments for better macOS compatibility
+    // JVM arguments for JavaFX 21+ on Java 17+
+    // IMPORTANT: module-path is required for JavaFX modules
     applicationDefaultJvmArgs = [
-        '-Dprism.order=sw',  // Use software rendering to avoid graphics glitches
-        '-Djavafx.animation.fullspeed=false'
+        // Use hardware acceleration (d3d on Windows, default on other platforms)
+        // Software rendering (-Dprism.order=sw) causes issues on Windows
+        '-Djavafx.animation.fullspeed=false',
+        '-Dapple.awt.application.appearance=system',
+        '--enable-native-access=ALL-UNNAMED',  // Required for JavaFX and SQLite native libraries
+        '--module-path', 'LIB_PLACEHOLDER',  // Will be replaced by startScripts task
+        '--add-modules', 'javafx.controls,javafx.fxml'  // Explicitly add JavaFX modules
     ]
+}
+
+// Fix module-path placeholder in generated scripts
+startScripts {
+    doLast {
+        // Unix script
+        def unixScriptFile = file(getUnixScript())
+        def unixScriptText = unixScriptFile.text
+        unixScriptText = unixScriptText.replace('LIB_PLACEHOLDER', '\$APP_HOME/lib')
+        unixScriptFile.text = unixScriptText
+
+        // Windows script
+        def windowsScriptFile = file(getWindowsScript())
+        def windowsScriptText = windowsScriptFile.text
+        windowsScriptText = windowsScriptText.replace('LIB_PLACEHOLDER', '%APP_HOME%\\lib')
+        windowsScriptFile.text = windowsScriptText
+    }
+}
+
+// Configure distZip to create proper distribution
+distributions {
+    main {
+        distributionBaseName = 'beekeeper-desktop'
+        contents {
+            // Include database inserts (extracted from complete export)
+            from('src/main/resources/sql') {
+                include 'database_inserts_only.sql'
+                into 'sql'
+            }
+            // Include README
+            from('dist') {
+                include 'README.txt'
+            }
+            // Include custom launcher scripts (override Gradle generated ones)
+            from('dist') {
+                include 'launcher-unix.sh'
+                include 'launcher-windows.bat'
+                into 'bin'
+                rename 'launcher-unix.sh', 'beekeeper'
+                rename 'launcher-windows.bat', 'beekeeper.bat'
+            }
+        }
+    }
 }
 
 java {
@@ -22,9 +71,34 @@ javafx {
     modules = ['javafx.controls', 'javafx.fxml']
 }
 
+// Define JavaFX version for multi-platform distribution
+def javaFxVersion = '21.0.2'
+
 dependencies {
     // Shared module - contains entities, DAOs, repositories, ViewModels
     implementation project(':shared')
+
+    // JavaFX multi-platform support - include native libraries for all platforms
+    // This allows the distribution to work on Windows, macOS, and Linux
+    implementation "org.openjfx:javafx-base:${javaFxVersion}:win"
+    implementation "org.openjfx:javafx-base:${javaFxVersion}:linux"
+    implementation "org.openjfx:javafx-base:${javaFxVersion}:mac"
+    implementation "org.openjfx:javafx-base:${javaFxVersion}:mac-aarch64"
+
+    implementation "org.openjfx:javafx-controls:${javaFxVersion}:win"
+    implementation "org.openjfx:javafx-controls:${javaFxVersion}:linux"
+    implementation "org.openjfx:javafx-controls:${javaFxVersion}:mac"
+    implementation "org.openjfx:javafx-controls:${javaFxVersion}:mac-aarch64"
+
+    implementation "org.openjfx:javafx-fxml:${javaFxVersion}:win"
+    implementation "org.openjfx:javafx-fxml:${javaFxVersion}:linux"
+    implementation "org.openjfx:javafx-fxml:${javaFxVersion}:mac"
+    implementation "org.openjfx:javafx-fxml:${javaFxVersion}:mac-aarch64"
+
+    implementation "org.openjfx:javafx-graphics:${javaFxVersion}:win"
+    implementation "org.openjfx:javafx-graphics:${javaFxVersion}:linux"
+    implementation "org.openjfx:javafx-graphics:${javaFxVersion}:mac"
+    implementation "org.openjfx:javafx-graphics:${javaFxVersion}:mac-aarch64"
 
     // SQLite JDBC driver
     implementation 'org.xerial:sqlite-jdbc:3.45.1.0'
@@ -59,4 +133,70 @@ task readExcel(type: JavaExec) {
 task runDesktop(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'com.beekeeper.desktop.Main'
+}
+
+// Create fat JAR with all dependencies for distribution
+task fatJar(type: Jar) {
+    group = 'distribution'
+    description = 'Creates executable JAR with all dependencies for distribution'
+
+    manifest {
+        attributes(
+            'Main-Class': 'com.beekeeper.desktop.Main',
+            'Implementation-Title': 'Beekeeper Desktop',
+            'Implementation-Version': project.version
+        )
+    }
+
+    archiveBaseName = 'beekeeper-desktop'
+    archiveVersion = '1.0.0'
+    archiveClassifier = 'all'
+
+    // Include compiled classes from desktop module
+    from sourceSets.main.output
+
+    // Include all runtime dependencies (JAR files - includes shared module JAR)
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect {
+            zipTree(it).matching {
+                exclude 'META-INF/*.SF'
+                exclude 'META-INF/*.DSA'
+                exclude 'META-INF/*.RSA'
+            }
+        }
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// Create distribution package with launcher scripts
+task createDistribution(type: Zip) {
+    group = 'distribution'
+    description = 'Creates distributable package with JAR and launcher scripts'
+    dependsOn fatJar
+
+    archiveBaseName = 'beekeeper-desktop-dist'
+    archiveVersion = '1.0.0'
+
+    into('beekeeper-desktop') {
+        // Include fat JAR only (contains all dependencies)
+        from(fatJar.outputs.files) {
+            into 'lib'
+        }
+
+        // Include database inserts (extracted from complete export)
+        from('src/main/resources/sql') {
+            include 'database_inserts_only.sql'
+            into 'sql'
+        }
+
+        // Include launcher scripts
+        from('dist') {
+            include '*.bat'
+            include '*.sh'
+            include '*.command'
+            include 'README.txt'
+        }
+    }
 }

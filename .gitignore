@@ -50,3 +50,6 @@ test-db/
 config.properties
 secrets.yml
 **/application-production.properties
+data/
+*.db
+
