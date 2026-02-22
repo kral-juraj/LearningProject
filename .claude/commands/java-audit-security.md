@@ -1,0 +1,1 @@
+spusti java-security-auditor
